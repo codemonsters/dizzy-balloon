@@ -1,5 +1,7 @@
 # dizzy_balloon
 
+Remake con licencia GPL de Dizzy Balloon, juego desarrollado originalmente por Pony Canyon para ordenadores MSX y publicado en el año 1984. Más información sobre el juego original [aquí](https://www.generation-msx.nl/software/pony-canyon/dizzy-balloon/release/559/).
+
 ## Preparación del entorno de desarrollo
 
 ### Software necesario
