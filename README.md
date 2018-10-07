@@ -35,6 +35,6 @@ Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
 
 * [Learn Lua In 15 Minutes](http://tylerneylon.com/a/learn-lua/)
 * [Love2D Wiki](https://love2d.org/wiki/Main_Page)
-* [aewsome-love2d](https://github.com/love2d-community/awesome-love2d): A curated list of amazingly awesome LÖVE libraries, resources and shiny things
-* [http://rogerdudler.github.io/git-guide/](git - the simpe guide)
+* [awesome-love2d](https://github.com/love2d-community/awesome-love2d): A curated list of amazingly awesome LÖVE libraries, resources and shiny things
+* [git - the simpe guide](http://rogerdudler.github.io/git-guide/)
 * [Mastering Markdown](https://guides.github.com/features/mastering-markdown/): Útil para editar este y otros ficheros
