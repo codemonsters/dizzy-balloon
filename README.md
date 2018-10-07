@@ -6,8 +6,9 @@
 
 Instalamos lo siguiente:
 * Un cliente Git:
-    * [SmartSVN](http://www.smartsvn.com/)
-    * [GitKraken](http://www.gitkraken.com/) 
+    * [git](https://git-scm.com/downloads): Cliente Git oficial (CLI / intefaz de línea de comandos)
+    * [SmartSVN](http://www.smartsvn.com/): Cliente con interfaz gráfica
+    * [GitKraken](http://www.gitkraken.com/): Otro cliente con interfaz gráfica
 * [Love2D](http://love2d.org/)
 * [Visual Studio Code](http://code.visualstudio.com/):
 * Extensiones para Visual Studio:
