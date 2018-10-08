@@ -1,6 +1,6 @@
-# dizzy_balloon
+# Dizzy Balloon
 
-Remake con licencia GPL de Dizzy Balloon, juego desarrollado originalmente por Pony Canyon para ordenadores MSX y publicado en el año 1984. Más información sobre el juego original [aquí](https://www.generation-msx.nl/software/pony-canyon/dizzy-balloon/release/559/).
+Remake no oficial y con licencia GPL de Dizzy Balloon, juego desarrollado originalmente por Pony Canyon para ordenadores MSX y publicado en el año 1984. Más información sobre el juego original [aquí](https://www.generation-msx.nl/software/pony-canyon/dizzy-balloon/release/559/).
 
 ## Preparación del entorno de desarrollo
 
@@ -14,9 +14,8 @@ Instalamos lo siguiente:
 * [Love2D](http://love2d.org/)
 * [Visual Studio Code](http://code.visualstudio.com/):
 * Extensiones para Visual Studio:
-    * Love2D Support (pixelbyte-studios.pixelbyte-love2d)
-    * Lua Debug (actboy168.lua-debug)
-    * vscode-lua (trixnz.vscode-lua)
+    * [Love2D Support](https://marketplace.visualstudio.com/items?itemName=pixelbyte-studios.pixelbyte-love2d):  pixelbyte-studios.pixelbyte-love2d
+    * [vscode-lua](https://marketplace.visualstudio.com/items?itemName=actboy168.lua-debug) (trixnz.vscode-lua)
 * Configuración de Visual Studio Code:
     * No siempre vendrá bien configurado el path de Love en la extensión Love2D Support (por defecto pixelbyte.love2d.path vale: C:\Program Files\Love\love.exe). Para cambiar esto vamos a File / Preferences / Settings / Extensions / Love2D config.
 
@@ -34,7 +33,7 @@ Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
 4. Abrimos la *carpeta* en Visual Studio Code
 
 
-## Documentación:
+## Documentación
 
 * [Learn Lua In 15 Minutes](http://tylerneylon.com/a/learn-lua/)
 * [Love2D Wiki](https://love2d.org/wiki/Main_Page)
