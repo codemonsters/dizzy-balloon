@@ -36,6 +36,7 @@ Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
 ## Documentación
 
 * [Learn Lua In 15 Minutes](http://tylerneylon.com/a/learn-lua/)
+* [Metatables](https://www.lua.org/pil/13.html) y [Programación Orientada a Objetos con Lua](https://www.tutorialspoint.com/lua/lua_object_oriented.htm)
 * [Love2D Wiki](https://love2d.org/wiki/Main_Page)
 * [awesome-love2d](https://github.com/love2d-community/awesome-love2d): A curated list of amazingly awesome LÖVE libraries, resources and shiny things
 * [git - the simpe guide](http://rogerdudler.github.io/git-guide/)
