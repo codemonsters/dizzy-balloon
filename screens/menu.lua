@@ -13,7 +13,7 @@ end
 
 function menu.keypressed(key, scancode, isrepeat)
     if key == "space" then
-        game_state = require("game")
+        game_state = require("screens/game")
         change_state(game_state)
     end
 end
