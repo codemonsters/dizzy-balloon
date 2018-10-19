@@ -13,7 +13,7 @@ Instalamos lo siguiente:
     * [GitKraken](http://www.gitkraken.com/): Otro cliente con interfaz gráfica
 * [Love2D](http://love2d.org/)
 * [Visual Studio Code](http://code.visualstudio.com/):
-* Extensiones para Visual Studio:
+* Extensiones para Visual Studio Code:
     * [Love2D Support](https://marketplace.visualstudio.com/items?itemName=pixelbyte-studios.pixelbyte-love2d):  pixelbyte-studios.pixelbyte-love2d
     * [vscode-lua](https://marketplace.visualstudio.com/items?itemName=actboy168.lua-debug) (trixnz.vscode-lua)
 * Configuración de Visual Studio Code:
@@ -28,7 +28,7 @@ Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
     * git config --global user.name "NOMBREDEUSUARIO"
 1. Creamos una carpeta vacía para alojar el proyecto
 2. Clonamos el repositorio dentro de esa carpeta:
-    * Si es desde la terminal ejecutamos: git checkout https://NOMBREDEUSUARIO@github.com/codemonsters/dizzy_balloon.git
+    * Si es desde la terminal ejecutamos: git clone https://NOMBREDEUSUARIO@github.com/codemonsters/dizzy_balloon.git
     * O bien usamos un programa con interfaz gráfica (SmartSVN, GitKraken...)
 4. Abrimos la *carpeta* en Visual Studio Code
 
