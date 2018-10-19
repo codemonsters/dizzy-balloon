@@ -12,7 +12,7 @@ end
 
 function game.keypressed(key, scancode, isrepeat)
     --[[ if key == "space" then
-        game_state = require(game)
+        game_state = require("game")
         change_state(game_state)
     end ]]--
 end
