@@ -1,7 +1,7 @@
 local push = require "libraries/push/push" -- https://github.com/Ulydev/push
 log = require "libraries/log/log" -- https://github.com/rxi/log.lua
 
-local menu_state = require "states/menu"
+local menu_state = require "screens/menu"
 
 local GAME_WIDTH, GAME_HEIGHT = 512, 288 -- fixed game size (it
 local window_width, window_height
