@@ -3,7 +3,7 @@ log = require "libraries/log/log" -- https://github.com/rxi/log.lua
 
 local menu_state = require "screens/menu"
 
-local GAME_WIDTH, GAME_HEIGHT = 512, 288 -- fixed game size (it
+GAME_WIDTH, GAME_HEIGHT = 512, 288 -- fixed game size (it
 local window_width, window_height
 local state = nil
 
