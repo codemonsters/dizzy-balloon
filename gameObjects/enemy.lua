@@ -10,14 +10,14 @@ end
 
 function enemy.update(dt)
     enemy.x = enemy.x + enemy.velocidad_x
-    if enemy.x > GAME_WIDTH - 12 then
+    if enemy.x > SCREEN_WIDTH - 12 then
         enemy.velocidad_x = enemy.velocidad_x * -1
     end
     if enemy.x < 0 then
         enemy.velocidad_x = enemy.velocidad_x * -1
     end
     enemy.y = enemy.y + enemy.velocidad_y
-    if enemy.y > GAME_HEIGHT - 12 then
+    if enemy.y > SCREEN_HEIGHT - 12 then
         enemy.velocidad_y = enemy.velocidad_y * -1
     end
     if enemy.y < 0 then

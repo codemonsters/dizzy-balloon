@@ -1,7 +1,7 @@
 local player = {}
 
 player.x = 0
-player.y = GAME_HEIGHT - 20
+player.y = SCREEN_HEIGHT - 20
 player.left = false
 player.right = false
 player.up = false
