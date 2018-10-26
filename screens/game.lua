@@ -1,6 +1,5 @@
 local game = { name = "Juego" }
 local player = require("gameObjects/player")
-
 local enemy = require("gameObjects/enemy")
 
 function game.load()
