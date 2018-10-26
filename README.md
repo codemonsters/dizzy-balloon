@@ -23,14 +23,17 @@ Instalamos lo siguiente:
 
 Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
 
-1. Configuramos Git:
+1. Configuramos Git para reflejar nuestro nombre de usuario y mail:
     * git config --global user.email "NUESTRA@DIRECCION.MAIL"
     * git config --global user.name "NOMBREDEUSUARIO"
-1. Creamos una carpeta vacía para alojar el proyecto
-2. Clonamos el repositorio dentro de esa carpeta:
+2. Configuramos Git para que no vuelva a pedir nuestra contraseña durante los siguientes 90 minutos (5400 segundos):
+    * git config --global credential.helper cache
+    * git config --global credential.helper 'cache --timeout=5400'
+3. Creamos una carpeta vacía para alojar el proyecto
+4. Clonamos el repositorio dentro de esa carpeta:
     * Si es desde la terminal ejecutamos: git clone https://NOMBREDEUSUARIO@github.com/codemonsters/dizzy_balloon.git
     * O bien usamos un programa con interfaz gráfica (SmartSVN, GitKraken...)
-4. Abrimos la *carpeta* en Visual Studio Code
+5. Abrimos la *carpeta* en Visual Studio Code
 
 
 ## Documentación
@@ -38,6 +41,7 @@ Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
 * [Learn Lua In 15 Minutes](http://tylerneylon.com/a/learn-lua/)
 * [Metatables](https://www.lua.org/pil/13.html) y [Programación Orientada a Objetos con Lua](https://www.tutorialspoint.com/lua/lua_object_oriented.htm)
 * [Love2D Wiki](https://love2d.org/wiki/Main_Page)
+* [Love2D API](https://love2d-community.github.io/love-api/)
 * [awesome-love2d](https://github.com/love2d-community/awesome-love2d): A curated list of amazingly awesome LÖVE libraries, resources and shiny things
 * [git - the simple guide](http://rogerdudler.github.io/git-guide/)
 * [Mastering Markdown](https://guides.github.com/features/mastering-markdown/): Útil para editar este y otros ficheros
