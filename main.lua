@@ -3,7 +3,8 @@ log = require "libraries/log/log" -- https://github.com/rxi/log.lua
 
 local menu_state = require ("screens/menu")
 
-GAME_WIDTH, GAME_HEIGHT = 512, 288 -- fixed game size (it
+SCREEN_WIDTH, SCREEN_HEIGHT = 512, 288
+WORLD_WIDTH, WORLD_HEIGHT = 280, 280
 local window_width, window_height
 local state = nil
 
@@ -27,7 +28,7 @@ function love.load()
         log.debug("Escalando dentro de una ventana")
         window_width, window_height = window_width * .7, window_height * .7
     end
-    push:setupScreen(GAME_WIDTH, GAME_HEIGHT, window_width, window_height, {fullscreen = love.window.getFullscreen()})
+    push:setupScreen(SCREEN_WIDTH, SCREEN_HEIGHT, window_width, window_height, {fullscreen = love.window.getFullscreen()})
 
     math.randomseed(os.time())
     change_state(menu_state)

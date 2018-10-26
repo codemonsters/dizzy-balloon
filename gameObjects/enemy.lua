@@ -10,7 +10,7 @@ end
 
 function enemy.update(dt)
     enemy.x = enemy.x + enemy.velocidad_x
-    if enemy.x > GAME_WIDTH - 12 then
+    if enemy.x > WORLD_WIDTH - 12 then
         enemy.velocidad_x = enemy.velocidad_x * -1
     end
     if enemy.x < 0 then
@@ -20,7 +20,7 @@ function enemy.update(dt)
 end
 
 function enemy.draw()
-    love.graphics.draw(enemy.image, enemy.x, enemy.y)
+    love.graphics.draw(enemy.image, enemy.x + (SCREEN_WIDTH-WORLD_WIDTH)/2, enemy.y + (SCREEN_HEIGHT- WORLD_HEIGHT)/2)
     love.graphics.print(enemy.x, 0, 0)
     love.graphics.print(enemy.y, 0, 20)
 end

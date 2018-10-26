@@ -21,7 +21,7 @@ function menu.keypressed(key, scancode, isrepeat)
 end
 
 function menu.keyreleased(key, scancode, isrepeat)
-    
+
 end
 
 return menu
