@@ -20,4 +20,8 @@ function menu.keypressed(key, scancode, isrepeat)
     end
 end
 
+function menu.keyreleased(key, scancode, isrepeat)
+    
+end
+
 return menu
