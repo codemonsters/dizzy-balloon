@@ -1,6 +1,5 @@
 local player = {}
 
-<<<<<<< HEAD
 player.x = 1
 player.y = WORLD_HEIGHT - 20
 player.left = false
