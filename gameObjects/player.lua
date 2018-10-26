@@ -1,7 +1,12 @@
 local player = {}
 
+<<<<<<< HEAD
 player.x = 1
 player.y = WORLD_HEIGHT - 20
+=======
+player.x = 0
+player.y = SCREEN_HEIGHT - 20
+>>>>>>> 83dad42700fd49480bf41d0aa5bedb39a99fffe5
 player.left = false
 player.right = false
 player.up = false
