@@ -17,7 +17,7 @@ Instalamos lo siguiente:
     * [Love2D Support](https://marketplace.visualstudio.com/items?itemName=pixelbyte-studios.pixelbyte-love2d):  pixelbyte-studios.pixelbyte-love2d
     * [vscode-lua](https://marketplace.visualstudio.com/items?itemName=actboy168.lua-debug) (trixnz.vscode-lua)
 * Configuración de Visual Studio Code:
-    * No siempre vendrá bien configurado el path de Love en la extensión Love2D Support (por defecto pixelbyte.love2d.path vale: C:\Program Files\Love\love.exe). Para cambiar esto vamos a File / Preferences / Settings / Extensions / Love2D config.
+    * No siempre vendrá bien configurado el path de Love en la extensión Love2D Support (por defecto pixelbyte.love2d.path vale: C:\Program Files\Love\love.exe). Para cambiar esto vamos a File / Preferences / Settings / Extensions / Love2D config. Usando un ordenador Mac tendremos que poner una ruta similar a: /Applications/love.app/Contents/MacOS/love
 
 ### Cómo trabajar con el repositorio
 
