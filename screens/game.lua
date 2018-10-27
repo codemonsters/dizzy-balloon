@@ -16,7 +16,6 @@ function game.draw()
     local shift_x = (SCREEN_WIDTH - WORLD_WIDTH) / 2 -- TODO: este cálculo es común a todo lo que queramos dibujar en el mundo. Deberíamos hacer estas dos constantes globales (o mejor todavía: hacer una metatabla común para todos los gameobjects que incluya dos funciones que devuelvan la x y la y de cada gameobject pero ya desplazados)
     local shift_y = (SCREEN_HEIGHT - WORLD_HEIGHT) / 2
     love.graphics.setColor(20, 00, 200)
-    -- FIXME: Este rectángulo no coincide con el mundo!
     love.graphics.rectangle("fill", shift_x, shift_y, WORLD_WIDTH, WORLD_HEIGHT)
     -- objetos del juego
     player.draw()
@@ -26,13 +25,13 @@ end
 function game.keypressed(key, scancode, isrepeat)
     if key == "q" then
         change_state(require("screens/menu"))
-    elseif key == "w" then
+    elseif key == "w" or key == "up" then
         player.up = true
-    elseif key == "a" then
+    elseif key == "a" or key == "left" then
         player.left = true
-    elseif key == "s" then
+    elseif key == "s" or key == "down" then
         player.down = true
-    elseif key == "d" then
+    elseif key == "d" or key == "right" then
         player.right = true
     end
 end
@@ -40,13 +39,13 @@ end
 function game.keyreleased(key, scancode, isrepeat)
     if key == "q" then
         change_state(require("screens/menu"))
-    elseif key == "w" then
+    elseif key == "w" or key == "up" then
         player.up = false
-    elseif key == "a" then
+    elseif key == "a" or key == "left" then
         player.left = false
-    elseif key == "s" then
+    elseif key == "s" or key == "down" then
         player.down = false
-    elseif key == "d" then
+    elseif key == "d" or key == "right" then
         player.right = false
     end
 end
