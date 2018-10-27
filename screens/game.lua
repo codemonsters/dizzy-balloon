@@ -1,4 +1,4 @@
-local game = { name = "Juego" }
+local game = {name = "Juego"}
 local player = require("gameobjects/player")
 local enemy = require("gameobjects/enemy")
 
@@ -13,15 +13,11 @@ end
 
 function game.draw()
     -- El fondo del mundo
-    local desplazamiento_x = (SCREEN_WIDTH - WORLD_WIDTH) / 2
-    local desplazamiento_y = (SCREEN_HEIGHT - WORLD_HEIGHT) / 2
+    local shift_x = (SCREEN_WIDTH - WORLD_WIDTH) / 2 -- TODO: este cálculo es común a todo lo que queramos dibujar en el mundo. Deberíamos hacer estas dos constantes globales (o mejor todavía: hacer una metatabla común para todos los gameobjects que incluya dos funciones que devuelvan la x y la y de cada gameobject pero ya desplazados)
+    local shift_y = (SCREEN_HEIGHT - WORLD_HEIGHT) / 2
     love.graphics.setColor(20, 00, 200)
     -- FIXME: Este rectángulo no coincide con el mundo!
-    love.graphics.rectangle("fill", 
-        desplazamiento_x,
-        desplazamiento_y,
-        desplazamiento_x + WORLD_WIDTH,
-        desplazamiento_y + WORLD_HEIGHT)
+    love.graphics.rectangle("fill", shift_x, shift_y, WORLD_WIDTH, WORLD_HEIGHT)
     -- objetos del juego
     player.draw()
     enemy.draw()
