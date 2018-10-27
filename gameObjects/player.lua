@@ -1,4 +1,4 @@
-local player = {}
+local player = { name = "Player" }
 
 player.x = 1
 player.y = WORLD_HEIGHT - 20
