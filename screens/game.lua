@@ -11,15 +11,28 @@ function game.update(dt)
     enemy.update(dt)
 end
 
+-- Traduce una coordenada X del mundo del juego a su correspondiente coordenada X en pantalla
+function translate_x(x_world)
+    local shift_x = (SCREEN_WIDTH - WORLD_WIDTH) / 2 -- IMPROVEME: Mejorar eficiencia eliminando parte del cálculo (o mejor todavía: hacer una metatabla común para todos los gameobjects que incluya dos funciones que devuelvan la x y la y de cada gameobject pero ya desplazados)
+    return x_world + shift_x
+end
+
+-- Traduce una coordenada Y del mundo del juego a su correspondiente coordenada Y en pantalla
+function translate_y(y_world)
+    local shift_y = (SCREEN_HEIGHT - WORLD_HEIGHT) / 2
+    return y_world + shift_y
+end
+
 function game.draw()
     -- El fondo del mundo
-    local shift_x = (SCREEN_WIDTH - WORLD_WIDTH) / 2 -- TODO: este cálculo es común a todo lo que queramos dibujar en el mundo. Deberíamos hacer estas dos constantes globales (o mejor todavía: hacer una metatabla común para todos los gameobjects que incluya dos funciones que devuelvan la x y la y de cada gameobject pero ya desplazados)
-    local shift_y = (SCREEN_HEIGHT - WORLD_HEIGHT) / 2
     love.graphics.setColor(20, 00, 200)
-    love.graphics.rectangle("fill", shift_x, shift_y, WORLD_WIDTH, WORLD_HEIGHT)
+    love.graphics.rectangle("fill", translate_x(0), translate_y(0), WORLD_WIDTH, WORLD_HEIGHT)
     -- objetos del juego
     player.draw()
     enemy.draw()
+    -- puntos de las dos esquinas del mundo
+    love.graphics.setColor(0, 0, 255)
+    love.graphics.points(translate_x(0), translate_y(0), translate_x(WORLD_WIDTH - 1), translate_y(WORLD_HEIGHT - 1))
 end
 
 function game.keypressed(key, scancode, isrepeat)
