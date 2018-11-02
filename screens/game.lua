@@ -1,14 +1,24 @@
 local game = {name = "Juego"}
 local player = require("gameobjects/player")
 local enemy = require("gameobjects/enemy")
+local seed = require("gameobjects/seed")
 
 function game.load()
     enemy.load()
+    sky = {}
+    for i = 1, 28 do
+        table.insert(sky, seed)
+    end
+    for i, semilla in ipairs(sky) do
+        semilla.x = i * 10
+    end
 end
 
 function game.update(dt)
     player.update(dt)
     enemy.update(dt)
+    seed.update(dt)
+    
 end
 
 -- Traduce una coordenada X del mundo del juego a su correspondiente coordenada X en pantalla
@@ -30,6 +40,9 @@ function game.draw()
     -- objetos del juego
     player.draw()
     enemy.draw()
+    for i, semilla in ipairs(sky) do
+        semilla.draw()
+    end
     -- puntos de las dos esquinas del mundo
     love.graphics.setColor(0, 0, 255)
     love.graphics.points(translate_x(0), translate_y(0), translate_x(WORLD_WIDTH - 1), translate_y(WORLD_HEIGHT - 1))
