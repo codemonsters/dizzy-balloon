@@ -1,18 +1,18 @@
 local push = require "libraries/push/push" -- https://github.com/Ulydev/push
 log = require "libraries/log/log" -- https://github.com/rxi/log.lua
 
-local menu_state = require ("screens/menu")
+local menu_screen = require ("screens/menu")
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 512, 288
 WORLD_WIDTH, WORLD_HEIGHT = 280, 280
 
 local window_width, window_height
-local state = nil
+local screen = nil
 
-function change_state(newState)
-    state = newState
-    log.info("cargando estado: " .. state.name)
-    state.load()
+function change_screen(new_screen)
+    screen = new_screen
+    log.info("cargando pantalla: " .. screen.name)
+    screen.load()
 end
 
 function love.load()
@@ -32,17 +32,17 @@ function love.load()
     push:setupScreen(SCREEN_WIDTH, SCREEN_HEIGHT, window_width, window_height, {fullscreen = love.window.getFullscreen()})
 
     math.randomseed(os.time())
-    change_state(menu_state)
+    change_screen(menu_screen)
     log.info("Juego cargado")
 end
 
 function love.update(dt)
-    state.update(dt)
+    screen.update(dt)
 end
 
 function love.draw()
     push:start()
-    state.draw()
+    screen.draw()
     push:finish()
 end
 
@@ -51,10 +51,10 @@ function love.keypressed(key, scancode, isrepeat)
         log.info("Finalizado")
         love.event.quit()
     else
-        state.keypressed(key, scancode, isrepeat)
+        screen.keypressed(key, scancode, isrepeat)
     end
 end
 
 function love.keyreleased(key, scancode, isrepeat)
-    state.keyreleased(key, scancode, isrepeat)
+    screen.keyreleased(key, scancode, isrepeat)
 end

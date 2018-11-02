@@ -24,7 +24,7 @@ end
 
 function game.keypressed(key, scancode, isrepeat)
     if key == "q" then
-        change_state(require("screens/menu"))
+        change_screen(require("screens/menu"))
     elseif key == "w" or key == "up" then
         player.up = true
     elseif key == "a" or key == "left" then
@@ -38,7 +38,7 @@ end
 
 function game.keyreleased(key, scancode, isrepeat)
     if key == "q" then
-        change_state(require("screens/menu"))
+        change_screen(require("screens/menu"))
     elseif key == "w" or key == "up" then
         player.up = false
     elseif key == "a" or key == "left" then
