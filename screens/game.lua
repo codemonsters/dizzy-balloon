@@ -5,6 +5,7 @@ local seed = require("gameobjects/seed")
 
 function game.load()
     enemy.load()
+    player.load()
     sky = {}
     for i = 1, 28 do
         table.insert(sky, seed)
@@ -18,7 +19,6 @@ function game.update(dt)
     player.update(dt)
     enemy.update(dt)
     seed.update(dt)
-    
 end
 
 -- Traduce una coordenada X del mundo del juego a su correspondiente coordenada X en pantalla
