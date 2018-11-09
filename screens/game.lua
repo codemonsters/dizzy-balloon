@@ -8,17 +8,17 @@ function game.load()
     player.load()
     sky = {}
     for i = 1, 28 do
-        table.insert(sky, seed)
-    end
-    for i, semilla in ipairs(sky) do
-        semilla.x = i * 10
+        local semilla = seed.create(i * 10, 0)
+        table.insert(sky, semilla)
     end
 end
 
 function game.update(dt)
     player.update(dt)
     enemy.update(dt)
-    seed.update(dt)
+    for i, semilla in ipairs(sky) do
+        semilla.update()
+    end
 end
 
 -- Traduce una coordenada X del mundo del juego a su correspondiente coordenada X en pantalla
