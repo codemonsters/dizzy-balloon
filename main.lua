@@ -1,8 +1,6 @@
 local push = require "libraries/push/push" -- https://github.com/Ulydev/push
 log = require "libraries/log/log" -- https://github.com/rxi/log.lua
 
-local menu_screen = require("screens/menu")
-
 SCREEN_WIDTH, SCREEN_HEIGHT = 512, 288
 WORLD_WIDTH, WORLD_HEIGHT = 280, 280
 
@@ -37,7 +35,7 @@ function love.load()
     )
 
     math.randomseed(os.time())
-    change_screen(menu_screen)
+    change_screen(require("screens/menu"))
     log.info("Juego cargado")
 end
 
