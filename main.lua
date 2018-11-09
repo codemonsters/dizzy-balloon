@@ -1,12 +1,11 @@
 local push = require "libraries/push/push" -- https://github.com/Ulydev/push
 log = require "libraries/log/log" -- https://github.com/rxi/log.lua
 
-local menu_screen = require ("screens/menu")
+local menu_screen = require("screens/menu")
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 512, 288
 WORLD_WIDTH, WORLD_HEIGHT = 280, 280
 
-local window_width, window_height
 local screen = nil
 
 function change_screen(new_screen)
@@ -20,8 +19,8 @@ function love.load()
     log.info("Iniciado programa")
 
     -- scale the window of the game (without changing game width and heigth)
-    window_width, window_height = love.window.getDesktopDimensions()
-    if not love.window.getFullscreen == true then
+    local window_width, window_height = love.window.getDesktopDimensions()
+    if love.window.getFullscreen() == true then
         -- scale the window to match the screen resolution
         log.debug("Escalando en pantalla completa")
     else
@@ -29,7 +28,13 @@ function love.load()
         log.debug("Escalando dentro de una ventana")
         window_width, window_height = window_width * .7, window_height * .7
     end
-    push:setupScreen(SCREEN_WIDTH, SCREEN_HEIGHT, window_width, window_height, {fullscreen = love.window.getFullscreen()})
+    push:setupScreen(
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT,
+        window_width,
+        window_height,
+        {fullscreen = love.window.getFullscreen()}
+    )
 
     math.randomseed(os.time())
     change_screen(menu_screen)
