@@ -44,9 +44,9 @@ function love.update(dt)
 end
 
 function love.draw()
-    push:start()
+    --push:start()
     screen.draw()
-    push:finish()
+    --push:finish()
 end
 
 function love.keypressed(key, scancode, isrepeat)

@@ -25,23 +25,22 @@ end
 
 function game.draw()
     love.graphics.setCanvas(worldCanvas) -- a partir de ahora dibujamos en el canvas
-        love.graphics.clear()
         love.graphics.setBlendMode("alpha")
-    -- El fondo del mundo
-    love.graphics.setColor(20, 00, 200)
-    love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
-    -- objetos del juego
-    player.draw()
-    enemy.draw()
-    for i, semilla in ipairs(sky) do
-        semilla.draw()
-    end
-    -- puntos de las dos esquinas del mundo
-    love.graphics.setColor(0, 0, 255)
-    love.graphics.points(0, 0, WORLD_WIDTH - 1, WORLD_HEIGHT - 1)
-    love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
+        -- El fondo del mundo
+        love.graphics.setColor(20, 00, 200)
+        love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
+        -- objetos del juego
+        player.draw()
+        enemy.draw()
+        for i, semilla in ipairs(sky) do
+            semilla.draw()
+        end
+        -- puntos de las dos esquinas del mundo
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.points(0, 0, WORLD_WIDTH - 1, WORLD_HEIGHT - 1)
+        love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
     love.graphics.setBlendMode("alpha", "premultiplied")
-    love.graphics.draw(worldCanvas, (SCREEN_WIDTH - WORLD_WIDTH) / 2, (SCREEN_HEIGHT - WORLD_HEIGHT) / 2)
+    love.graphics.draw(worldCanvas, (SCREEN_WIDTH - WORLD_WIDTH) / 2, (SCREEN_HEIGHT - WORLD_HEIGHT) / 2,0,2,2)
 end
 
 function game.keypressed(key, scancode, isrepeat)
