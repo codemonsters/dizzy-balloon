@@ -10,7 +10,7 @@ end
 function menu.draw()
     love.graphics.clear(255, 255, 255)
     love.graphics.setColor(255, 0, 0, 255)
-    love.graphics.print("Hola mundo", 0, 0)
+    love.graphics.print("Dizzy Balloon", 0, 0)
 end
 
 function menu.keypressed(key, scancode, isrepeat)

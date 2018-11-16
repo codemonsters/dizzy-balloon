@@ -54,6 +54,8 @@ function game.keypressed(key, scancode, isrepeat)
         player.down = true
     elseif key == "d" or key == "right" then
         player.right = true
+    elseif key == "space" then
+        player.jump()
     end
 end
 
