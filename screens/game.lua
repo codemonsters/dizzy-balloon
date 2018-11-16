@@ -3,9 +3,23 @@ local player = require("gameobjects/player")
 local enemy = require("gameobjects/enemy")
 local seed = require("gameobjects/seed")
 local worldCanvas = nil
+local bordes = 4
+
+function pillarEscala()
+
+    if (window_height >= window_width) then
+        return (window_width - bordes*2) / WORLD_WIDTH
+    else
+        return (window_height - bordes*2) / WORLD_HEIGHT
+    end
+
+end
+
+local scaleCanvas = pillarEscala()
 
 function game.load()
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
+    
     enemy.load()
     player.load()
     sky = {}
@@ -25,6 +39,7 @@ end
 
 function game.draw()
     love.graphics.setCanvas(worldCanvas) -- a partir de ahora dibujamos en el canvas
+    do
         love.graphics.setBlendMode("alpha")
         -- El fondo del mundo
         love.graphics.setColor(20, 00, 200)
@@ -38,9 +53,10 @@ function game.draw()
         -- puntos de las dos esquinas del mundo
         love.graphics.setColor(255, 255, 255)
         love.graphics.points(0, 0, WORLD_WIDTH - 1, WORLD_HEIGHT - 1)
-        love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
+    end
+    love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
     love.graphics.setBlendMode("alpha", "premultiplied")
-    love.graphics.draw(worldCanvas, (SCREEN_WIDTH - WORLD_WIDTH) / 2, (SCREEN_HEIGHT - WORLD_HEIGHT) / 2,0,2,2)
+    love.graphics.draw(worldCanvas, (window_width / 2) - (WORLD_WIDTH * scaleCanvas / 2), (window_height / 2) - (WORLD_HEIGHT * scaleCanvas / 2),0, scaleCanvas, scaleCanvas)
 end
 
 function game.keypressed(key, scancode, isrepeat)
