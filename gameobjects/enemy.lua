@@ -26,7 +26,7 @@ function enemy.update(dt)
 end
 
 function enemy.draw()
-    love.graphics.draw(enemy.image, enemy.x + (SCREEN_WIDTH-WORLD_WIDTH)/2, enemy.y + (SCREEN_HEIGHT- WORLD_HEIGHT)/2)
+    love.graphics.draw(enemy.image, enemy.x, enemy.y)
     love.graphics.print(enemy.x, 0, 0)
     love.graphics.print(enemy.y, 50, 0)
 end

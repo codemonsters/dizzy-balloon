@@ -46,8 +46,8 @@ function player.draw()
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.draw(
         player.state[1], -- TODO: Cambiar la imagen del sprite según su estado
-        player.x + (SCREEN_WIDTH - WORLD_WIDTH) / 2,
-        player.y + (SCREEN_HEIGHT - WORLD_HEIGHT) / 2
+        player.x,
+        player.y
     )
 end
 
