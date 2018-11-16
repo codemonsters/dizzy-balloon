@@ -60,8 +60,8 @@ function player.update(dt)
     --]]
     if player.jumping then
         player.y = player.y - player.velocidad_y
-        player.velocidad_y = player.velocidad_y - 0.25 * dt
-        if player.y > WORLD_HEIGHT + 20 then
+        player.velocidad_y = player.velocidad_y - 0.75 * dt
+        if player.y > WORLD_HEIGHT - 20 then
             player.jumping = false
         end
     end
