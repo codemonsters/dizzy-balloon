@@ -17,7 +17,7 @@ function love.load()
     log.info("Iniciado programa")
 
     -- scale the window of the game (without changing game width and heigth)
-    local window_width, window_height = love.window.getDesktopDimensions()
+    window_width, window_height = love.window.getDesktopDimensions()
     if love.window.getFullscreen() == true then
         -- scale the window to match the screen resolution
         log.debug("Escalando en pantalla completa")
@@ -44,9 +44,9 @@ function love.update(dt)
 end
 
 function love.draw()
-    --push:start()
+    push:start()
     screen.draw()
-    --push:finish()
+    push:finish()
 end
 
 function love.keypressed(key, scancode, isrepeat)
