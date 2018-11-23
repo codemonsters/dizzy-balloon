@@ -17,8 +17,9 @@ local states = {
 }
 
 function player.load()
+    player.size = 20
     player.x = 1
-    player.y = WORLD_HEIGHT - 20
+    player.y = WORLD_HEIGHT - player.size
     player.velocidad_y = 0
     player.left = false
     player.right = false
@@ -43,10 +44,10 @@ function player.update(dt)
     if player.left and player.x > 0 then
         player.x = player.x - 1
     end
-    if player.down and player.y < WORLD_HEIGHT then
+    if player.down and player.y < WORLD_HEIGHT - player.size then
         player.y = player.y + 1
     end
-    if player.right and player.x < WORLD_WIDTH then
+    if player.right and player.x < WORLD_WIDTH - player.size then
         player.x = player.x + 1
     end
     --[[
@@ -61,7 +62,7 @@ function player.update(dt)
     if player.jumping then
         player.y = player.y - player.velocidad_y
         player.velocidad_y = player.velocidad_y - 0.75 * dt
-        if player.y > WORLD_HEIGHT - 20 then
+        if player.y > WORLD_HEIGHT - player.size then
             player.jumping = false
         end
     end

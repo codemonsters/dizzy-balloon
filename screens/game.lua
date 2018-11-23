@@ -18,10 +18,14 @@ end
 local scaleCanvas = pillarEscala()
 
 function game.load()
+    player.load()
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
     
-    enemy.load()
-    player.load()
+    enemigos = {}
+    for i = 1, 10 do
+        table.insert(enemigos, enemy.load(i + (10*i), 0))
+    end
+    
     sky = {}
     for i = 1, 28 do
         local semilla = seed.create(i * 10, 0)
@@ -31,7 +35,11 @@ end
 
 function game.update(dt)
     player.update(dt)
-    enemy.update(dt)
+
+    for i, enemigo in ipairs(enemigos) do
+        enemigo.update()
+    end
+
     for i, semilla in ipairs(sky) do
         semilla.update()
     end
@@ -46,7 +54,11 @@ function game.draw()
         love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
         -- objetos del juego
         player.draw()
-        enemy.draw()
+
+        for i, enemigo in ipairs(enemigos) do
+            enemigo.draw()
+        end
+
         for i, semilla in ipairs(sky) do
             semilla.draw()
         end
