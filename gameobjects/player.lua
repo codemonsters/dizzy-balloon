@@ -32,19 +32,13 @@ end
 function player.jump()
     if not player.jumping then
         player.jumping = true
-        player.velocidad_y = 1
+        player.velocidad_y = 2
     end
 end
 
 function player.update(dt)
-    if player.up and player.y > 0 then
-        player.y = player.y - 1
-    end
     if player.left and player.x > 0 then
         player.x = player.x - 1
-    end
-    if player.down and player.y < WORLD_HEIGHT then
-        player.y = player.y + 1
     end
     if player.right and player.x < WORLD_WIDTH then
         player.x = player.x + 1
@@ -60,7 +54,7 @@ function player.update(dt)
     --]]
     if player.jumping then
         player.y = player.y - player.velocidad_y
-        player.velocidad_y = player.velocidad_y - 0.75 * dt
+        player.velocidad_y = player.velocidad_y - 1 * dt
         if player.y > WORLD_HEIGHT - 20 then
             player.jumping = false
         end
