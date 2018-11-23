@@ -1,34 +1,37 @@
-local enemy = { name = "Enemigo" }
+local enemy = {}
 
-function enemy.load()
-    enemy.x = 10
-    enemy.y = 10
-    enemy.velocidad_x = 2
-    enemy.velocidad_y = 2
-    enemy.image = love.graphics.newImage("assets/enemy.png")
-end
+function enemy.load(x, y)
+    local enemigo = { name = "Enemigo" }
+    enemigo.x = x
+    enemigo.y = y
+    enemigo.velocidad_x = 2
+    enemigo.velocidad_y = 2
+    enemigo.image = love.graphics.newImage("assets/enemy.png")
 
-function enemy.update(dt)
-    enemy.x = enemy.x + enemy.velocidad_x
-    if enemy.x > WORLD_WIDTH - 12 then
-        enemy.velocidad_x = enemy.velocidad_x * -1
+    function enemigo.update(dt)
+        enemigo.x = enemigo.x + enemigo.velocidad_x
+        if enemigo.x > WORLD_WIDTH - 12 then
+            enemigo.velocidad_x = enemigo.velocidad_x * -1
+        end
+        if enemigo.x < 0 then
+            enemigo.velocidad_x = enemigo.velocidad_x * -1
+        end
+        enemigo.y = enemigo.y + enemigo.velocidad_y
+        if enemigo.y > WORLD_HEIGHT - 12 then
+            enemigo.velocidad_y = enemigo.velocidad_y * -1
+        end
+        if enemigo.y < 0 then
+            enemigo.velocidad_y = enemigo.velocidad_y * -1
+        end
     end
-    if enemy.x < 0 then
-        enemy.velocidad_x = enemy.velocidad_x * -1
-    end
-    enemy.y = enemy.y + enemy.velocidad_y
-    if enemy.y > WORLD_HEIGHT - 12 then
-        enemy.velocidad_y = enemy.velocidad_y * -1
-    end
-    if enemy.y < 0 then
-        enemy.velocidad_y = enemy.velocidad_y * -1
-    end
-end
 
-function enemy.draw()
-    love.graphics.draw(enemy.image, enemy.x, enemy.y)
-    love.graphics.print(enemy.x, 0, 0)
-    love.graphics.print(enemy.y, 50, 0)
+    function enemigo.draw()
+        love.graphics.draw(enemigo.image, enemigo.x, enemigo.y)
+        love.graphics.print(enemigo.x, 0, 0)
+        love.graphics.print(enemigo.y, 50, 0)
+    end
+
+    return enemigo
 end
 
 return enemy
