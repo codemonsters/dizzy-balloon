@@ -1,8 +1,8 @@
 local push = require "libraries/push/push" -- https://github.com/Ulydev/push
 log = require "libraries/log/log" -- https://github.com/rxi/log.lua
 
-SCREEN_WIDTH, SCREEN_HEIGHT = 512, 288
-WORLD_WIDTH, WORLD_HEIGHT = 280, 280
+SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720 -- 512, 288
+WORLD_WIDTH, WORLD_HEIGHT = 700, 700 -- 280, 280
 
 local screen = nil
 

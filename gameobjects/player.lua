@@ -17,7 +17,7 @@ local states = {
 }
 
 function player.load()
-    player.size = 20
+    player.size = 40
     player.x = 1
     player.y = WORLD_HEIGHT - player.size
     player.velocidad_y = 0
@@ -59,7 +59,10 @@ function player.draw()
     love.graphics.draw(
         player.state[1], -- TODO: Cambiar la imagen del sprite según su estado
         player.x,
-        player.y
+        player.y,
+        0,
+        2,
+        2
     )
 end
 
