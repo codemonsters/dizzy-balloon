@@ -17,9 +17,10 @@ local states = {
 }
 
 function player.load()
-    player.size = 40
+    player.width = 40
+    player.height = player.width
     player.x = 1
-    player.y = WORLD_HEIGHT - player.size
+    player.y = WORLD_HEIGHT - player.height
     player.velocidad_y = 0
     player.left = false
     player.right = false
@@ -27,7 +28,6 @@ function player.load()
     player.down = false
     player.jumping = false
     player.state = states.standing
-    print("--> " .. #player.state)
 end
 
 function player.jump()
@@ -41,13 +41,13 @@ function player.update(dt)
     if player.left and player.x > 0 then
         player.x = player.x - 1
     end
-    if player.right and player.x < WORLD_WIDTH - player.size then
+    if player.right and player.x < WORLD_WIDTH - player.width then
         player.x = player.x + 1
     end
     if player.jumping then
         player.y = player.y - player.velocidad_y
         player.velocidad_y = player.velocidad_y - 1 * dt
-        if player.y > WORLD_HEIGHT - player.size then
+        if player.y > WORLD_HEIGHT - player.height then
             player.jumping = false
         end
     end
@@ -61,8 +61,8 @@ function player.draw()
         player.x,
         player.y,
         0,
-        2,
-        2
+        player.width / player.state[1]:getWidth(),
+        player.height/ player.state[1]:getHeight()
     )
 end
 
