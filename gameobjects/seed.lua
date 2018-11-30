@@ -1,20 +1,30 @@
-local seed = {}
+local SeedClass = {
+    x = 0,
+    y = 0,
+    image = love.graphics.newImage("assets/seed.png"),
+    name = "Semilla"
+}
 
-function seed.create(x, y)
-    local semilla = { name = "Semilla" }
-    
-    semilla.x = x
-    semilla.y = y
-    semilla.image = love.graphics.newImage("assets/seed.png")
-    
-    function semilla.update(dt)
-    end
-    
-    function semilla.draw()
-        love.graphics.draw(semilla.image, semilla.x, semilla.y)
-    end
+SeedClass.__index = SeedClass
+
+function SeedClass:new()
+    local semilla = {}
+
+    setmetatable(semilla, SeedClass) 
     
     return semilla
 end
 
-return seed
+function SeedClass:load(x, y)
+    self.x = x
+    self.y = y
+end
+
+function SeedClass:update(dt)
+end
+
+function SeedClass:draw()
+    love.graphics.draw(self.image, self.x, self.y)
+end
+
+return SeedClass
