@@ -13,9 +13,9 @@ function SkyClass.new()
 end
 
 function SkyClass:load()
-    for i = 1, 28 do
+    for i = 0, WORLD_WIDTH / SeedClass.width do
         local semilla = SeedClass.new()
-        semilla:load(i * 10, 0)
+        semilla:load(i * semilla.width, 0)
         table.insert(self.semillas, semilla)
     end
 end

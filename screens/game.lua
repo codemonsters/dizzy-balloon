@@ -1,7 +1,7 @@
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
 local jugador = PlayerClass.new()
-local enemy = require("gameobjects/enemy")
+local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
 local sky = SkyClass.new()
 local worldCanvas = nil
@@ -25,7 +25,9 @@ function game.load()
     
     enemigos = {}
     for i = 1, 10 do
-        table.insert(enemigos, enemy.load(i + (10*i), 0))
+        local enemy = EnemyClass.new()
+        enemy:load(i + (10*i), 0, enemigos)
+        table.insert(enemigos, enemy)
     end
     
     sky:load()
@@ -36,7 +38,7 @@ function game.update(dt)
     jugador:update(dt)
 
     for i, enemigo in ipairs(enemigos) do
-        enemigo.update()
+        enemigo:update()
     end
     sky:update()
 end
@@ -52,7 +54,7 @@ function game.draw()
         jugador:draw()
 
         for i, enemigo in ipairs(enemigos) do
-            enemigo.draw()
+            enemigo:draw()
         end
 
         sky:draw()
