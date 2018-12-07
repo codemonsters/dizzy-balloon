@@ -1,5 +1,6 @@
 local game = {name = "Juego"}
-local player = require("gameobjects/player")
+local PlayerClass = require("gameobjects/player")
+local jugador = PlayerClass.new()
 local enemy = require("gameobjects/enemy")
 local seed = require("gameobjects/seed")
 local worldCanvas = nil
@@ -18,7 +19,7 @@ end
 local scaleCanvas = pillarEscala()
 
 function game.load()
-    player.load()
+    jugador:load()
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
     
     enemigos = {}
@@ -34,7 +35,7 @@ function game.load()
 end
 
 function game.update(dt)
-    player.update(dt)
+    jugador:update(dt)
 
     for i, enemigo in ipairs(enemigos) do
         enemigo.update()
@@ -53,7 +54,7 @@ function game.draw()
         love.graphics.setColor(20, 00, 200)
         love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
         -- objetos del juego
-        player.draw()
+        jugador:draw()
 
         for i, enemigo in ipairs(enemigos) do
             enemigo.draw()
@@ -75,15 +76,15 @@ function game.keypressed(key, scancode, isrepeat)
     if key == "q" then
         change_screen(require("screens/menu"))
     elseif key == "w" or key == "up" then
-        player.up = true
+        jugador.up = true
     elseif key == "a" or key == "left" then
-        player.left = true
+        jugador.left = true
     elseif key == "s" or key == "down" then
-        player.down = true
+        jugador.down = true
     elseif key == "d" or key == "right" then
-        player.right = true
+        jugador.right = true
     elseif key == "space" then
-        player.jump()
+        jugador:jump()
     end
 end
 
@@ -91,13 +92,13 @@ function game.keyreleased(key, scancode, isrepeat)
     if key == "q" then
         change_screen(require("screens/menu"))
     elseif key == "w" or key == "up" then
-        player.up = false
+        jugador.up = false
     elseif key == "a" or key == "left" then
-        player.left = false
+        jugador.left = false
     elseif key == "s" or key == "down" then
-        player.down = false
+        jugador.down = false
     elseif key == "d" or key == "right" then
-        player.right = false
+        jugador.right = false
     end
 end
 
