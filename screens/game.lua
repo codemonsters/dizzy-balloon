@@ -2,7 +2,8 @@ local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
 local jugador = PlayerClass.new()
 local enemy = require("gameobjects/enemy")
-local seed = require("gameobjects/seed")
+local SkyClass = require("gameobjects/sky")
+local sky = SkyClass.new()
 local worldCanvas = nil
 local bordes = 4
 
@@ -27,11 +28,8 @@ function game.load()
         table.insert(enemigos, enemy.load(i + (10*i), 0))
     end
     
-    sky = {}
-    for i = 1, 28 do
-        local semilla = seed.create(i * 10, 0)
-        table.insert(sky, semilla)
-    end
+    sky:load()
+    
 end
 
 function game.update(dt)
@@ -40,10 +38,7 @@ function game.update(dt)
     for i, enemigo in ipairs(enemigos) do
         enemigo.update()
     end
-
-    for i, semilla in ipairs(sky) do
-        semilla.update()
-    end
+    sky:update()
 end
 
 function game.draw()
@@ -60,9 +55,8 @@ function game.draw()
             enemigo.draw()
         end
 
-        for i, semilla in ipairs(sky) do
-            semilla.draw()
-        end
+        sky:draw()
+
         -- puntos de las dos esquinas del mundo
         love.graphics.setColor(255, 255, 255)
         love.graphics.points(0, 0, WORLD_WIDTH - 1, WORLD_HEIGHT - 1)
