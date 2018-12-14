@@ -23,7 +23,7 @@ local scaleCanvas = pillarEscala()
 function game.load()
     local world = bump.newWorld(50)
 
-    jugador:load()
+    jugador:load(world)
 
     world:add(jugador,   jugador.x, jugador.y,    jugador.width, jugador.height)
 
