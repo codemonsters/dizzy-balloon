@@ -52,10 +52,14 @@ end
 
 function Player:update(dt)
     if self.left and self.x > 0 then
-        self.x = self.x - 3
+        local actualX, actualY, cols, len = world:move(self, self.x - 3,self.y)
+        self.x = actualX
+        self.y = actualY
     end
     if self.right and self.x < WORLD_WIDTH - self.width then
-        self.x = self.x + 3
+        local actualX, actualY, cols, len = world:move(self, self.x + 3,self.y)
+        self.x = actualX
+        self.y = actualY
     end
     if self.jumping then
         self.y = self.y - self.velocidad_y

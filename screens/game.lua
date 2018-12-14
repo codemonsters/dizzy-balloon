@@ -1,3 +1,4 @@
+local bump = require 'libraries/bump/bump'
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
 local jugador = PlayerClass.new()
@@ -20,7 +21,12 @@ end
 local scaleCanvas = pillarEscala()
 
 function game.load()
+    local world = bump.newWorld(50)
+
     jugador:load()
+
+    world:add(jugador,   jugador.x, jugador.y,    jugador.width, jugador.height)
+
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
     
     enemigos = {}
