@@ -9,17 +9,18 @@ local SeedClass = {
 
 SeedClass.__index = SeedClass
 
-function SeedClass:new()
+function SeedClass:new(name)
     local semilla = {}
-
+    semilla.name = name
     setmetatable(semilla, SeedClass) 
-    
     return semilla
 end
 
-function SeedClass:load(x, y)
+function SeedClass:load(world, x, y)
+    self.world = world
     self.x = x
     self.y = y
+    self.world:add(self.name, self.x, self.y, self.width, self.height)
 end
 
 function SeedClass:update(dt)
