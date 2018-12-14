@@ -20,9 +20,9 @@ function SkyClass:load()
     end
 end
 
-function SkyClass:update()
+function SkyClass:update(dt)
     for i, semilla in ipairs(self.semillas) do
-        semilla:update()
+        semilla:update(dt)
     end
 end
 
