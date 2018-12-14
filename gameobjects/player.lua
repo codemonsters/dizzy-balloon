@@ -53,18 +53,13 @@ end
 
 function Player:update(dt)
     if self.left and self.x > 0 then
-        local actualX, actualY, cols, len = self.world:move(self, self.x - 3,self.y)
-        self.x = actualX
-        self.y = actualY
+        self.x, self.y, cols, len = self.world:move(self, self.x - 3,self.y)
     end
     if self.right and self.x < WORLD_WIDTH - self.width then
-        local actualX, actualY, cols, len = self.world:move(self, self.x + 3,self.y)
-        self.x = actualX
-        self.y = actualY
+        self.x, self.y, cols, len = self.world:move(self, self.x + 3,self.y)
     end
     if self.jumping then
-        
-        self.y = self.y - self.velocidad_y
+        self.x, self.y, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y)
         self.velocidad_y = self.velocidad_y - 9.8 * dt
         if self.y > WORLD_HEIGHT - self.height then
             self.jumping = false

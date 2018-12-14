@@ -25,7 +25,7 @@ function game.load()
 
     jugador:load(world)
 
-    world:add(jugador,   jugador.x, jugador.y,    jugador.width, jugador.height)
+    world:add(jugador, jugador.x, jugador.y, jugador.width, jugador.height)
 
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
     
@@ -36,7 +36,7 @@ function game.load()
         table.insert(enemigos, enemy)
     end
     
-    sky:load()
+    sky:load(world)
     
 end
 
