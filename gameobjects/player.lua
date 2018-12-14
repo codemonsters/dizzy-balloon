@@ -49,6 +49,8 @@ function Player:load(world)
     self.left, self.right, self.up, self.down = false
     self.jumping = falses
     self.state = Player.states.standing
+    
+    self.world:add(self, self.x, self.y, self.width, self.height)
 end
 
 function Player:update(dt)

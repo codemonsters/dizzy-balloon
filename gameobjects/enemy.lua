@@ -17,30 +17,30 @@ function Enemy:new()
 end
 
 
-function Enemy:load(x, y, enemigos)
+function Enemy:load(x, y, world)
+    self.world = world
     self.x = x
     self.y = y
-    self.enemigos = enemigos
+
+    self.world:add(self, self.x, self.y, self.width, self.height)
 end
 
 function Enemy:update(dt)
-    self.x = self.x + self.velocidad_x
+    self.x, self.y, cols, len = self.world:move(self, self.x + self.velocidad_x,self.y)
+
     if self.x > WORLD_WIDTH - self.width then
         self.velocidad_x = self.velocidad_x * -1
     end
     if self.x < 0 then
         self.velocidad_x = self.velocidad_x * -1
     end
-    self.y = self.y + self.velocidad_y
+    self.x, self.y, cols, len = self.world:move(self, self.x,self.y + self.velocidad_y)
     if self.y > WORLD_HEIGHT - self.height then
         self.velocidad_y = self.velocidad_y * -1
     end
     if self.y < 0 then
         self.velocidad_y = self.velocidad_y * -1
     end
-    --for i, enemigo in ipairs(self.enemigos) do
-    --  if enemigo.y > 
-    --end
 end
 
 function Enemy:draw()
