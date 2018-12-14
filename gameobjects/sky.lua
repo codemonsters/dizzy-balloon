@@ -7,15 +7,18 @@ local SkyClass = {
 SkyClass.__index = SkyClass
 
 function SkyClass.new()
-    local sky = {}
+    local sky = {
+    }
     setmetatable(sky, SkyClass)
     return sky
 end
 
-function SkyClass:load()
+function SkyClass:load(world)
+    self.world = world
     for i = 0, WORLD_WIDTH / SeedClass.width do
-        local semilla = SeedClass.new()
-        semilla:load(i * semilla.width, 0)
+        local semilla = SeedClass.new("seed" .. (i + 1))
+        log.debug(semilla.name)
+        semilla:load(world, i * semilla.width, 0)
         table.insert(self.semillas, semilla)
     end
 end
