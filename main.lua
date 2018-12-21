@@ -34,7 +34,12 @@ function love.load()
         {fullscreen = love.window.getFullscreen()}
     )
 
-    math.randomseed(os.time())
+    math.randomseed(os.time())  -- NOTE: Quizá redundante, parece que Love ya inicializa la semilla random automáticamente 
+
+    -- atlas: la textura que contiene todas las imágenes
+    atlas = love.graphics.newImage("assets/atlas/arcade_platformerV2.png") -- Créditos: Grafixkid (https://opengameart.org/content/arcade-platformer-assets)
+
+
     change_screen(require("screens/menu"))
     log.info("Juego cargado")
 end

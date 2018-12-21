@@ -4,17 +4,37 @@ local Player = {
     height = 40,
     states = {
         standing = {
-            love.graphics.newImage("assets/player/p.png")
+            quads = {
+                {
+                    quad = love.graphics.newQuad(8, 14, 18, 18, atlas:getDimensions()),
+                    width = 18,
+                    height = 18
+                }
+            }
         },
-        right = {
-            love.graphics.newImage("assets/player/r1.png"),
-            love.graphics.newImage("assets/player/r2.png"),
-            love.graphics.newImage("assets/player/r3.png")
-        },
-        left = {
-            love.graphics.newImage("assets/player/l1.png"),
-            love.graphics.newImage("assets/player/l2.png"),
-            love.graphics.newImage("assets/player/l3.png")
+        walking = {
+            quads = {
+                {
+                    quad = love.graphics.newQuad(40, 13, 17, 18, atlas:getDimensions()),
+                    width = 18,
+                    height = 18
+                },
+                {
+                    quad = love.graphics.newQuad(72, 14, 18, 18, atlas:getDimensions()),
+                    width = 18,
+                    height = 18
+                },
+                {
+                    quad = love.graphics.newQuad(6, 45, 20, 18, atlas:getDimensions()),
+                    width = 18,
+                    height = 18
+                },
+                {
+                    quad = love.graphics.newQuad(72, 14, 18, 18, atlas:getDimensions()),
+                    width = 18,
+                    height = 18
+                }
+            }
         }
     }
 }
@@ -67,18 +87,40 @@ function Player:update(dt)
             self.jumping = false
         end
     end
+
+    -- actualización del estado del jugador
+    if self.jumping then
+    else
+        if self.left or self.right then
+            self.state = self.states.walking
+        else
+            self.state = self.states.standing
+        end
+    end
 end
 
 function Player:draw()
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.draw(
-        self.state[1], -- TODO: Cambiar la imagen del sprite según su estado
+        atlas,
+        self.state.quads[1].quad,
         self.x,
         self.y,
         0,
-        self.width / self.state[1]:getWidth(),
+        self.width / self.state.quads[1].width,
+        self.height/ self.state.quads[1].height
+    ) -- TODO: Cambiar la imagen del sprite según su estado
+    --[[
+    love.graphics.draw(
+        self.state.quads[1], -- TODO: Cambiar la imagen del sprite según su estado
+        self.x,
+        self.y,
+        0
+    
+        self.width / self.state.quads[1]:getWidth(),
         self.height/ self.state[1]:getHeight()
     )
+    --]]
 end
 
 function Player:jump()
