@@ -20,7 +20,8 @@ function SeedClass:load(world, x, y)
     self.world = world
     self.x = x
     self.y = y
-    self.world:add(self.name, self.x, self.y, self.width, self.height)
+    
+    self.world:add(self, self.x, self.y, self.width, self.height)
 end
 
 function SeedClass:update(dt)
