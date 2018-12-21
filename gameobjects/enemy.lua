@@ -28,17 +28,28 @@ end
 function Enemy:update(dt)
     self.x, self.y, cols, len = self.world:move(self, self.x + self.velocidad_x,self.y)
 
-    if self.x > WORLD_WIDTH - self.width then
+    if len > 0 then
         self.velocidad_x = self.velocidad_x * -1
     end
-    if self.x < 0 then
+
+    if self.x > WORLD_WIDTH - self.width and self.velocidad_x > 0 then
+        self.velocidad_x = self.velocidad_x * -1
+    end
+    if self.x < 0 and self.velocidad_x < 0 then
         self.velocidad_x = self.velocidad_x * -1
     end
     self.x, self.y, cols, len = self.world:move(self, self.x,self.y + self.velocidad_y)
-    if self.y > WORLD_HEIGHT - self.height then
+
+    if len > 0 then
+        if (cols[1].other.name ~= "Player") then
+            self.velocidad_y = self.velocidad_y * -1
+        end
+    end
+
+    if self.y > WORLD_HEIGHT - self.height and self.velocidad_y > 0 then
         self.velocidad_y = self.velocidad_y * -1
     end
-    if self.y < 0 then
+    if self.y < 0 and self.velocidad_x < 0 then
         self.velocidad_y = self.velocidad_y * -1
     end
 end

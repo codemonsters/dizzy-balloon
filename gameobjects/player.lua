@@ -46,7 +46,7 @@ function Player:load()
     self.height = Player.width
     self.x = 1
     self.y = WORLD_HEIGHT - Player.height
-    self.velocidad_y = 0
+    self.velocidad_y = -0.1
     self.left = false
     self.right = false
     self.up = false
@@ -65,7 +65,7 @@ function Player:load(world)
     self.world = world
     self.x = 1
     self.y = WORLD_HEIGHT - self.height
-    self.velocidad_y = 0
+    self.velocidad_y = -0.1 --la velocidad y debe ser negativa para que haya diferencia en el movimiento de eje y para saber cuando aplicar aceleración
     self.left, self.right, self.up, self.down = false
     self.jumping = falses
     self.state = Player.states.standing
@@ -80,12 +80,24 @@ function Player:update(dt)
     if self.right and self.x < WORLD_WIDTH - self.width then
         self.x, self.y, cols, len = self.world:move(self, self.x + 3,self.y)
     end
-    if self.jumping then
-        self.x, self.y, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y)
+    --El jugador aumenta constantemente la velocidad y, pero se resetea cada vez que toca el suelo o un enemigo cayendo
+    self.x, ydespues, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y)
+
+    if ydespues - self.y ~= 0 then --si es diferente a 0 no tenemos superficie debajo, aplicamos la aceleración
         self.velocidad_y = self.velocidad_y - 9.8 * dt
-        if self.y > WORLD_HEIGHT - self.height then
-            self.jumping = false
-        end
+    end
+
+    self.y = ydespues
+
+    if self.velocidad_y < 0 and len > 0 then --si hay colision al bajar en el eje y
+        self.velocidad_y = -0.1
+        self.jumping = false
+    end
+
+    if self.y > WORLD_HEIGHT - self.height then --molaría meter los bordes del mundo
+        self.velocidad_y = -0.1
+        self.y = WORLD_HEIGHT - self.height
+        self.jumping = false
     end
 
     -- actualización del estado del jugador
