@@ -60,12 +60,23 @@ function Player:update(dt)
     if self.right and self.x < WORLD_WIDTH - self.width then
         self.x, self.y, cols, len = self.world:move(self, self.x + 3,self.y)
     end
+    --El jugador aumenta constantemente la velocidad y, pero se resetea cada vez que toca el suelo o un enemigo cayendo
+    self.x, self.y, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y)
+    self.velocidad_y = self.velocidad_y - 9.8 * dt
+
     if self.jumping then
-        self.x, self.y, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y)
-        self.velocidad_y = self.velocidad_y - 9.8 * dt
-        if self.y > WORLD_HEIGHT - self.height then
+
+        if self.velocidad_y < 0 and len > 0 then
+            self.velocidad_y = 0
             self.jumping = false
         end
+
+    end
+
+    if self.y > WORLD_HEIGHT - self.height then
+        self.velocidad_y = 0
+        self.y = WORLD_HEIGHT - self.height
+        self.jumping = false
     end
 end
 
