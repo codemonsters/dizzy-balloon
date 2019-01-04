@@ -41,20 +41,6 @@ local Player = {
 
 Player.__index = Player
 
-function Player:load()
-    self.width = 40
-    self.height = Player.width
-    self.x = 1
-    self.y = WORLD_HEIGHT - Player.height
-    self.velocidad_y = -0.1
-    self.left = false
-    self.right = false
-    self.up = false
-    self.down = false
-    self.jumping = false
-    self.state = states.standing
-end
-
 function Player:new()
     local jugador = {}
     setmetatable(jugador, Player)
@@ -63,13 +49,13 @@ end
 
 function Player:load(world)
     self.world = world
+    self.width = 40
+    self.height = Player.width
     self.x = 1
     self.y = WORLD_HEIGHT - self.height
     self.velocidad_y = -0.1 --la velocidad y debe ser negativa para que haya diferencia en el movimiento de eje y para saber cuando aplicar aceleración
-    self.left, self.right, self.up, self.down = false
-    self.jumping = falses
+    self.left, self.right, self.up, self.down, self.jumping = false, false, false, false, false
     self.state = Player.states.standing
-    
     self.world:add(self, self.x, self.y, self.width, self.height)
 end
 

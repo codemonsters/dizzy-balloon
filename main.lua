@@ -16,6 +16,8 @@ function love.load()
     log.level = "trace" -- trace / debug / info / warn / error / fatal
     log.info("Iniciado programa")
 
+    love.graphics.setDefaultFilter("nearest", "linear") -- Cambiamos el filtro usado durante el escalado
+
     -- scale the window of the game (without changing game width and heigth)
     window_width, window_height = love.window.getDesktopDimensions()
     if love.window.getFullscreen() == true then
