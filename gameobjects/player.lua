@@ -11,7 +11,8 @@ local Player = {
                     height = 18
                 }
             },
-            update = function(self, dt) self.current_frame = 1 end
+            load = function(self) self.current_frame = 1 end,
+            update = function(self, dt) end
         },
         walking = {
             quads = {
@@ -36,10 +37,29 @@ local Player = {
                     height = 18
                 }
             },
+            load = function(self)
+                self.current_frame = 1
+                self.elapsed_time = 0
+            end,
             update = function(self, dt)
-                self.current_frame = self.current_frame + 1
-                if self.current_frame > 4 then self.current_frame = 1 end
+                self.elapsed_time = self.elapsed_time + dt
+                if self.elapsed_time > 0.1 then
+                    self.elapsed_time = 0
+                    self.current_frame = self.current_frame + 1
+                    if self.current_frame > 4 then self.current_frame = 1 end
+                end
             end
+        },
+        jumping = {
+            quads = {
+                {
+                    quad = love.graphics.newQuad(40, 13, 17, 18, atlas:getDimensions()),
+                    width = 18,
+                    height = 18
+                }
+            },
+            load = function(self) self.current_frame = 1 end,
+            update = function(self, dt) end
         }
     }
 }
@@ -53,6 +73,8 @@ function Player:new()
 end
 
 function Player:load(world)
+    self.offset = 0
+    self.direccion = 1
     self.world = world
     self.width = 40
     self.height = Player.width
@@ -60,7 +82,8 @@ function Player:load(world)
     self.y = WORLD_HEIGHT - self.height
     self.velocidad_y = -0.1 --la velocidad y debe ser negativa para que haya diferencia en el movimiento de eje y para saber cuando aplicar aceleración
     self.left, self.right, self.up, self.down, self.jumping = false, false, false, false, false
-    self.state = Player.states.standing
+    -- self.state = Player.states.standing
+    self.change_state(self, Player.states.standing)
     self.current_frame = 1
     self.world:add(self, self.x, self.y, self.width, self.height)
 end
@@ -94,12 +117,14 @@ function Player:update(dt)
 
     -- actualización del estado del jugador
     if self.jumping then
-        -- TODO: Implementar
+        self.change_state(self, Player.states.jumping)
     else
         if self.left or self.right then
-            self.state = self.states.walking
+            -- self.state = self.states.walking
+            self.change_state(self, Player.states.walking)
         else
-            self.state = self.states.standing
+            -- self.state = self.states.standing
+            self.change_state(self, Player.states.standing)
         end
     end
     self.state.update(self, dt)
@@ -107,13 +132,24 @@ end
 
 function Player:draw()
     love.graphics.setColor(255, 255, 255, 255)
+
+    -- TODO: eliminar offset y dibujar todos los frames del mismo tamaño
+    if self.right then
+        self.direccion = 1
+        self.offset = 0
+    end
+    if self.left then
+        self.direccion = -1
+        self.offset = self.width
+    end
+
     love.graphics.draw(
         atlas,
         self.state.quads[self.current_frame].quad,
-        self.x,
+        self.x + self.offset,
         self.y,
         0,
-        self.width / self.state.quads[self.current_frame].width,
+        self.width / self.state.quads[self.current_frame].width * self.direccion,
         self.height/ self.state.quads[self.current_frame].height
     )
     --[[
@@ -127,6 +163,13 @@ function Player:draw()
         self.height/ self.state[1]:getHeight()
     )
     --]]
+end
+
+function Player:change_state(new_state)
+    if self.state ~= new_state then
+        self.state = new_state
+        self.state.load(self)
+    end
 end
 
 function Player:jump()
