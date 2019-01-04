@@ -10,7 +10,8 @@ local Player = {
                     width = 18,
                     height = 18
                 }
-            }
+            },
+            update = function(self, dt) self.current_frame = 1 end
         },
         walking = {
             quads = {
@@ -34,7 +35,11 @@ local Player = {
                     width = 18,
                     height = 18
                 }
-            }
+            },
+            update = function(self, dt)
+                self.current_frame = self.current_frame + 1
+                if self.current_frame > 4 then self.current_frame = 1 end
+            end
         }
     }
 }
@@ -56,6 +61,7 @@ function Player:load(world)
     self.velocidad_y = -0.1 --la velocidad y debe ser negativa para que haya diferencia en el movimiento de eje y para saber cuando aplicar aceleración
     self.left, self.right, self.up, self.down, self.jumping = false, false, false, false, false
     self.state = Player.states.standing
+    self.current_frame = 1
     self.world:add(self, self.x, self.y, self.width, self.height)
 end
 
@@ -88,6 +94,7 @@ function Player:update(dt)
 
     -- actualización del estado del jugador
     if self.jumping then
+        -- TODO: Implementar
     else
         if self.left or self.right then
             self.state = self.states.walking
@@ -95,19 +102,20 @@ function Player:update(dt)
             self.state = self.states.standing
         end
     end
+    self.state.update(self, dt)
 end
 
 function Player:draw()
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.draw(
         atlas,
-        self.state.quads[1].quad,
+        self.state.quads[self.current_frame].quad,
         self.x,
         self.y,
         0,
-        self.width / self.state.quads[1].width,
-        self.height/ self.state.quads[1].height
-    ) -- TODO: Cambiar la imagen del sprite según su estado
+        self.width / self.state.quads[self.current_frame].width,
+        self.height/ self.state.quads[self.current_frame].height
+    )
     --[[
     love.graphics.draw(
         self.state.quads[1], -- TODO: Cambiar la imagen del sprite según su estado
