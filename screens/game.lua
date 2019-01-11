@@ -5,6 +5,9 @@ local jugador = PlayerClass.new()
 local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
 local sky = SkyClass.new()
+local PointerClass = require("gameobjects/pointer")
+local left_finger = PointerClass.new(game, "Izquierdo")
+local right_finger = PointerClass.new(game, "Derecho")
 local worldCanvas = nil
 local bordes = 4
 
@@ -44,6 +47,7 @@ function game.update(dt)
     for i, enemigo in ipairs(enemigos) do
         enemigo:update()
     end
+
     sky:update()
 end
 
@@ -100,6 +104,39 @@ function game.keyreleased(key, scancode, isrepeat)
     elseif key == "d" or key == "right" then
         jugador.right = false
     end
+end
+
+function love.touchpressed(id, x, y, dx, dy, pressure)
+    if x < SCREEN_WIDHT / 2 then   -- dedo izquierdo
+        left_finger.touchpressed(x, y)
+    else                           -- dedo derecho
+        right_finger.touchpressed(x, y)
+    end
+end
+
+function love.touchreleased(id, x, y, dx, dy, pressure)
+    if x < SCREEN_WIDTH / 2 then   -- dedo izquierdo
+        left_finger.touchreleased(dx, dy)
+    else                           -- dedo derecho
+        right_finger.touchreleased(dx, dy)
+    end
+end
+
+function love.touchmoved(id, x, y, dx, dy, pressure)
+    if x < SCREEN_WIDTH / 2 then   -- dedo izquierdo
+        left_finger.touchmoved(dx, dy)
+    else
+        right_finger.touchmoved(dx, dy)
+    end
+end
+
+function game.pointerpressed(pointer)
+end
+
+function game.pointerreleased(pointer)
+end
+
+function game.pointermoved(pointer)
 end
 
 return game
