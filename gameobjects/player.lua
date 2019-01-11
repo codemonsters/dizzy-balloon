@@ -98,8 +98,9 @@ function Player:update(dt)
     --El jugador aumenta constantemente la velocidad y, pero se resetea cada vez que toca el suelo o un enemigo cayendo
     self.x, ydespues, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y)
 
-    if ydespues - self.y ~= 0 then --si es diferente a 0 no tenemos superficie debajo, aplicamos la aceleración
+    if ydespues == self.y - self.velocidad_y then --debería caer si se consiguió mover en el eje y
         self.velocidad_y = self.velocidad_y - 9.8 * dt
+        self.jumping = true
     end
 
     self.y = ydespues
@@ -176,6 +177,21 @@ function Player:jump()
     if not self.jumping then
         self.jumping = true
         self.velocidad_y = 5
+    end
+end
+
+function Player:empujar(eje, empujador)
+    if eje == "x" then
+        self.x, self.y, cols, len = self.world:move(self, self.x + empujador.velocidad_x, self.y)
+    end
+    if eje == "y" then
+        self.velocidad_y = 0
+        self.x, self.y, cols, len = self.world:move(self, self.x, self.y + empujador.velocidad_y - 0.1)
+        if empujador.velocidad_y < 0 then
+            self.x, dsadads, cols, len = self.world:move(self, self.x + empujador.velocidad_x, self.y)
+            self.jumping = false
+        end 
+        self.velocidad_y = -0.1
     end
 end
 

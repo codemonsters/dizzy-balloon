@@ -26,10 +26,22 @@ function Enemy:load(x, y, world)
 end
 
 function Enemy:update(dt)
-    self.x, self.y, cols, len = self.world:move(self, self.x + self.velocidad_x,self.y)
-
+    self.movSigx = self.x + self.velocidad_x;
+    self.movSigy = self.y + self.velocidad_y;
+    self.x, self.y, cols, len = self.world:move(self, self.x + self.velocidad_x, self.y )
+    
+    for i=1,len do -- Checkeamos choque con jugador
+        local col = cols[i]
+        if (col.other.name == "Player") then
+            col.other:empujar("x", self)
+            self.x = self.movSigx
+        end
+    end 
+  
     if len > 0 then
-        self.velocidad_x = self.velocidad_x * -1
+        if (cols[1].other.name ~= "Player") then
+            self.velocidad_x = self.velocidad_x * -1
+        end
     end
 
     if self.x > WORLD_WIDTH - self.width and self.velocidad_x > 0 then
@@ -38,7 +50,16 @@ function Enemy:update(dt)
     if self.x < 0 and self.velocidad_x < 0 then
         self.velocidad_x = self.velocidad_x * -1
     end
+
     self.x, self.y, cols, len = self.world:move(self, self.x,self.y + self.velocidad_y)
+
+    for i=1,len do -- Checkeamos choque con jugador
+        local col = cols[i]
+        if (col.other.name == "Player") then
+            col.other:empujar("y", self)
+            self.y = self.movSigy
+        end
+    end
 
     if len > 0 then
         if (cols[1].other.name ~= "Player") then
@@ -65,5 +86,5 @@ function Enemy:draw()
     love.graphics.print(self.x, 0, 0)
     love.graphics.print(self.y, 50, 0)
 end
-
+ 
 return Enemy
