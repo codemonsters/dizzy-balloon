@@ -9,7 +9,7 @@ local screen = nil
 function change_screen(new_screen)
     screen = new_screen
     log.info("cargando pantalla: " .. screen.name)
-    screen.load()
+    screen.load()  
 end
 
 function love.load()
