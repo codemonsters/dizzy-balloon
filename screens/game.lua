@@ -6,8 +6,9 @@ local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
 local sky = SkyClass.new()
 local PointerClass = require("gameobjects/pointer")
-local left_finger = PointerClass.new(game, "Izquierdo")
-local right_finger = PointerClass.new(game, "Derecho")
+local leftFinger = PointerClass.new(game, "Izquierdo")
+local rightFinger = PointerClass.new(game, "Derecho")
+local mousepointer = PointerClass.new(game, "Puntero")
 local worldCanvas = nil
 local bordes = 4
 
@@ -49,6 +50,10 @@ function game.update(dt)
     end
 
     sky:update()
+
+    if love.mouse.isDown(1) then
+        love.touchpressed(mousepointer, love.mouse.getX(), love.mouse.getY(), 0, 0, 1)
+    end
 end
 
 function game.draw()
@@ -106,37 +111,61 @@ function game.keyreleased(key, scancode, isrepeat)
     end
 end
 
+
 function love.touchpressed(id, x, y, dx, dy, pressure)
-    if x < SCREEN_WIDHT / 2 then   -- dedo izquierdo
-        left_finger.touchpressed(x, y)
-    else                           -- dedo derecho
-        right_finger.touchpressed(x, y)
+    if x < SCREEN_WIDTH / 2 then       -- dedo izquierdo
+        leftFinger:touchpressed(x, y)
+    else                               -- dedo derecho
+        log.debug()
+        rightFinger:touchpressed(x, y)
+        --rightFinger.touchpressed(self, x, y)
     end
 end
 
 function love.touchreleased(id, x, y, dx, dy, pressure)
-    if x < SCREEN_WIDTH / 2 then   -- dedo izquierdo
-        left_finger.touchreleased(dx, dy)
-    else                           -- dedo derecho
-        right_finger.touchreleased(dx, dy)
+    if x < SCREEN_WIDTH / 2 then       -- dedo izquierdo
+        leftFinger:touchreleased(dx, dy)
+    else                               -- dedo derecho
+        rightFinger:touchreleased(dx, dy)
     end
 end
 
 function love.touchmoved(id, x, y, dx, dy, pressure)
-    if x < SCREEN_WIDTH / 2 then   -- dedo izquierdo
-        left_finger.touchmoved(dx, dy)
+    if x < SCREEN_WIDTH / 2 then       -- dedo izquierdo
+        leftFinger:touchmoved(dx, dy)
     else
-        right_finger.touchmoved(dx, dy)
+        rightFinger:touchmoved(dx, dy)
     end
 end
 
 function game.pointerpressed(pointer)
+    if self.x > SCREEN_WIDTH / 2 and self.y < SCREEN_HEIGHT / 2 then
+    jugador:jump()                          -- esquina derecha inferior -> ¿saltar?
+    else                                    -- esquina derecha superior -> ¿disparar?
+    -- TODO: implementar disparo cuando esté listo
+    end
 end
 
 function game.pointerreleased(pointer)
+    if self.x < SCREEN_WIDHT / 2 then       -- lado izquierdo de la pantalla -> movimiento
+        if self.x < self.dx then -- ha dejado de moverse hacia la derecha
+            jugador.right = false
+        else                     -- ha dejado de moverse hacia la izquierda
+            jugador.left = false
+        end
+    end
+    -- no es necesario implementar pointerreleased para saltar y disparar porque ocurren en el momento
+    -- en el que la pantalla se toca en esa zona
 end
 
 function game.pointermoved(pointer)
+    if self.x < SCREEN_WIDHT / 2 then       -- lado izquierdo de la pantalla -> movimiento
+        if self.x < self.dx then -- se ha movido hacia la derecha
+            jugador.right = true
+        else                     -- se ha movido hacia la izquierda
+            jugador.left = true
+        end
+    end
 end
 
 return game

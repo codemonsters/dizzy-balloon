@@ -6,6 +6,7 @@ function love.conf(t)
     t.window.fullscreen = false -- Enable or disable fullscreen
     t.version = "11.1" -- The LÖVE version this game was made for (string)
     t.accelerometerjoystick = false -- Enable the accelerometer on iOS and Android by exposing it as a Joystick (boolean)
+    t.console = true
 
     -- modules
     t.modules.joystick = false -- No necesitamos el módulo joystick
