@@ -83,7 +83,7 @@ function SeedClass:new(name)
     local seed = {}
     seed.name = name
     seed.state = SeedClass.states.sky
-    seed.currentframe = 1
+    seed.currentFrame = 1
     setmetatable(seed, SeedClass) 
     return seed
 end
@@ -112,12 +112,12 @@ function SeedClass:draw()
     --]]
     love.graphics.draw(
         atlas,
-        self.state.quads[self.current_frame].quad,
+        self.state.quads[self.currentFrame].quad,
         self.x,
         self.y,
         0,
-        self.width / self.state.quads[self.current_frame].width * self.direccion,
-        self.height/ self.state.quads[self.current_frame].height
+        self.width / self.state.quads[self.currentFrame].width,
+        self.height/ self.state.quads[self.currentFrame].height
     )
 end
 
