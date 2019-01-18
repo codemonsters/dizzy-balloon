@@ -2,6 +2,9 @@ local Player = {
     name = "Player",
     width = 40,
     height = 40,
+    velyini = -0.5,
+    montado = false,
+    montura = nil,
     states = {
         standing = {
             quads = {
@@ -80,7 +83,7 @@ function Player:load(world)
     self.height = Player.width
     self.x = 1
     self.y = WORLD_HEIGHT - self.height
-    self.velocidad_y = -0.1 --la velocidad y debe ser negativa para que haya diferencia en el movimiento de eje y para saber cuando aplicar aceleración
+    self.velocidad_y = self.velyini --la velocidad y debe ser negativa para que haya diferencia en el movimiento de eje y para saber cuando aplicar aceleración
     self.left, self.right, self.up, self.down, self.jumping = false, false, false, false, false
     -- self.state = Player.states.standing
     self.change_state(self, Player.states.standing)
@@ -99,19 +102,31 @@ function Player:update(dt)
     self.x, ydespues, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y)
 
     if ydespues == self.y - self.velocidad_y then --debería caer si se consiguió mover en el eje y
-        self.velocidad_y = self.velocidad_y - 9.8 * dt
-        self.jumping = true
+        
+        if (self.montado) then
+            log.info(self.montura.y - ydespues)
+            if (self.montura.x - self.x > self.montura.width/2 or self.montura.x - self.x < -self.montura.width/2) then
+                self.montura.jugadorMontado = false
+                self.montado = false
+            end
+        else
+            self.velocidad_y = self.velocidad_y - 9.8 * dt
+            self.jumping = true
+        end
+
+    end
+    
+    if (self.montado == false) then
+        self.y = ydespues
     end
 
-    self.y = ydespues
-
     if self.velocidad_y < 0 and len > 0 then --si hay colision al bajar en el eje y
-        self.velocidad_y = -0.1
+        self.velocidad_y = self.velyini
         self.jumping = false
     end
 
     if self.y > WORLD_HEIGHT - self.height then --molaría meter los bordes del mundo
-        self.velocidad_y = -0.1
+        self.velocidad_y = self.velyini
         self.y = WORLD_HEIGHT - self.height
         self.jumping = false
     end
@@ -177,6 +192,11 @@ function Player:jump()
     if not self.jumping then
         self.jumping = true
         self.velocidad_y = 5
+
+        if (self.montado) then
+            self.montura.jugadorMontado = false
+            self.montado = false
+        end
     end
 end
 
@@ -184,14 +204,18 @@ function Player:empujar(eje, empujador)
     if eje == "x" then
         self.x, self.y, cols, len = self.world:move(self, self.x + empujador.velocidad_x, self.y)
     end
-    if eje == "y" then
+    if eje == "y" then --Si se da en el eje y siempre va a ser hacia arriba
         self.velocidad_y = 0
-        self.x, self.y, cols, len = self.world:move(self, self.x, self.y + empujador.velocidad_y - 0.1)
-        if empujador.velocidad_y < 0 then
-            self.x, dsadads, cols, len = self.world:move(self, self.x + empujador.velocidad_x, self.y)
-            self.jumping = false
-        end 
-        self.velocidad_y = -0.1
+
+        self.x, self.y, cols, len = self.world:move(self, self.x, self.y + empujador.velocidad_y)
+
+        self.jumping = false
+
+        self.velocidad_y = self.velyini
+    end
+    if eje == "montado" then
+        self.montado = true
+        self.montura = empujador
     end
 end
 

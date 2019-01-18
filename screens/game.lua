@@ -28,11 +28,11 @@ function game.load()
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
     
     enemigos = {}
-    for i = 1, 10 do
-        local enemy = EnemyClass.new()
-        enemy:load(i + (10*i), 0, world)
-        table.insert(enemigos, enemy)
-    end
+    
+    local enemy = EnemyClass.new()
+    enemy:load(50, 120, world)
+    table.insert(enemigos, enemy)
+
     
     sky:load(world)
     

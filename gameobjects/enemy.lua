@@ -1,5 +1,7 @@
 local Enemy = {
     name = "Enemigo",
+    jugador = nil,
+    jugadorMontado = false,
     x = 0,
     y = 0,
     width = 40,
@@ -33,7 +35,7 @@ function Enemy:update(dt)
     for i=1,len do -- Checkeamos choque con jugador
         local col = cols[i]
         if (col.other.name == "Player") then
-            col.other:empujar("x", self)
+            --col.other:empujar("x", self)
             self.x = self.movSigx
         end
     end 
@@ -56,9 +58,16 @@ function Enemy:update(dt)
     for i=1,len do -- Checkeamos choque con jugador
         local col = cols[i]
         if (col.other.name == "Player") then
-            col.other:empujar("y", self)
+            self.jugadorMontado = true
+            self.jugador = col.other
+            col.other:empujar("montado", self)
             self.y = self.movSigy
         end
+    end
+
+    if self.jugadorMontado then
+        self.jugador:empujar("y", self)
+        self.jugador:empujar("x", self)
     end
 
     if len > 0 then
@@ -70,7 +79,7 @@ function Enemy:update(dt)
     if self.y > WORLD_HEIGHT - self.height and self.velocidad_y > 0 then
         self.velocidad_y = self.velocidad_y * -1
     end
-    if self.y < 0 and self.velocidad_x < 0 then
+    if self.y < 400 and self.velocidad_y < 0 then
         self.velocidad_y = self.velocidad_y * -1
     end
 end
