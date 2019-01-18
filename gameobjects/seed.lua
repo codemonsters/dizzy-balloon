@@ -23,6 +23,12 @@ local SeedClass = {
                     height = 16
                 }
             },
+            update = function(self, dt)
+                self.x  = self.x + 10 * dt
+                if  self.x > WORLD_WIDTH then 
+                    self.x = 0 - self.width
+                end
+            end
         },
         falling = {
             quads = {
@@ -37,6 +43,10 @@ local SeedClass = {
                     height = 19
                 }
             },
+            update = function(self, dt)
+                self.y = self.y + 30 * dt
+                -- TODO: Añadir función change.state
+            end
         },
         touchdown = {
             quads = {
@@ -98,6 +108,7 @@ function SeedClass:load(world, x, y)
 end
 
 function SeedClass:update(dt)
+    self.state.update(self, dt)
 end
 
 function SeedClass:draw()

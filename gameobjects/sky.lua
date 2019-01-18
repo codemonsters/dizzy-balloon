@@ -15,12 +15,14 @@ end
 
 function SkyClass:load(world)
     self.world = world
-    for i = 0, WORLD_WIDTH / SeedClass.width do
+    for i = 0, WORLD_WIDTH / SeedClass.width + 1 do
         local semilla = SeedClass.new("seed" .. (i + 1))
         log.debug(semilla.name)
         semilla:load(world, i * semilla.width, 0)
         table.insert(self.semillas, semilla)
     end
+    self.semillas[10].state = SeedClass.states.falling
+
 end
 
 function SkyClass:update(dt)
