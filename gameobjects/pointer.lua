@@ -1,17 +1,19 @@
 local Pointer = { name = "Pointer" }
 
-function Pointer:new(game, name)
+Pointer.__index = Pointer
+
+function Pointer.new(game, name)
     local puntero = {}
     setmetatable(puntero, Pointer)
     puntero.game = game
     puntero.name = name
     puntero.pressed = false
-    puntero.x, self.y = 0, 0
-    puntero.dx, self.dy = 0, 0
+    puntero.x, puntero.y = 0, 0
+    puntero.dx, puntero.dy = 0, 0
     return puntero
 end
 
-function Pointer:touchpressed(x, y)
+function Pointer.touchpressed(self, x, y)
     self.pressed = true
     self.x = x
     self.y = y
