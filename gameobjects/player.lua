@@ -104,7 +104,6 @@ function Player:update(dt)
     if ydespues == self.y - self.velocidad_y then --debería caer si se consiguió mover en el eje y
         
         if (self.montado) then
-            log.info(self.montura.y - ydespues)
             if (self.montura.x - self.x > self.montura.width/2 or self.montura.x - self.x < -self.montura.width/2) then
                 self.montura.jugadorMontado = false
                 self.montado = false
@@ -200,25 +199,25 @@ function Player:jump()
     end
 end
 
-function Player:empujar(eje, empujador)
-    if eje == "x" then
-        self.x, self.y, cols, len = self.world:move(self, self.x + empujador.velocidad_x, self.y)
+function Player:empujar(vector, empujador)
+    if vector.x ~= 0 then
+        self.x, self.y, cols, len = self.world:move(self, self.x + vector.x, self.y)
     end
-    if eje == "y" then --Si se da en el eje y siempre va a ser hacia arriba
+    if vector.y ~= 0 then --Si se da en el eje y siempre va a ser hacia arriba
         self.velocidad_y = 0
 
-        self.x, self.y, cols, len = self.world:move(self, self.x, self.y + empujador.velocidad_y)
+        self.x, self.y, cols, len = self.world:move(self, self.x, self.y + vector.y)
 
         self.jumping = false
 
         self.velocidad_y = self.velyini
     end
-    if eje == "montado" then
-        self.montado = true
-        self.montura = empujador
-    end
 end
 
 
+function Player:montar(montura)
+    self.montado = true
+    self.montura = montura
+end
 
 return Player

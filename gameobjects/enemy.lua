@@ -36,7 +36,8 @@ function Enemy:update(dt)
         local col = cols[i]
         if (col.other.name == "Player") then
             if (not col.other.montado) then
-                col.other:empujar("x", self)
+                vector = { x = self.velocidad_x , y = 0}
+                col.other:empujar(vector, self)
             end
             
             self.x = self.movSigx
@@ -61,16 +62,21 @@ function Enemy:update(dt)
     for i=1,len do -- Checkeamos choque con jugador
         local col = cols[i]
         if (col.other.name == "Player") then
-            self.jugadorMontado = true
-            self.jugador = col.other
-            col.other:empujar("montado", self)
+            vector = { x = 0, y = self.velocidad_y}
+            if (self.velocidad_y < 0) then
+                self.jugadorMontado = true
+                self.jugador = col.other
+                col.other:montar(self)
+            else
+                col.other:empujar(vector, self)
+            end
             self.y = self.movSigy
         end
     end
 
     if self.jugadorMontado then
-        self.jugador:empujar("y", self)
-        self.jugador:empujar("x", self)
+        vector = { x = self.velocidad_x, y = self.velocidad_y}
+        self.jugador:empujar(vector, self)
     end
 
     if len > 0 then
@@ -98,5 +104,5 @@ function Enemy:draw()
     love.graphics.print(self.x, 0, 0)
     love.graphics.print(self.y, 50, 0)
 end
- 
+
 return Enemy
