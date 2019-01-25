@@ -23,6 +23,14 @@ local scaleCanvas = pillarEscala()
 function game.load()
     local world = bump.newWorld(50)
 
+    --Límites nivel
+    suelo = {} 
+    parizq = {} 
+    parder = {}
+    world:add(suelo, 0, WORLD_HEIGHT, WORLD_WIDTH, 1) -- suelo
+    world:add(parizq, 0, 0, 1, WORLD_HEIGHT) -- pared izquierda
+    world:add(parder, WORLD_WIDTH, 0, 1, WORLD_HEIGHT) -- pared derecha
+
     jugador:load(world)
 
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)

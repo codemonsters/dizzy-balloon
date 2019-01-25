@@ -92,10 +92,10 @@ function Player:load(world)
 end
 
 function Player:update(dt)
-    if self.left and self.x > 0 then
+    if self.left then
         self.x, self.y, cols, len = self.world:move(self, self.x - 3,self.y)
     end
-    if self.right and self.x < WORLD_WIDTH - self.width then
+    if self.right then
         self.x, self.y, cols, len = self.world:move(self, self.x + 3,self.y)
     end
     --El jugador aumenta constantemente la velocidad y, pero se resetea cada vez que toca el suelo o un enemigo cayendo
@@ -124,15 +124,12 @@ function Player:update(dt)
         self.jumping = false
     end
 
-    if self.y > WORLD_HEIGHT - self.height then --molaría meter los bordes del mundo
-        self.velocidad_y = self.velyini
-        self.y = WORLD_HEIGHT - self.height
-        self.jumping = false
-    end
-
     -- actualización del estado del jugador
     if self.jumping then
         self.change_state(self, Player.states.jumping)
+        if len > 0 and self.velocidad_y > 0 then -- si hay un choque en medio de un salto llendo hacia arriba, te das un cabezazo
+            self:cabezazo();
+        end
     else
         if self.left or self.right then
             -- self.state = self.states.walking
@@ -143,6 +140,11 @@ function Player:update(dt)
         end
     end
     self.state.update(self, dt)
+end
+
+function Player:cabezazo()
+    self.x, self.y, cols, len = self.world:move(self, self.x, self.y + 2)
+    self.velocidad_y = -4
 end
 
 function Player:draw()
