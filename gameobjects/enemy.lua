@@ -35,7 +35,10 @@ function Enemy:update(dt)
     for i=1,len do -- Checkeamos choque con jugador
         local col = cols[i]
         if (col.other.name == "Player") then
-            --col.other:empujar("x", self)
+            if (not col.other.montado) then
+                col.other:empujar("x", self)
+            end
+            
             self.x = self.movSigx
         end
     end 

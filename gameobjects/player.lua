@@ -219,4 +219,6 @@ function Player:empujar(eje, empujador)
     end
 end
 
+
+
 return Player
