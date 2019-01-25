@@ -16,6 +16,7 @@ local SeedClass = {
     name = "Seed",
     states = {
         sky = {
+            name = "sky",
             quads = {
                 {
                     quad = love.graphics.newQuad(130, 61, 14, 16, atlas:getDimensions()),
@@ -28,9 +29,11 @@ local SeedClass = {
                 if  self.x > WORLD_WIDTH then 
                     self.x = 0 - self.width
                 end
-            end
+            end,
+            load = function(self) end
         },
         falling = {
+            name = "falling",
             quads = {
                 {
                     quad = love.graphics.newQuad(98, 56, 14, 27, atlas:getDimensions()),
@@ -43,12 +46,26 @@ local SeedClass = {
                     height = 19
                 }
             },
+            load = function(self) 
+                print("EMPIEZA A CAER")
+                self.current_frame = 1
+                self.elapsed_time = 0
+            end,
             update = function(self, dt)
-                self.y = self.y + 30 * dt
-                -- TODO: Añadir función change.state
+                self.y = self.y + 100 * dt
+                if self.y + self.height >= WORLD_HEIGHT then
+                    self.change_state(self, self.states.touchdown)
+                    self.elapsed_time = self.elapsed_time + dt
+                end
+                if self.elapsed_time > 0.5 then
+                    self.elapsed_time = 0
+                    self.current_frame = self.current_frame + 1
+                    if self.current_frame > 2 then self.current_frame = 1 end
+                end
             end
         },
         touchdown = {
+            name = "touchdown",
             quads = {
                 {
                     quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
@@ -56,8 +73,11 @@ local SeedClass = {
                     height = 14
                 }
             },
+            update = function(self, dt) end,
+            load = function(self) end
         },
         onthefloor = {
+            name = "onthefloor",
             quads = {
                 {
                     quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
@@ -65,8 +85,11 @@ local SeedClass = {
                     height = 14
                 }
             },
+            update = function(self, dt) end,
+            load = function(self) end
         },
         rotting = {
+            name = "rotting",
             quads = {
                 {
                     quad = love.graphics.newQuad(161, 66, 15, 14, atlas:getDimensions()),
@@ -74,8 +97,11 @@ local SeedClass = {
                     height = 14
                 } 
             },
+            update = function(self, dt) end,
+            load = function(self) end
         },
         evolving = {
+            name ="evolving",
             quads = {
                 {
                     quad = love.graphics.newQuad(177, 67, 15, 13, atlas:getDimensions()),
@@ -83,6 +109,8 @@ local SeedClass = {
                     height = 13
                 }
             },
+            update = function(self, dt) end,
+            load = function(self) end
         }
     }
 }
@@ -108,6 +136,9 @@ function SeedClass:load(world, x, y)
 end
 
 function SeedClass:update(dt)
+    if self.state.name ~= SeedClass.states.sky.name then
+        log.debug(self.state.name)
+    end
     self.state.update(self, dt)
 end
 
@@ -130,6 +161,13 @@ function SeedClass:draw()
         self.width / self.state.quads[self.currentFrame].width,
         self.height/ self.state.quads[self.currentFrame].height
     )
+end
+
+function SeedClass:change_state(new_state)
+    if self.state ~= new_state then
+        self.state = new_state
+        self.state.load(self)
+    end
 end
 
 return SeedClass
