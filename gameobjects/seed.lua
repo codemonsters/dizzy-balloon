@@ -24,21 +24,21 @@ local SeedClass = {
                     height = 16
                 }
             },
+            load = function(self) end,
             update = function(self, dt)
                 self.x  = self.x + 10 * dt
                 if  self.x > WORLD_WIDTH then 
                     self.x = 0 - self.width
                 end
             end,
-            load = function(self) end
         },
         falling = {
             name = "falling",
             quads = {
                 {
-                    quad = love.graphics.newQuad(98, 56, 14, 27, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(98, 56, 14, 21, atlas:getDimensions()),
                     width = 14,
-                    height = 27
+                    height = 21
                 },
                 {
                     quad = love.graphics.newQuad(114, 57, 14, 19, atlas:getDimensions()),
@@ -56,6 +56,7 @@ local SeedClass = {
                 if self.y + self.height >= WORLD_HEIGHT then
                     self.change_state(self, self.states.touchdown)
                     self.elapsed_time = self.elapsed_time + dt
+                    return
                 end
                 if self.elapsed_time > 0.5 then
                     self.elapsed_time = 0
