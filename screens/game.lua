@@ -37,10 +37,11 @@ function game.load()
     
     enemigos = {}
     
-    local enemy = EnemyClass.new()
-    enemy:load(50, 120, world)
-    table.insert(enemigos, enemy)
-
+    for i=1,2 do
+        local enemy = EnemyClass.new()
+        enemy:load(50 + i * enemy.width, 120, world)
+        table.insert(enemigos, enemy)
+    end
     
     sky:load(world)
     

@@ -32,11 +32,11 @@ function Enemy:update(dt)
     self.movSigy = self.y + self.velocidad_y;
     self.x, self.y, cols, len = self.world:move(self, self.x + self.velocidad_x, self.y )
     
-    for i=1,len do -- Checkeamos choque con jugador
-        local col = cols[i]
+    if len > 0 then
+        local col = cols[1]
         if (col.other.name == "Player") then
             if (not col.other.montado) then
-                vector = { x = self.velocidad_x , y = 0}
+                vector = { x = self.velocidad_x * 2 , y = 0}
                 col.other:empujar(vector, self)
             end
             
@@ -52,15 +52,11 @@ function Enemy:update(dt)
 
     self.x, self.y, cols, len = self.world:move(self, self.x,self.y + self.velocidad_y)
 
-    for i=1,len do -- Checkeamos choque con jugador
-        local col = cols[i]
+    if len > 0 then
+        local col = cols[1]
         if (col.other.name == "Player") then
-            vector = { x = 0, y = self.velocidad_y}
-            if (self.velocidad_y < 0) then
-                self.jugadorMontado = true
-                self.jugador = col.other
-                col.other:montar(self)
-            else
+            if (not col.other.montado) then 
+                vector = { x = 0, y = self.velocidad_y * 2}
                 col.other:empujar(vector, self)
             end
             self.y = self.movSigy
@@ -89,6 +85,11 @@ function Enemy:draw()
         self.height/ self.image:getHeight())
     love.graphics.print(self.x, 0, 0)
     love.graphics.print(self.y, 50, 0)
+end
+
+function Enemy:montado(jugador)
+    self.jugadorMontado = true
+    self.jugador = jugador
 end
 
 return Enemy

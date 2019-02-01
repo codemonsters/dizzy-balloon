@@ -98,15 +98,25 @@ function Player:update(dt)
     if self.right then
         self.x, self.y, cols, len = self.world:move(self, self.x + 3,self.y)
     end
-    --El jugador aumenta constantemente la velocidad y, pero se resetea cada vez que toca el suelo o un enemigo cayendo
     self.x, ydespues, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y)
 
+    if (len > 0) then
+        if (cols[1].other.name == "Enemigo" and not self.montado) then
+            if (cols[1].other.y - self.y > self.width) then
+                self.montado = true
+                self.montura = cols[1].other
+                self.y = self.montura.y - self.height
+                self.montura:montado(self)
+            end
+        end
+    end
+
+    --El jugador aumenta constantemente la velocidad y, pero se resetea cada vez que toca el suelo o un enemigo cayendo
     if ydespues == self.y - self.velocidad_y then --debería caer si se consiguió mover en el eje y
         
         if (self.montado) then
-            if (self.montura.x - self.x > self.montura.width/2 or self.montura.x - self.x < -self.montura.width/2) then
-                self.montura.jugadorMontado = false
-                self.montado = false
+            if (self.montura.x - self.x > self.montura.width or self.montura.x - self.x < - self.montura.width) then        
+                self:desmontar()
             end
         else
             self.velocidad_y = self.velocidad_y - 9.8 * dt
@@ -195,8 +205,7 @@ function Player:jump()
         self.velocidad_y = 5
 
         if (self.montado) then
-            self.montura.jugadorMontado = false
-            self.montado = false
+            self:desmontar()
         end
     end
 end
@@ -216,10 +225,9 @@ function Player:empujar(vector, empujador)
     end
 end
 
-
-function Player:montar(montura)
-    self.montado = true
-    self.montura = montura
+function Player:desmontar()
+    self.montura.jugadorMontado = false
+    self.montado = false
 end
 
 return Player
