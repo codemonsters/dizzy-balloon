@@ -99,7 +99,7 @@ function Player:update(dt)
         self.x, self.y, cols, len = self.world:move(self, self.x + 3,self.y)
     end
     self.x, ydespues, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y)
-
+    
     if (len > 0) then
         if (cols[1].other.name == "Enemigo" and not self.montado) then
             if (cols[1].other.y - self.y > self.width) then
@@ -213,11 +213,25 @@ end
 function Player:empujar(vector, empujador)
     if vector.x ~= 0 then
         self.x, self.y, cols, len = self.world:move(self, self.x + vector.x, self.y)
+
+        if (len > 0) then --hay una colision con otra cosa al intentar moverlo, debe morir
+            xtest, self.y, cols, len = self.world:move(self, self.x - vector.x, self.y)
+            if (math.abs(xtest - self.x) < math.abs(vector.x)) then
+                self:morir()
+            end
+        end
     end
     if vector.y ~= 0 then --Si se da en el eje y siempre va a ser hacia arriba
         self.velocidad_y = 0
 
         self.x, self.y, cols, len = self.world:move(self, self.x, self.y + vector.y)
+
+        if (len > 0) then --hay una colision con otra cosa al intentar moverlo, debe morir
+            self.x, ytest, cols, len = self.world:move(self, self.x, self.y - vector.y)
+            if (math.abs(ytest - self.y) < math.abs(vector.y)) then
+                self:morir()
+            end
+        end
 
         self.jumping = false
 
@@ -228,6 +242,14 @@ end
 function Player:desmontar()
     self.montura.jugadorMontado = false
     self.montado = false
+end
+
+function Player:morir()
+    if self.montado then
+        self:desmontar()
+    end
+    self.y = WORLD_HEIGHT
+    self.x = 0
 end
 
 return Player
