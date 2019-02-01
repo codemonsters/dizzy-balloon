@@ -147,20 +147,18 @@ end
 function game.pointermoved(pointer)
     if pointer.x < SCREEN_WIDTH / 2 then
         if jugadorquieremoverse == true then
-            if pointer.x < pointer.x + pointer.dx then
-                log.debug("...")
+            if pointer.x + pointer.movementdeadzone < pointer.x + pointer.dx then
                 jugador.left = false
                 jugador.right = true
-            elseif pointer.x > pointer.x + pointer.dx then
-                log.debug(",,,")
+            elseif pointer.x - pointer.movementdeadzone > pointer.x + pointer.dx then
                 jugador.right = false
                 jugador.left = true
             end
         end
         if jugadorquieredisparar == true then
-            if pointer.y < pointer.y + pointer.dy then
+            if pointer.y + pointer.shootingdeadzone < pointer.y + pointer.dy then
                 log.debug("Disparo hacia abajo")
-            elseif pointer.y > pointer.y + pointer.dy then
+            elseif pointer.y - pointer.shootingdeadzone > pointer.y + pointer.dy then
                 log.debug("Disparo hacia arriba")
             end
         end

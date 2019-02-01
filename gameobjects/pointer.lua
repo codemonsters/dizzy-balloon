@@ -10,6 +10,8 @@ function Pointer.new(game, name)
     puntero.pressed = false
     puntero.x, puntero.y = 0, 0
     puntero.dx, puntero.dy = 0, 0
+    puntero.movementdeadzone = SCREEN_WIDTH * 0.005
+    puntero.shootingdeadzone = SCREEN_HEIGHT * 0.01
     return puntero
 end
 
