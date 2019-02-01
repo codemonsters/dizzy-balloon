@@ -6,6 +6,7 @@
         * onthefloor
         * rotting
         * evolving
+        * dead
 --]]
 local SeedClass = {
     x = 0,
@@ -47,7 +48,6 @@ local SeedClass = {
                 }
             },
             load = function(self) 
-                print("EMPIEZA A CAER")
                 self.current_frame = 1
                 self.elapsed_time = 0
             end,
@@ -74,8 +74,10 @@ local SeedClass = {
                     height = 14
                 }
             },
-            update = function(self, dt) end,
-            load = function(self) end
+            load = function(self) end,
+            update = function(self, dt) 
+                self.change_state(self, self.states.onthefloor)
+            end
         },
         onthefloor = {
             name = "onthefloor",
@@ -86,8 +88,15 @@ local SeedClass = {
                     height = 14
                 }
             },
-            update = function(self, dt) end,
-            load = function(self) end
+            load = function(self)
+                self.elapsed_time = 0 
+            end,
+            update = function(self, dt)
+                self.elapsed_time = self.elapsed_time + dt
+                if self.elapsed_time > 3 then
+                    self.change_state(self, self.states.rotting)
+                end
+            end
         },
         rotting = {
             name = "rotting",
@@ -98,8 +107,15 @@ local SeedClass = {
                     height = 14
                 } 
             },
-            update = function(self, dt) end,
-            load = function(self) end
+            load = function(self)
+                self.elapsed_time = 0
+            end,
+            update = function(self, dt)
+                self.elapsed_time = self.elapsed_time + dt
+                if self.elapsed_time > 2 then
+                    self.sky:deleteSeed(self)
+                end
+            end
         },
         evolving = {
             name ="evolving",
@@ -118,9 +134,10 @@ local SeedClass = {
 
 SeedClass.__index = SeedClass
 
-function SeedClass:new(name)
+function SeedClass.new(name, sky)
     local seed = {}
     seed.name = name
+    seed.sky = sky
     seed.state = SeedClass.states.sky
     seed.currentFrame = 1
     setmetatable(seed, SeedClass) 
@@ -137,9 +154,6 @@ function SeedClass:load(world, x, y)
 end
 
 function SeedClass:update(dt)
-    if self.state.name ~= SeedClass.states.sky.name then
-        log.debug(self.state.name)
-    end
     self.state.update(self, dt)
 end
 
