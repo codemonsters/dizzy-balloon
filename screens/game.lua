@@ -53,7 +53,7 @@ function game.update(dt)
     for i, enemigo in ipairs(enemigos) do
         enemigo:update()
     end
-    sky:update()
+    sky:update(dt)
 end
 
 function game.draw()

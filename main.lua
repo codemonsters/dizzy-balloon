@@ -9,13 +9,13 @@ local screen = nil
 function change_screen(new_screen)
     screen = new_screen
     log.info("cargando pantalla: " .. screen.name)
-    screen.load()
+    screen.load()  
 end
 
 function love.load()
     log.level = "trace" -- trace / debug / info / warn / error / fatal
     log.info("Iniciado programa")
-
+    
     love.graphics.setDefaultFilter("nearest", "linear") -- Cambiamos el filtro usado durante el escalado
 
     -- scale the window of the game (without changing game width and heigth)
