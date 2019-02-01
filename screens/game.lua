@@ -12,6 +12,8 @@ local mousepointer = PointerClass.new(game, "Puntero")
 local worldCanvas = nil
 local bordes = 4
 local jugadorpuedesaltar = true
+local jugadorquieremoverse = false
+local jugadorquieredisparar = false
 
 function pillarEscala()
 
@@ -51,10 +53,6 @@ function game.update(dt)
     end
 
     sky:update()
-
-    if love.mouse.isDown(1) then
-        love.touchpressed(mousepointer, love.mouse.getX(), love.mouse.getY(), 0, 0, 1)
-    end
 end
 
 function game.draw()
@@ -112,6 +110,64 @@ function game.keyreleased(key, scancode, isrepeat)
     end
 end
 
+function love.mousepressed(x, y, button, istouch, presses)
+    if button == 1 then
+        jugadorquieremoverse = true
+        jugadorquieredisparar = true
+        mousepointer.touchpressed(mousepointer, x, y)
+    end
+end
+
+function love.mousereleased(x, y, button, istouch, presses)
+    if button == 1 then
+        jugadorquieremoverse = false
+        jugadorquieredisparar = false
+        mousepointer.touchreleased(mousepointer, dx, dy)
+    end
+end
+
+function love.mousemoved(x, y, dx, dy, istouch)
+    mousepointer.touchmoved(mousepointer, dx, dy)
+end
+
+function game.pointerpressed(pointer)
+    if pointer.x > SCREEN_WIDTH / 2 then
+        jugador:jump()
+    end
+end
+
+function game.pointerreleased(pointer)
+    if pointer.x < SCREEN_WIDTH / 2 then
+        jugador.left, jugador.right = false, false
+    else
+        jugadorpuedesaltar = true
+    end
+end
+
+function game.pointermoved(pointer)
+    if pointer.x < SCREEN_WIDTH / 2 then
+        if jugadorquieremoverse == true then
+            if pointer.x < pointer.x + pointer.dx then
+                log.debug("...")
+                jugador.left = false
+                jugador.right = true
+            elseif pointer.x > pointer.x + pointer.dx then
+                log.debug(",,,")
+                jugador.right = false
+                jugador.left = true
+            end
+        end
+        if jugadorquieredisparar == true then
+            if pointer.y < pointer.y + pointer.dy then
+                log.debug("Disparo hacia abajo")
+            elseif pointer.y > pointer.y + pointer.dy then
+                log.debug("Disparo hacia arriba")
+            end
+        end
+    end
+end
+
+--[[
 function love.touchpressed(id, x, y, dx, dy, pressure)
     if x < SCREEN_WIDTH / 2 then       -- dedo izquierdo
         ratonx, ratony = love.mouse.getPosition()
@@ -139,70 +195,6 @@ function love.touchmoved(id, x, y, dx, dy, pressure)
         rightFinger:touchmoved(dx, dy)
     end
 end
-
-function love.mousepressed(x, y, button, istouch, presses)
-    if button == 1 then
-        if x < SCREEN_WIDTH / 2 then
-            -- movimiento
-        elseif y > SCREEN_HEIGHT / 2 then
-            jugador:jump()
-        elseif y < SCREEN_HEIGHT / 2 then
-            log.debug("Disparo (Ratón!)")
-        end
-    end
-end
-
-function love.mousereleased(x, y, button, istouch, presses)
-    if button == 1 then
-        jugador.right = false
-        jugador.left = false
-    end
-end
-
-function love.mousemoved(x, y, dx, dy, istouch)
-    if x < dx then
-        jugador.right = true
-    else
-        jugador.left = true
-    end
-end
-
-function game.pointerpressed(self, pointer)
-    if self.x < SCREEN_WIDTH / 2 then
-        log.debug(love.mouse.getRelativeMode())
-    end
-    if self.x > SCREEN_WIDTH / 2 and self.y > SCREEN_HEIGHT / 2 and jugadorpuedesaltar == true then
-        jugador:jump()                          -- esquina derecha inferior -> ¿saltar?
-        jugadorpuedesaltar = false
-    elseif self.x > SCREEN_WIDTH / 2 and self.y < SCREEN_HEIGHT / 2 then                                    -- esquina derecha superior -> ¿disparar?
-    -- TODO: implementar disparo cuando esté listo
-        log.debug("*Disparo*")
-    end
-end
-
-function game.pointerreleased(pointer)
-    if self.x < SCREEN_WIDTH / 2 then       -- lado izquierdo de la pantalla -> movimiento
-        if self.x < self.dx then -- ha dejado de moverse hacia la derecha
-            jugador.right = false
-        else                     -- ha dejado de moverse hacia la izquierda
-            jugador.left = false
-        end
-    end
-    if self.x > SCREEN_WIDTH / 2 and self.y > SCREEN_HEIGHT / 2 then
-        jugadorpuedesaltar = true
-    end
-    -- no es necesario implementar pointerreleased para saltar y disparar porque ocurren en el momento
-    -- en el que la pantalla se toca en esa zona
-end
-
-function game.pointermoved(pointer)
-    if self.x < SCREEN_WIDTH / 2 then       -- lado izquierdo de la pantalla -> movimiento
-        if self.x < self.dx then -- se está moviendo hacia la derecha
-            jugador.right = true
-        else                     -- se está moviendo hacia la izquierda
-            jugador.left = true
-        end
-    end
-end
+]]
 
 return game
