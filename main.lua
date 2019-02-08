@@ -17,6 +17,9 @@ function love.load()
     log.info("Iniciado programa")
     
     love.graphics.setDefaultFilter("nearest", "linear") -- Cambiamos el filtro usado durante el escalado
+    
+    font = love.graphics.newFont("assets/fonts/pixelmania.ttf", 14) -- https://www.dafont.com/es/pixelmania.font
+    love.graphics.setFont(font)
 
     -- scale the window of the game (without changing game width and heigth)
     window_width, window_height = love.window.getDesktopDimensions()

@@ -10,7 +10,13 @@ end
 function menu.draw()
     love.graphics.clear(255, 255, 255)
     love.graphics.setColor(255, 0, 0, 255)
-    love.graphics.print("Dizzy Balloon", 0, 0)
+    love.graphics.printf(
+        "DIZZY BALLOON\n\n=PRESS FIRE TO START=",
+        0,
+        math.floor((SCREEN_HEIGHT - font:getHeight() * 3) / 2 + 0.5),
+        SCREEN_WIDTH,
+        "center"
+    )
 end
 
 function menu.keypressed(key, scancode, isrepeat)
