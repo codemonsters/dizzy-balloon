@@ -10,8 +10,8 @@ function Pointer.new(game, name)
     puntero.pressed = false
     puntero.x, puntero.y = 0, 0
     puntero.dx, puntero.dy = 0, 0
-    puntero.movementdeadzone = SCREEN_WIDTH * 0.005
-    puntero.shootingdeadzone = SCREEN_HEIGHT * 0.01
+    puntero.movementdeadzone = SCREEN_WIDTH * 0.05
+    puntero.shootingdeadzone = SCREEN_HEIGHT * 0.1
     return puntero
 end
 
@@ -32,9 +32,11 @@ function Pointer:touchreleased(dx, dy)
 end
 
 function Pointer:touchmoved(dx, dy)
-    self.dx = dx
-    self.dy = dy
-    self.game.pointermoved(self)
+    if self.dx ~= nil and self.dy ~= nil then
+        self.dx = self.dx + dx
+        self.dy = self.dy + dy
+        self.game.pointermoved(self)
+    end
 end
 
 return Pointer

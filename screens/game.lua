@@ -147,6 +147,7 @@ end
 function game.pointermoved(pointer)
     if pointer.x < SCREEN_WIDTH / 2 then
         if jugadorquieremoverse == true then
+            log.debug(pointer.x, pointer.y, pointer.dx, pointer.dy)
             if pointer.x + pointer.movementdeadzone < pointer.x + pointer.dx then
                 jugador.left = false
                 jugador.right = true
