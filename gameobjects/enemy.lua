@@ -1,5 +1,7 @@
 local Enemy = {
     name = "Enemigo",
+    jugador = nil,
+    jugadorMontado = false,
     x = 0,
     y = 0,
     width = 40,
@@ -26,31 +28,50 @@ function Enemy:load(x, y, world)
 end
 
 function Enemy:update(dt)
-    self.x, self.y, cols, len = self.world:move(self, self.x + self.velocidad_x,self.y)
+    self.movSigx = self.x + self.velocidad_x;
+    self.movSigy = self.y + self.velocidad_y;
+    self.x, self.y, cols, len = self.world:move(self, self.x + self.velocidad_x, self.y )
+    
+    if len > 0 then
+        local col = cols[1]
+        if (col.other.name == "Player") then
+            if (not col.other.montado) then
+                vector = { x = self.velocidad_x * 2 , y = 0}
+                col.other:empujar(vector, self)
+            end
+            
+            self.x = self.movSigx
+        end
+    end 
+  
+    if len > 0 then
+        if (cols[1].other.name ~= "Player") then
+            self.velocidad_x = self.velocidad_x * -1
+        end
+    end
+
+    self.x, self.y, cols, len = self.world:move(self, self.x,self.y + self.velocidad_y)
 
     if len > 0 then
-        self.velocidad_x = self.velocidad_x * -1
+        local col = cols[1]
+        if (col.other.name == "Player") then
+            if (not col.other.montado) then 
+                vector = { x = 0, y = self.velocidad_y * 2}
+                col.other:empujar(vector, self)
+            end
+            self.y = self.movSigy
+        end
     end
 
-    if self.x > WORLD_WIDTH - self.width and self.velocidad_x > 0 then
-        self.velocidad_x = self.velocidad_x * -1
+    if self.jugadorMontado then
+        vector = { x = self.velocidad_x, y = self.velocidad_y}
+        self.jugador:empujar(vector, self)
     end
-    if self.x < 0 and self.velocidad_x < 0 then
-        self.velocidad_x = self.velocidad_x * -1
-    end
-    self.x, self.y, cols, len = self.world:move(self, self.x,self.y + self.velocidad_y)
 
     if len > 0 then
         if (cols[1].other.name ~= "Player") then
             self.velocidad_y = self.velocidad_y * -1
         end
-    end
-
-    if self.y > WORLD_HEIGHT - self.height and self.velocidad_y > 0 then
-        self.velocidad_y = self.velocidad_y * -1
-    end
-    if self.y < 0 and self.velocidad_x < 0 then
-        self.velocidad_y = self.velocidad_y * -1
     end
 end
 
@@ -64,6 +85,11 @@ function Enemy:draw()
         self.height/ self.image:getHeight())
     love.graphics.print(self.x, 0, 0)
     love.graphics.print(self.y, 50, 0)
+end
+
+function Enemy:montado(jugador)
+    self.jugadorMontado = true
+    self.jugador = jugador
 end
 
 return Enemy

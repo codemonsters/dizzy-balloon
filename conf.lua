@@ -11,4 +11,5 @@ function love.conf(t)
     -- modules
     t.modules.joystick = false -- No necesitamos el módulo joystick
     t.modules.physics = false -- No necesitamos el módulo de físicas
+    t.console = true -- Usamos consola para mostrar el logging(Sólo Windows)
 end

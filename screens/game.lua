@@ -30,14 +30,23 @@ local scaleCanvas = pillarEscala()
 function game.load()
     local world = bump.newWorld(50)
 
+    --Límites nivel
+    suelo = {} 
+    parizq = {} 
+    parder = {}
+    world:add(suelo, 0, WORLD_HEIGHT, WORLD_WIDTH, 1) -- suelo
+    world:add(parizq, 0, 0, 1, WORLD_HEIGHT) -- pared izquierda
+    world:add(parder, WORLD_WIDTH, 0, 1, WORLD_HEIGHT) -- pared derecha
+
     jugador:load(world)
 
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
     
     enemigos = {}
-    for i = 1, 10 do
+    
+    for i=1,2 do
         local enemy = EnemyClass.new()
-        enemy:load(i + (10*i), 0, world)
+        enemy:load(50 + i * enemy.width, 120, world)
         table.insert(enemigos, enemy)
     end
     
@@ -51,8 +60,7 @@ function game.update(dt)
     for i, enemigo in ipairs(enemigos) do
         enemigo:update()
     end
-
-    sky:update()
+    sky:update(dt)
 end
 
 function game.draw()
@@ -147,7 +155,6 @@ end
 function game.pointermoved(pointer)
     if pointer.x < SCREEN_WIDTH / 2 then
         if jugadorquieremoverse == true then
-            log.debug(pointer.x, pointer.y, pointer.dx, pointer.dy)
             if pointer.x + pointer.movementdeadzone < pointer.x + pointer.dx then
                 jugador.left = false
                 jugador.right = true
@@ -165,35 +172,5 @@ function game.pointermoved(pointer)
         end
     end
 end
-
---[[
-function love.touchpressed(id, x, y, dx, dy, pressure)
-    if x < SCREEN_WIDTH / 2 then       -- dedo izquierdo
-        ratonx, ratony = love.mouse.getPosition()
-        leftFinger:touchpressed(ratonx, ratony)
-    else                               -- dedo derecho
-        rightFinger:touchpressed(x, y)
-        --rightFinger.touchpressed(self, x, y)
-    end
-end
-
-function love.touchreleased(id, x, y, dx, dy, pressure)
-    if x < SCREEN_WIDTH / 2 then       -- dedo izquierdo
-        ratondx, ratondy = love.mouse.getPosition()
-        leftFinger:touchreleased(ratondx, ratondy)
-    else                               -- dedo derecho
-        rightFinger:touchreleased(dx, dy)
-    end
-end
-
-function love.touchmoved(id, x, y, dx, dy, pressure)
-    if x < SCREEN_WIDTH / 2 then       -- dedo izquierdo
-        ratondx, ratondy = love.mouse.getPosition()
-        leftFinger:touchmoved(ratondx, ratondy)
-    else
-        rightFinger:touchmoved(dx, dy)
-    end
-end
-]]
 
 return game
