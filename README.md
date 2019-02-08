@@ -36,11 +36,11 @@ Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
     * Para mostrar la información de cada commit en una única línea:
         * ```git config format.pretty oneline```
 2. Clonamos el repositorio dentro de una carpeta local:
-    * Si es desde la terminal ejecutamos: git clone https://NOMBREDEUSUARIO@github.com/codemonsters/dizzy-balloon.git
+    * Si es desde la terminal ejecutamos: ```git clone https://NOMBREDEUSUARIO@github.com/codemonsters/dizzy-balloon.git```
     * O bien usamos un programa con interfaz gráfica (SmartSVN, GitKraken...)
 3. Abrimos la *carpeta* en Visual Studio Code
 
-Trabajando con branches (frecuentemente una branch implica una nueva característica):
+### Trabajando con branches (frecuentemente una branch implica una nueva característica):
 
 * Para crear una nueva rama y comenzar a utilizarla: ```git checkout -b nombre_rama```
 * Hacemos tantos commit y push dentro la rama como sea necesario
