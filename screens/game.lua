@@ -171,6 +171,8 @@ function game.pointermoved(pointer)
             end
         end
     end
+end
+
 function game.vidaperdida()
     game.load()
 end
