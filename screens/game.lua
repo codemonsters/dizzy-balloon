@@ -14,6 +14,7 @@ local bordes = 4
 local jugadorpuedesaltar = true
 local jugadorquieremoverse = false
 local jugadorquieredisparar = false
+local BlockClass = require("gameobjects/block")
 
 function pillarEscala()
 
@@ -37,6 +38,15 @@ function game.load()
     world:add(suelo, 0, WORLD_HEIGHT, WORLD_WIDTH, 1) -- suelo
     world:add(parizq, 0, 0, 1, WORLD_HEIGHT) -- pared izquierda
     world:add(parder, WORLD_WIDTH, 0, 1, WORLD_HEIGHT) -- pared derecha
+
+    -- Límites del nivel usando block
+    bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 10, SCREEN_WIDTH, 10)
+    bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT)
+    bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT)
+
+    bloqueSuelo:load(world, x, y)
+    bloqueParizq:load(world, x, y)
+    bloqueParder:load(world, x, y)
 
     jugador:load(world)
 
@@ -78,6 +88,10 @@ function game.draw()
         end
 
         sky:draw()
+
+        bloqueSuelo:draw()
+        bloqueParizq:draw()
+        bloqueParder:draw()
 
         -- puntos de las dos esquinas del mundo
         love.graphics.setColor(255, 255, 255)
