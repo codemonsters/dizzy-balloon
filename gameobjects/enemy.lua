@@ -61,6 +61,10 @@ function Enemy:update(dt)
             end
             self.y = self.movSigy
         end
+        if (col.other.name ~= "Player") then
+            self.velocidad_y = self.velocidad_y * -1
+        end
+        
     end
 
     if self.jugadorMontado then
@@ -68,11 +72,6 @@ function Enemy:update(dt)
         self.jugador:empujar(vector, self)
     end
 
-    if len > 0 then
-        if (cols[1].other.name ~= "Player") then
-            self.velocidad_y = self.velocidad_y * -1
-        end
-    end
 end
 
 function Enemy:draw()

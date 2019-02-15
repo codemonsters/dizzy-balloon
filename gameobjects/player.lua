@@ -75,7 +75,8 @@ function Player:new()
     return jugador
 end
 
-function Player:load(world)
+function Player:load(world, game)
+    self.game = game
     self.offset = 0
     self.direccion = 1
     self.world = world
@@ -99,7 +100,7 @@ function Player:update(dt)
         self.x, self.y, cols, len = self.world:move(self, self.x + 3,self.y)
     end
     self.x, ydespues, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y)
-
+    
     if (len > 0) then
         if (cols[1].other.name == "Enemigo" and not self.montado) then
             if (cols[1].other.y - self.y > self.width) then
@@ -213,11 +214,25 @@ end
 function Player:empujar(vector, empujador)
     if vector.x ~= 0 then
         self.x, self.y, cols, len = self.world:move(self, self.x + vector.x, self.y)
+
+        if (len > 0) then --hay una colision con otra cosa al intentar moverlo, debe morir
+            xtest, self.y, cols, len = self.world:move(self, self.x - vector.x, self.y)
+            if (math.abs(xtest - self.x) <= 0.5) then --si no puede retroceder una distancia, se considera estrujado
+                self:morir()
+            end
+        end
     end
     if vector.y ~= 0 then --Si se da en el eje y siempre va a ser hacia arriba
         self.velocidad_y = 0
 
         self.x, self.y, cols, len = self.world:move(self, self.x, self.y + vector.y)
+
+        if (len > 0) then --hay una colision con otra cosa al intentar moverlo
+            self.x, ytest, cols, len = self.world:move(self, self.x, self.y - vector.y)
+            if (math.abs(ytest - self.y) <= 0.5) then --si no puede retroceder una distancia, se considera estrujado
+                self:morir()
+            end
+        end
 
         self.jumping = false
 
@@ -228,6 +243,10 @@ end
 function Player:desmontar()
     self.montura.jugadorMontado = false
     self.montado = false
+end
+
+function Player:morir()
+    self.game.vidaperdida()
 end
 
 return Player

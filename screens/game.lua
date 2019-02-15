@@ -31,14 +31,14 @@ function game.load()
     local world = bump.newWorld(50)
 
     --Límites nivel
-    suelo = {} 
-    parizq = {} 
-    parder = {}
+    suelo = {name = "suelo"}
+    parizq = {name = "parizq"}
+    parder = {name = "parder"}
     world:add(suelo, 0, WORLD_HEIGHT, WORLD_WIDTH, 1) -- suelo
     world:add(parizq, 0, 0, 1, WORLD_HEIGHT) -- pared izquierda
     world:add(parder, WORLD_WIDTH, 0, 1, WORLD_HEIGHT) -- pared derecha
 
-    jugador:load(world)
+    jugador:load(world, game)
 
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
     
@@ -46,7 +46,7 @@ function game.load()
     
     for i=1,2 do
         local enemy = EnemyClass.new()
-        enemy:load(50 + i * enemy.width, 120, world)
+        enemy:load(50 + i * enemy.width, 120 + i * enemy.height, world)
         table.insert(enemigos, enemy)
     end
     
@@ -171,6 +171,8 @@ function game.pointermoved(pointer)
             end
         end
     end
+function game.vidaperdida()
+    game.load()
 end
 
 return game
