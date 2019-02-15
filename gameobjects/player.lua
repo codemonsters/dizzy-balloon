@@ -75,7 +75,8 @@ function Player:new()
     return jugador
 end
 
-function Player:load(world)
+function Player:load(world, game)
+    self.game = game
     self.offset = 0
     self.direccion = 1
     self.world = world
@@ -216,7 +217,7 @@ function Player:empujar(vector, empujador)
 
         if (len > 0) then --hay una colision con otra cosa al intentar moverlo, debe morir
             xtest, self.y, cols, len = self.world:move(self, self.x - vector.x, self.y)
-            if (math.abs(xtest - self.x) < math.abs(vector.x)) then
+            if (math.abs(xtest - self.x) <= 0.5) then --si no puede retroceder una distancia, se considera estrujado
                 self:morir()
             end
         end
@@ -226,9 +227,9 @@ function Player:empujar(vector, empujador)
 
         self.x, self.y, cols, len = self.world:move(self, self.x, self.y + vector.y)
 
-        if (len > 0) then --hay una colision con otra cosa al intentar moverlo, debe morir
+        if (len > 0) then --hay una colision con otra cosa al intentar moverlo
             self.x, ytest, cols, len = self.world:move(self, self.x, self.y - vector.y)
-            if (math.abs(ytest - self.y) < math.abs(vector.y)) then
+            if (math.abs(ytest - self.y) <= 0.5) then --si no puede retroceder una distancia, se considera estrujado
                 self:morir()
             end
         end
@@ -245,11 +246,7 @@ function Player:desmontar()
 end
 
 function Player:morir()
-    if self.montado then
-        self:desmontar()
-    end
-    self.y = WORLD_HEIGHT
-    self.x = 0
+    self.game.vidaperdida()
 end
 
 return Player
