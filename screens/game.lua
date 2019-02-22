@@ -31,22 +31,17 @@ local scaleCanvas = pillarEscala()
 function game.load()
     local world = bump.newWorld(50)
 
-    --Límites nivel
-    suelo = {} 
-    parizq = {} 
-    parder = {}
-    world:add(suelo, 0, WORLD_HEIGHT, WORLD_WIDTH, 1) -- suelo
-    world:add(parizq, 0, 0, 1, WORLD_HEIGHT) -- pared izquierda
-    world:add(parder, WORLD_WIDTH, 0, 1, WORLD_HEIGHT) -- pared derecha
-
-    -- Límites del nivel usando block
-    bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 10, SCREEN_WIDTH, 10)
-    bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT)
-    bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT)
-
-    bloqueSuelo:load(world, x, y)
-    bloqueParizq:load(world, x, y)
-    bloqueParder:load(world, x, y)
+    bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 10, world)
+    bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT, world)
+    bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT, world)
+    
+    --[[
+    -- Plataformas de prueba:
+    bloquePlatA = BlockClass.new("Plataforma A", 100, WORLD_HEIGHT - 70, 100, 4, world)
+    bloquePlatB = BlockClass.new("Plataforma B", 600, 200, 40, 4, world)
+    bloquePlatC = BlockClass.new("Plataforma C", 475, WORLD_HEIGHT - 500, 20, 400, world)
+    bloquePlatD = BlockClass.new("Plataforma D", 200, 200, 120, 4, world)
+    --]]
 
     jugador:load(world)
 
@@ -92,6 +87,10 @@ function game.draw()
         bloqueSuelo:draw()
         bloqueParizq:draw()
         bloqueParder:draw()
+        bloquePlatA:draw()
+        bloquePlatB:draw()
+        bloquePlatC:draw()
+        bloquePlatD:draw()
 
         -- puntos de las dos esquinas del mundo
         love.graphics.setColor(255, 255, 255)

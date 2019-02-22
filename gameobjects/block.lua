@@ -8,11 +8,13 @@ local BlockClass = {
 
 BlockClass.__index = BlockClass
 
-function BlockClass.new(name, x, y, width, height)
+function BlockClass.new(name, x, y, width, height, world)
     local block = {}
     block.name = name
     block.x, block.y = x, y
     block.width, block.height = width, height
+    block.world = world
+    block.world:add(block, block.x, block.y, block.width, block.height)
     setmetatable(block, BlockClass)
     return block
 end
