@@ -14,6 +14,7 @@ local bordes = 4
 local jugadorpuedesaltar = true
 local jugadorquieremoverse = false
 local jugadorquieredisparar = false
+local BlockClass = require("gameobjects/block")
 
 function pillarEscala()
 
@@ -30,13 +31,17 @@ local scaleCanvas = pillarEscala()
 function game.load()
     local world = bump.newWorld(50)
 
-    --Límites nivel
-    suelo = {name = "suelo"}
-    parizq = {name = "parizq"}
-    parder = {name = "parder"}
-    world:add(suelo, 0, WORLD_HEIGHT, WORLD_WIDTH, 1) -- suelo
-    world:add(parizq, 0, 0, 1, WORLD_HEIGHT) -- pared izquierda
-    world:add(parder, WORLD_WIDTH, 0, 1, WORLD_HEIGHT) -- pared derecha
+    bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 10, world)
+    bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT, world)
+    bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT, world)
+
+    --[[
+    -- Plataformas de prueba:
+    bloquePlatA = BlockClass.new("Plataforma A", 100, WORLD_HEIGHT - 70, 100, 4, world)
+    bloquePlatB = BlockClass.new("Plataforma B", 600, 200, 40, 4, world)
+    bloquePlatC = BlockClass.new("Plataforma C", 475, WORLD_HEIGHT - 500, 20, 400, world)
+    bloquePlatD = BlockClass.new("Plataforma D", 200, 200, 120, 4, world)
+    --]]
 
     jugador:load(world, game)
 
@@ -78,6 +83,18 @@ function game.draw()
         end
 
         sky:draw()
+
+        bloqueSuelo:draw()
+        bloqueParizq:draw()
+        bloqueParder:draw()
+
+        --[[
+        -- Plataformas de prueba
+        bloquePlatA:draw()
+        bloquePlatB:draw()
+        bloquePlatC:draw()
+        bloquePlatD:draw()
+        --]]
 
         -- puntos de las dos esquinas del mundo
         love.graphics.setColor(255, 255, 255)
