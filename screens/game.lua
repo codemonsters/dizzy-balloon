@@ -34,7 +34,7 @@ function game.load()
     bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 10, world)
     bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT, world)
     bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT, world)
-    
+
     --[[
     -- Plataformas de prueba:
     bloquePlatA = BlockClass.new("Plataforma A", 100, WORLD_HEIGHT - 70, 100, 4, world)
@@ -87,10 +87,14 @@ function game.draw()
         bloqueSuelo:draw()
         bloqueParizq:draw()
         bloqueParder:draw()
+
+        --[[
+        -- Plataformas de prueba
         bloquePlatA:draw()
         bloquePlatB:draw()
         bloquePlatC:draw()
         bloquePlatD:draw()
+        --]]
 
         -- puntos de las dos esquinas del mundo
         love.graphics.setColor(255, 255, 255)
