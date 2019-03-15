@@ -5,7 +5,7 @@ local jugador = PlayerClass.new()
 local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
 local sky = SkyClass.new(world)
-local PointerClass = require("gameobjects/pointer")
+local PointerClass = require("pointer")
 local leftFinger = PointerClass.new(game, "Izquierdo")
 local rightFinger = PointerClass.new(game, "Derecho")
 local mousepointer = PointerClass.new(game, "Puntero")
@@ -16,6 +16,8 @@ local jugadorquieremoverse = false
 local jugadorquieredisparar = false
 local BlockClass = require("gameobjects/block")
 local gameFilter
+local vidas
+local enemigos = {}
 
 function pillarEscala()
 
@@ -29,8 +31,13 @@ end
 
 local scaleCanvas = pillarEscala()
 
-function game.load()
-    local world = bump.newWorld(50)
+function game.loadlife()
+    jugador.x, jugador.y = jugador_x_inicial, jugador_y_inicial
+    enemigo1.x, enemigo1.y = enemigo1_x_inicial, enemigo1_y_inicial
+    enemigo2.x, enemigo2.y = enemigo2_x_inicial, enemigo2_y_inicial
+end
+
+function game.loadlevel()
 
     bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 10, world)
     bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT, world)
@@ -45,19 +52,35 @@ function game.load()
     --]]
 
     jugador:load(world, game)
+    jugador_x_inicial = 1
+    jugador_y_inicial = WORLD_HEIGHT - jugador.height
 
-    worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
+    enemigo1 = EnemyClass.new()
+    enemigo1:load(50 + EnemyClass.width, 120 + EnemyClass.height, world)
+    enemigo1_x_inicial = 50 + EnemyClass.width
+    enemigo1_y_inicial = 120 + EnemyClass.width
+
+    enemigo2 = EnemyClass.new()
+    enemigo2:load(50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world)
+    enemigo2_x_inicial = 50 + EnemyClass.width * 2
+    enemigo2_y_inicial = 120 + EnemyClass.width * 2
     
-    enemigos = {}
-    
-    for i=1,2 do
-        local enemy = EnemyClass.new()
-        enemy:load(50 + i * enemy.width, 120 + i * enemy.height, world)
-        table.insert(enemigos, enemy)
-    end
+    table.insert(enemigos, enemigo1)
+    table.insert(enemigos, enemigo2)
     
     sky:load(world)
 
+    vidas = 3
+
+end
+
+function game.load()
+    world = bump.newWorld(50)
+
+    worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
+
+    game.loadlevel()
+    
 end
 
 function game.update(dt)
@@ -66,6 +89,7 @@ function game.update(dt)
     for i, enemigo in ipairs(enemigos) do
         enemigo:update()
     end
+
     sky:update(dt)
 end
 
@@ -192,7 +216,11 @@ function game.pointermoved(pointer)
 end
 
 function game.vidaperdida()
-    game.load()
+    vidas = vidas - 1
+    if vidas <= 0 then
+        change_screen(require("screens/menu"))
+    end
+    game.loadlife()
 end
 
 return game
