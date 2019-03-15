@@ -4,7 +4,7 @@ local PlayerClass = require("gameobjects/player")
 local jugador = PlayerClass.new()
 local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
-local sky = SkyClass.new()
+local sky = SkyClass.new(world)
 local PointerClass = require("gameobjects/pointer")
 local leftFinger = PointerClass.new(game, "Izquierdo")
 local rightFinger = PointerClass.new(game, "Derecho")
@@ -15,6 +15,7 @@ local jugadorpuedesaltar = true
 local jugadorquieremoverse = false
 local jugadorquieredisparar = false
 local BlockClass = require("gameobjects/block")
+local gameFilter
 
 function pillarEscala()
 
@@ -56,7 +57,7 @@ function game.load()
     end
     
     sky:load(world)
-    
+
 end
 
 function game.update(dt)

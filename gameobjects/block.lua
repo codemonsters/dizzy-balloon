@@ -3,6 +3,7 @@ local BlockClass = {
     name = "Block",
     x, y = 0, 0,
     width, height = 0, 0,
+    isBlock = true,
     quad = love.graphics.newQuad(162, 148, 1, 1, atlas:getDimensions())
 }
 

@@ -8,6 +8,7 @@ local Enemy = {
     height = 40,
     velocidad_x = 2,
     velocidad_y = 2,
+    isEnemy = true,
     image = love.graphics.newImage("assets/enemy.png")
 }
 Enemy.__index = Enemy

@@ -15,6 +15,7 @@ local SeedClass = {
     height = 20,
     image = love.graphics.newImage("assets/seed.png"),
     name = "Seed",
+    isSeed = true,
     states = {
         sky = {
             name = "sky",
@@ -152,6 +153,7 @@ function SeedClass:load(world, x, y)
     self.currentframe = 1
     self.world:add(self, self.x, self.y, self.width, self.height)
 end
+
 
 function SeedClass:update(dt)
     self.state.update(self, dt)

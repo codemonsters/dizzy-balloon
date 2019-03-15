@@ -5,6 +5,7 @@ local Player = {
     velyini = -0.5,
     montado = false,
     montura = nil,
+    isPlayer = true,
     states = {
         standing = {
             quads = {
