@@ -9,7 +9,13 @@ local Enemy = {
     velocidad_x = 2,
     velocidad_y = 2,
     isEnemy = true,
-    image = love.graphics.newImage("assets/enemy.png")
+    image = love.graphics.newImage("assets/enemy.png"),
+    enemyFilter = function(item, other)
+        if     other.isPlayer then return 'bounce'
+        elseif other.isBlock  then return 'bounce'
+        elseif other.isSeed   then return 'bounce'
+        end
+    end
 }
 Enemy.__index = Enemy
 
