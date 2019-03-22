@@ -18,7 +18,84 @@ local BlockClass = require("gameobjects/block")
 local gameFilter
 local vidas
 local enemigos = {}
+local plataformas = {}
+--[[
+local niveles = {
+    
+    nivel1 = {
 
+        name = "1",
+        
+        jugador_x_inicial = 1,
+        jugador_y_inicial = WORLD_HEIGHT - jugador.height,
+        
+        enemigos = {
+            
+            enemigo1 = EnemyClass.new(),
+            enemigo1:load(50 + EnemyClass.width, 120 + EnemyClass.height, world),
+            enemigo1_x_inicial = 50 + EnemyClass.width,
+            enemigo1_y_inicial = 120 + EnemyClass.width,
+
+            enemigo2 = EnemyClass.new(),
+            enemigo2:load(50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world),
+            enemigo2_x_inicial = 50 + EnemyClass.width * 2,
+            enemigo2_y_inicial = 120 + EnemyClass.width * 2
+        
+        },
+
+        plataformas = {
+
+            bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 10, world),
+            bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT, world),
+            bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT, world)
+        
+        },
+
+        
+
+    },
+
+    nivel2 = {
+
+        name = "2",
+
+        jugador_x_inicial = 1,
+        jugador_y_inicial = WORLD_HEIGHT - jugador.height,
+
+        enemigos = {
+
+            enemigo1 = EnemyClass.new(),
+            enemigo1:load(50 + EnemyClass.width, 120 + EnemyClass.height, world),
+            enemigo1_x_inicial = 50 + EnemyClass.width,
+            enemigo1_y_inicial = 120 + EnemyClass.width,
+
+            enemigo2 = EnemyClass.new(),
+            enemigo2:load(50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world),
+            enemigo2_x_inicial = 50 + EnemyClass.width * 2,
+            enemigo2_y_inicial = 120 + EnemyClass.width * 2,
+
+            enemigo3 = EnemyClass.new(),
+            enemigo3:load(50 + EnemyClass.width * 3, 120 + EnemyClass.height * 2, world),
+            enemigo3_x_inicial = 50 + EnemyClass.width * 2,
+            enemigo3_y_inicial = 120 + EnemyClass.height * 2
+
+        },
+
+        plataformas = {
+
+            bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 10, world),
+            bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT, world),
+            bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT, world),
+            bloquePlatA = BlockClass.new("Plataforma A", 100, WORLD_HEIGHT - 70, 100, 4, world)
+        
+        },
+
+        bloqueSalida = BlockClass.new("Salida", 0, 0, SCREEN_WIDTH, 1, world)
+
+    }
+
+}
+--]]
 function pillarEscala()
 
     if (window_height >= window_width) then
@@ -42,6 +119,10 @@ function game.loadlevel()
     bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 10, world)
     bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT, world)
     bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT, world)
+
+    table.insert(plataformas, bloqueSuelo)
+    table.insert(plataformas, bloqueParizq)
+    table.insert(plataformas, bloqueParder)
 
     --[[
     -- Plataformas de prueba:
@@ -109,9 +190,9 @@ function game.draw()
 
         sky:draw()
 
-        bloqueSuelo:draw()
-        bloqueParizq:draw()
-        bloqueParder:draw()
+        for i, plataforma in ipairs(plataformas) do
+            plataforma:draw()
+        end
 
         --[[
         -- Plataformas de prueba
