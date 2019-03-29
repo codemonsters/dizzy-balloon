@@ -6,7 +6,7 @@ local SkyClass = {
 
 SkyClass.__index = SkyClass
 
-function SkyClass.new(world)
+function SkyClass:new(world)
     local sky = {
         name = "sky"
     }
