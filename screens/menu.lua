@@ -13,7 +13,7 @@ function menu.draw()
     love.graphics.printf(
         "DIZZY BALLOON\n\n=PRESS FIRE TO START=",
         0,
-        math.floor((SCREEN_HEIGHT - font:getHeight() * 3) / 2 + 0.5),
+        math.floor((SCREEN_HEIGHT - font:getHeight() * 2) / 2),
         SCREEN_WIDTH,
         "center"
     )
@@ -28,6 +28,11 @@ end
 
 function menu.keyreleased(key, scancode, isrepeat)
 
+end
+
+function love.mousepressed(id, x, y, dx, dy, pressure)
+    game_screen = require("screens/game")
+    change_screen(game_screen)
 end
 
 return menu

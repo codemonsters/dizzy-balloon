@@ -15,7 +15,7 @@ function Pointer.new(game, name)
     return puntero
 end
 
-function Pointer.touchpressed(self, x, y)
+function Pointer:touchpressed(x, y)
     self.pressed = true
     self.x = x
     self.y = y

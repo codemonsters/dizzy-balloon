@@ -1,6 +1,12 @@
 local push = require "libraries/push/push" -- https://github.com/Ulydev/push
 log = require "libraries/log/log" -- https://github.com/rxi/log.lua
 
+mobile = false
+
+if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
+    mobile = true
+end
+
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720 -- 512, 288
 WORLD_WIDTH, WORLD_HEIGHT = 700, 700 -- 280, 280
 

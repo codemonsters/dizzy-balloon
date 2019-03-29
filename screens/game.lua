@@ -6,9 +6,14 @@ local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
 local sky = SkyClass.new(world)
 local PointerClass = require("pointer")
-local leftFinger = PointerClass.new(game, "Izquierdo")
-local rightFinger = PointerClass.new(game, "Derecho")
-local mousepointer = PointerClass.new(game, "Puntero")
+
+if mobile then
+    leftFinger = PointerClass.new(game, "Izquierdo")
+    rightFinger = PointerClass.new(game, "Derecho")
+else
+    mousepointer = PointerClass.new(game, "Puntero")
+end
+
 local worldCanvas = nil
 local bordes = 4
 local jugadorpuedesaltar = true
@@ -39,9 +44,9 @@ end
 
 function game.loadlevel()
 
-    bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 10, world)
-    bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT, world)
-    bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT, world)
+    bloqueSuelo = BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, 10, world)
+    bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, WORLD_HEIGHT, world)
+    bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, WORLD_HEIGHT, world)
 
     --[[
     -- Plataformas de prueba:
@@ -128,6 +133,7 @@ function game.draw()
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
     love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.draw(worldCanvas, (window_width / 2) - (WORLD_WIDTH * scaleCanvas / 2), (window_height / 2) - (WORLD_HEIGHT * scaleCanvas / 2),0, scaleCanvas, scaleCanvas)
+    
 end
 
 function game.keypressed(key, scancode, isrepeat)
@@ -161,23 +167,49 @@ function game.keyreleased(key, scancode, isrepeat)
 end
 
 function love.mousepressed(x, y, button, istouch, presses)
-    if button == 1 then
+    if button == 1 and not mobile then
         jugadorquieremoverse = true
         jugadorquieredisparar = true
-        mousepointer.touchpressed(mousepointer, x, y)
+        mousepointer:touchpressed(x, y)
     end
 end
 
 function love.mousereleased(x, y, button, istouch, presses)
-    if button == 1 then
+    if button == 1 and not mobile then
         jugadorquieremoverse = false
         jugadorquieredisparar = false
-        mousepointer.touchreleased(mousepointer, dx, dy)
+        mousepointer:touchreleased(dx, dy)
     end
 end
 
 function love.mousemoved(x, y, dx, dy, istouch)
-    mousepointer.touchmoved(mousepointer, dx, dy)
+    if not mobile then
+        mousepointer:touchmoved(dx, dy)
+    end
+end
+
+function love.touchmoved(id, x, y, dx, dy, pressure)
+    leftFinger:touchmoved(dx, dy)
+end
+
+function love.touchpressed(id, x, y, dx, dy, pressure)
+    if x > SCREEN_WIDTH / 2 then
+        rightFinger:touchpressed(x, y)
+    else
+        jugadorquieremoverse = true
+        jugadorquieredisparar = true
+        leftFinger:touchpressed(x, y)
+    end
+end
+
+function love.touchreleased(id, x, y, dx, dy, pressure)
+    if x > SCREEN_WIDTH / 2 then
+        rightFinger:touchreleased(dx, dy)
+    else
+        jugadorquieremoverse = false
+        jugadorquieredisparar = false
+        leftFinger:touchreleased(dx, dy)
+    end
 end
 
 function game.pointerpressed(pointer)
