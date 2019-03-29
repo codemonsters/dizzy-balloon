@@ -184,7 +184,7 @@ function game.update(dt)
 
     if fireRequested then
         fireRequested = false
-        bomb:launch(jugador.x, jugador.y, fireInitialDirection)
+        bomb:launch(jugador.x, jugador.y, fireInitialDirection, jugador:vx(), jugador:vy())
     end
     bomb:update(dt)
 end

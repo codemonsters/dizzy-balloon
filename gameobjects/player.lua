@@ -6,6 +6,19 @@ local Player = {
     montado = false,
     montura = nil,
     isPlayer = true,
+    vx = function (self)
+        local vx_factor = 0
+        if self.left then
+            vx_factor = -1
+        end
+        if self.right then
+            vx_factor = 1
+        end
+        return vx_factor * 180
+    end,
+    vy = function (self)
+        return self.velocidad_y -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
+    end,
     collisions_filter = function(item, other)
         if other.isBomb then
             return nil
@@ -101,12 +114,9 @@ function Player:load(world, game)
 end
 
 function Player:update(dt)
-    if self.left then
-        self.x, self.y, cols, len = self.world:move(self, self.x - 3, self.y, self.collisions_filter)
-    end
-    if self.right then
-        self.x, self.y, cols, len = self.world:move(self, self.x + 3, self.y, self.collisions_filter)
-    end
+
+    self.x, self.y, cols, len = self.world:move(self, self.x + self:vx() * dt, self.y, self.collisions_filter)
+    -- TODO: juntar estas dos llamadas a world:move en una
     self.x, ydespues, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y, self.collisions_filter)
     
     if (len > 0) then
