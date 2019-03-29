@@ -6,6 +6,8 @@ local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
 local sky = SkyClass.new(world)
 local PointerClass = require("pointer")
+local BombClass = require("gameobjects/bomb")
+local bomb = BombClass.new()
 
 if mobile then
     leftFinger = PointerClass.new(game, "Izquierdo")
@@ -156,6 +158,8 @@ function game.loadlevel()
     
     sky:load(world)
 
+    bomb:load(world)
+
     vidas = 3
 
 end
@@ -177,6 +181,12 @@ function game.update(dt)
     end
 
     sky:update(dt)
+
+    if fireRequested then
+        fireRequested = false
+        bomb:launch(jugador.x, jugador.y, fireInitialDirection)
+    end
+    bomb:update(dt)
 end
 
 function game.draw()
@@ -206,6 +216,8 @@ function game.draw()
         bloquePlatC:draw()
         bloquePlatD:draw()
         --]]
+        
+        bomb:draw()
 
         -- puntos de las dos esquinas del mundo
         love.graphics.setColor(255, 255, 255)
@@ -221,11 +233,13 @@ function game.keypressed(key, scancode, isrepeat)
     if key == "q" then
         change_screen(require("screens/menu"))
     elseif key == "w" or key == "up" then
-        jugador.up = true
+        fireRequested = true
+        fireInitialDirection = "up"
     elseif key == "a" or key == "left" then
         jugador.left = true
     elseif key == "s" or key == "down" then
-        jugador.down = true
+        fireRequested = true
+        fireInitialDirection = "down"
     elseif key == "d" or key == "right" then
         jugador.right = true
     elseif key == "space" then

@@ -6,6 +6,13 @@ local Player = {
     montado = false,
     montura = nil,
     isPlayer = true,
+    collisions_filter = function(item, other)
+        if other.isBomb then
+            return nil
+        else
+            return "slide"
+        end
+    end,
     states = {
         standing = {
             quads = {
@@ -95,12 +102,12 @@ end
 
 function Player:update(dt)
     if self.left then
-        self.x, self.y, cols, len = self.world:move(self, self.x - 3,self.y)
+        self.x, self.y, cols, len = self.world:move(self, self.x - 3, self.y, self.collisions_filter)
     end
     if self.right then
-        self.x, self.y, cols, len = self.world:move(self, self.x + 3,self.y)
+        self.x, self.y, cols, len = self.world:move(self, self.x + 3, self.y, self.collisions_filter)
     end
-    self.x, ydespues, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y)
+    self.x, ydespues, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y, self.collisions_filter)
     
     if (len > 0) then
         if (cols[1].other.name == "Enemigo" and not self.montado) then
@@ -155,7 +162,7 @@ function Player:update(dt)
 end
 
 function Player:cabezazo()
-    self.x, self.y, cols, len = self.world:move(self, self.x, self.y + 2)
+    self.x, self.y, cols, len = self.world:move(self, self.x, self.y + 2, self.collisions_filter)
     self.velocidad_y = -4
 end
 
@@ -214,10 +221,10 @@ end
 
 function Player:empujar(vector, empujador)
     if vector.x ~= 0 then
-        self.x, self.y, cols, len = self.world:move(self, self.x + vector.x, self.y)
+        self.x, self.y, cols, len = self.world:move(self, self.x + vector.x, self.y, self.collisions_filter)
 
         if (len > 0) then --hay una colision con otra cosa al intentar moverlo, debe morir
-            xtest, self.y, cols, len = self.world:move(self, self.x - vector.x, self.y)
+            xtest, self.y, cols, len = self.world:move(self, self.x - vector.x, self.y, self.collisions_filter)
             if (math.abs(xtest - self.x) <= 0.5) then --si no puede retroceder una distancia, se considera estrujado
                 self:morir()
             end
@@ -226,10 +233,10 @@ function Player:empujar(vector, empujador)
     if vector.y ~= 0 then --Si se da en el eje y siempre va a ser hacia arriba
         self.velocidad_y = 0
 
-        self.x, self.y, cols, len = self.world:move(self, self.x, self.y + vector.y)
+        self.x, self.y, cols, len = self.world:move(self, self.x, self.y + vector.y, self.collisions_filter)
 
         if (len > 0) then --hay una colision con otra cosa al intentar moverlo
-            self.x, ytest, cols, len = self.world:move(self, self.x, self.y - vector.y)
+            self.x, ytest, cols, len = self.world:move(self, self.x, self.y - vector.y, self.collisions_filter)
             if (math.abs(ytest - self.y) <= 0.5) then --si no puede retroceder una distancia, se considera estrujado
                 self:morir()
             end
