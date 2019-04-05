@@ -104,59 +104,61 @@ function Player:load(world, game)
     self.x = 1
     self.y = WORLD_HEIGHT - self.height
     self.velocidad_y = self.velyini --la velocidad y debe ser negativa para que haya diferencia en el movimiento de eje y para saber cuando aplicar aceleración
-    self.left, self.right, self.up, self.down, self.jumping = false, false, false, false, false
+    self.left, self.right, self.up, self.down, self.not_supported = false, false, false, false, false
     self.offset = 0
-    self.direccion = 1
+    self.bitmap_direction = 1
     self.change_state(self, Player.states.standing)
     self.world:add(self, self.x, self.y, self.width, self.height)
 end
 
 function Player:update(dt)
-
+    --movimento en el eje x
     self.x, self.y, cols, len = self.world:move(self, self.x + self:vx() * dt, self.y, self.collisions_filter)
     -- TODO: juntar estas dos llamadas a world:move en una
+    --movimiento en el eje y
     self.x, ydespues, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y, self.collisions_filter)
     
-    if (len > 0) then
-        if (cols[1].other.name == "Enemigo" and not self.montado) then
-            if (cols[1].other.y - self.y > self.width) then
+    --colisiones en el eje y
+    if len > 0 then -- checkeamos si nos podemos montar sobre un enemigo
+        if cols[1].other.name == "Enemigo" and not self.montado then
+            if cols[1].other.y - self.y > cols[1].other.width then --cuando el jugador está sobre el enemigo, la y es menor a más altura
                 self.montado = true
                 self.montura = cols[1].other
                 self.y = self.montura.y - self.height
                 self.montura:montado(self)
             end
         end
+        if self.velocidad_y < 0 then --si hay colision al bajar en el eje y
+            self.velocidad_y = self.velyini
+            self.not_supported = false
+        end
+        if self.velocidad_y > 0 then -- si hay un choque en medio de un salto llendo hacia arriba, te das un cabezazo
+            self:cabezazo();
+        end
     end
 
     --El jugador aumenta constantemente la velocidad y, pero se resetea cada vez que toca el suelo o un enemigo cayendo
     if ydespues == self.y - self.velocidad_y then --debería caer si se consiguió mover en el eje y
         
-        if (self.montado) then
-            if (self.montura.x - self.x > self.montura.width or self.montura.x - self.x < - self.montura.width) then        
+        if self.montado then
+            -- si estamos fuera de los limites del enemigo en el eje x
+            if self.montura.x - self.x > self.montura.width or self.montura.x - self.x < - self.montura.width then        
                 self:desmontar()
             end
-        else
+        else -- el jugador está en el aire, ya sea subiendo o bajando
             self.velocidad_y = self.velocidad_y - 9.8 * dt
-            self.jumping = true
+            self.not_supported = true
         end
 
     end
     
-    if (self.montado == false) then
+    if self.montado == false then -- si lo hiciesemos cuando está montado caería a través del enemigo
         self.y = ydespues
     end
 
-    if self.velocidad_y < 0 and len > 0 then --si hay colision al bajar en el eje y
-        self.velocidad_y = self.velyini
-        self.jumping = false
-    end
-
     -- actualización del estado del jugador
-    if self.jumping then
+    if self.not_supported then
         self.change_state(self, Player.states.jumping)
-        if len > 0 and self.velocidad_y > 0 then -- si hay un choque en medio de un salto llendo hacia arriba, te das un cabezazo
-            self:cabezazo();
-        end
     else
         if self.left or self.right then
             -- self.state = self.states.walking
@@ -179,11 +181,11 @@ function Player:draw()
 
     -- TODO: eliminar offset y dibujar todos los frames del mismo tamaño
     if self.right then
-        self.direccion = 1
+        self.bitmap_direction = 1
         self.offset = 0
     end
     if self.left then
-        self.direccion = -1
+        self.bitmap_direction = -1
         self.offset = self.width
     end
 
@@ -193,20 +195,9 @@ function Player:draw()
         self.x + self.offset,
         self.y,
         0,
-        self.width / self.state.quads[self.current_frame].width * self.direccion,
+        self.width / self.state.quads[self.current_frame].width * self.bitmap_direction,
         self.height/ self.state.quads[self.current_frame].height
     )
-    --[[
-    love.graphics.draw(
-        self.state.quads[1], -- TODO: Cambiar la imagen del sprite según su estado
-        self.x,
-        self.y,
-        0
-    
-        self.width / self.state.quads[1]:getWidth(),
-        self.height/ self.state[1]:getHeight()
-    )
-    --]]
 end
 
 function Player:change_state(new_state)
@@ -217,8 +208,8 @@ function Player:change_state(new_state)
 end
 
 function Player:jump()
-    if not self.jumping then
-        self.jumping = true
+    if not self.not_supported then
+        self.not_supported = true
         self.velocidad_y = 5
 
         if self.montado then
@@ -250,7 +241,7 @@ function Player:empujar(vector, empujador)
             end
         end
 
-        self.jumping = false
+        self.not_supported = false
 
         self.velocidad_y = self.velyini
     end
