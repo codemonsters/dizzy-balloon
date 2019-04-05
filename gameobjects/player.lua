@@ -17,7 +17,7 @@ local Player = {
         return vx_factor * 180
     end,
     vy = function (self)
-        return self.velocidad_y -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
+        return -self.velocidad_y * 80 -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
     end,
     collisions_filter = function(item, other)
         if other.isBomb then
@@ -116,7 +116,7 @@ function Player:update(dt)
     self.x, self.y, cols, len = self.world:move(self, self.x + self:vx() * dt, self.y, self.collisions_filter)
     -- TODO: juntar estas dos llamadas a world:move en una
     --movimiento en el eje y
-    self.x, ydespues, cols, len = self.world:move(self, self.x, self.y - self.velocidad_y, self.collisions_filter)
+    self.x, ydespues, cols, len = self.world:move(self, self.x, self.y + self:vy() * dt, self.collisions_filter)
     
     --colisiones en el eje y
     if len > 0 then -- checkeamos si nos podemos montar sobre un enemigo
@@ -138,7 +138,7 @@ function Player:update(dt)
     end
 
     --El jugador aumenta constantemente la velocidad y, pero se resetea cada vez que toca el suelo o un enemigo cayendo
-    if ydespues == self.y - self.velocidad_y then --debería caer si se consiguió mover en el eje y
+    if ydespues == self.y + self:vy() * dt then --debería caer si se consiguió mover en el eje y
         
         if self.montado then
             -- si estamos fuera de los limites del enemigo en el eje x
