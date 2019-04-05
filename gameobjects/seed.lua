@@ -26,7 +26,9 @@ local SeedClass = {
                     height = 16
                 }
             },
-            load = function(self) end,
+            load = function(self)
+                self.currentframe = 1
+            end,
             update = function(self, dt)
                 self.x  = self.x + 10 * dt
                 if  self.x > WORLD_WIDTH then 
@@ -75,7 +77,9 @@ local SeedClass = {
                     height = 14
                 }
             },
-            load = function(self) end,
+            load = function(self)
+                self.currentframe = 1
+            end,
             update = function(self, dt) 
                 self.change_state(self, self.states.onthefloor)
             end
@@ -90,7 +94,8 @@ local SeedClass = {
                 }
             },
             load = function(self)
-                self.elapsed_time = 0 
+                self.elapsed_time = 0
+                self.currentframe = 1 
             end,
             update = function(self, dt)
                 self.elapsed_time = self.elapsed_time + dt
@@ -110,6 +115,7 @@ local SeedClass = {
             },
             load = function(self)
                 self.elapsed_time = 0
+                self.currentframe = 1
             end,
             update = function(self, dt)
                 self.elapsed_time = self.elapsed_time + dt
@@ -127,33 +133,29 @@ local SeedClass = {
                     height = 13
                 }
             },
-            update = function(self, dt) end,
-            load = function(self) end
+            load = function(self)
+                self.currentframe = 1
+            end,
+            update = function(self, dt) end
         }
     }
 }
 
 SeedClass.__index = SeedClass
 
-function SeedClass.new(name, sky)
+function SeedClass.new(name, sky, world, x, y)
     local seed = {}
     seed.name = name
     seed.sky = sky
+    seed.world = world
+    seed.x = x
+    seed.y = y
     seed.state = SeedClass.states.sky
     seed.currentFrame = 1
+    seed.world:add(seed, seed.x, seed.y, SeedClass.width, SeedClass.height)
     setmetatable(seed, SeedClass) 
     return seed
 end
-
-function SeedClass:load(world, x, y)
-    self.world = world
-    self.x = x
-    self.y = y
-    self.state = SeedClass.states.sky
-    self.currentframe = 1
-    self.world:add(self, self.x, self.y, self.width, self.height)
-end
-
 
 function SeedClass:update(dt)
     self.state.update(self, dt)

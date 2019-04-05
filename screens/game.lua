@@ -172,8 +172,7 @@ function game.load()
     jugador:load(world, game)
     
     sky = SkyClass.new(world)
-    sky:load(world)
-    
+        
     bomb = BombClass.new()
     bomb:load(world)
 
