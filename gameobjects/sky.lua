@@ -1,14 +1,13 @@
 local SeedClass = require("gameobjects/seed")
 
-local SkyClass = {
-    semillas = {}
-}
+local SkyClass = {}
 
 SkyClass.__index = SkyClass
 
 function SkyClass:new(world)
     local sky = {
-        name = "sky"
+        name = "sky",
+        semillas = {}
     }
     setmetatable(sky, SkyClass)
     return sky
