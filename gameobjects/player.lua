@@ -3,8 +3,8 @@ local Player = {
     width = 40,
     height = 40,
     velyini = -0.5,
-    montado = false,
-    montura = nil,
+    montado = false,    -- TODO: eliminar montado, usar montura como boolean
+    montura = nil,  
     isPlayer = true,
     vx = function (self)
         local vx_factor = 0
@@ -98,8 +98,6 @@ end
 
 function Player:load(world, game)
     self.game = game
-    self.offset = 0
-    self.direccion = 1
     self.world = world
     self.width = 40
     self.height = Player.width
@@ -107,9 +105,9 @@ function Player:load(world, game)
     self.y = WORLD_HEIGHT - self.height
     self.velocidad_y = self.velyini --la velocidad y debe ser negativa para que haya diferencia en el movimiento de eje y para saber cuando aplicar aceleración
     self.left, self.right, self.up, self.down, self.jumping = false, false, false, false, false
-    -- self.state = Player.states.standing
+    self.offset = 0
+    self.direccion = 1
     self.change_state(self, Player.states.standing)
-    self.current_frame = 1
     self.world:add(self, self.x, self.y, self.width, self.height)
 end
 
@@ -223,7 +221,7 @@ function Player:jump()
         self.jumping = true
         self.velocidad_y = 5
 
-        if (self.montado) then
+        if self.montado then
             self:desmontar()
         end
     end
@@ -233,9 +231,9 @@ function Player:empujar(vector, empujador)
     if vector.x ~= 0 then
         self.x, self.y, cols, len = self.world:move(self, self.x + vector.x, self.y, self.collisions_filter)
 
-        if (len > 0) then --hay una colision con otra cosa al intentar moverlo, debe morir
+        if len > 0 then --hay una colision con otra cosa al intentar moverlo, debe morir
             xtest, self.y, cols, len = self.world:move(self, self.x - vector.x, self.y, self.collisions_filter)
-            if (math.abs(xtest - self.x) <= 0.5) then --si no puede retroceder una distancia, se considera estrujado
+            if math.abs(xtest - self.x) <= 0.5 then --si no puede retroceder una distancia, se considera estrujado
                 self:morir()
             end
         end
@@ -245,9 +243,9 @@ function Player:empujar(vector, empujador)
 
         self.x, self.y, cols, len = self.world:move(self, self.x, self.y + vector.y, self.collisions_filter)
 
-        if (len > 0) then --hay una colision con otra cosa al intentar moverlo
+        if len > 0 then --hay una colision con otra cosa al intentar moverlo
             self.x, ytest, cols, len = self.world:move(self, self.x, self.y - vector.y, self.collisions_filter)
-            if (math.abs(ytest - self.y) <= 0.5) then --si no puede retroceder una distancia, se considera estrujado
+            if math.abs(ytest - self.y) <= 0.5 then --si no puede retroceder una distancia, se considera estrujado
                 self:morir()
             end
         end
