@@ -1,13 +1,13 @@
 local bump = require 'libraries/bump/bump'
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
-local jugador = PlayerClass.new()
+-- local jugador = PlayerClass.new()
 local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
-local sky = SkyClass.new(world)
+-- local sky = SkyClass.new(world)
 local PointerClass = require("pointer")
 local BombClass = require("gameobjects/bomb")
-local bomb = BombClass.new()
+-- local bomb = BombClass.new()
 
 if mobile then
     leftFinger = PointerClass.new(game, "Izquierdo")
@@ -16,6 +16,7 @@ else
     mousepointer = PointerClass.new(game, "Puntero")
 end
 
+-- local world = bump.newWorld(50)
 local worldCanvas = nil
 local bordes = 4
 local jugadorpuedesaltar = true
@@ -139,7 +140,7 @@ function game.loadlevel()
     bloquePlatD = BlockClass.new("Plataforma D", 200, 200, 120, 4, world)
     --]]
 
-    jugador:load(world, game)
+    -- jugador:load(world, game)
     jugador_x_inicial = 1
     jugador_y_inicial = WORLD_HEIGHT - jugador.height
 
@@ -156,9 +157,9 @@ function game.loadlevel()
     table.insert(enemigos, enemigo1)
     table.insert(enemigos, enemigo2)
     
-    sky:load(world)
+    -- sky:load(world)
 
-    bomb:load(world)
+    -- bomb:load(world)
 
     vidas = 3
 
@@ -166,6 +167,15 @@ end
 
 function game.load()
     world = bump.newWorld(50)
+
+    jugador = PlayerClass.new()
+    jugador:load(world, game)
+    
+    sky = SkyClass.new(world)
+    sky:load(world)
+    
+    bomb = BombClass.new()
+    bomb:load(world)
 
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
 
@@ -244,6 +254,12 @@ function game.keypressed(key, scancode, isrepeat)
         jugador.right = true
     elseif key == "space" then
         jugador:jump()
+    elseif key == "v" then
+        vidas = vidas - 1
+        log.debug("vidas: " .. vidas)
+    elseif key == "b" then
+        vidas = vidas + 1
+        log.debug("vidas: " .. vidas)
     end
 end
 
@@ -345,6 +361,9 @@ end
 function game.vidaperdida()
     vidas = vidas - 1
     if vidas <= 0 then
+        world = nil
+        enemigos = {}
+        plataformas = {}
         change_screen(require("screens/menu"))
     end
     game.loadlife()
