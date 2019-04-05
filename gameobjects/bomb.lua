@@ -112,30 +112,93 @@ local Bomb = {
         exploding = {
             name = "exploding",
             quads = {
+                --{
+                --    quad = love.graphics.newQuad(194, 35, 12, 12, atlas:getDimensions()),
+                --    width = 12,
+                --    height = 12
+                --},
                 {
-                    quad = love.graphics.newQuad(194, 35, 12, 12, atlas:getDimensions()),
-                    width = 12,
-                    height = 12
+                    quad = love.graphics.newQuad(402, 14, 22, 30, atlas:getDimensions()),
+                    width = 22,
+                    height = 30
+                },
+                {
+                    quad = love.graphics.newQuad(441, 13, 22, 31, atlas:getDimensions()),
+                    width = 22,
+                    height = 31
+                },
+                {
+                    quad = love.graphics.newQuad(519, 11, 31, 32, atlas:getDimensions()),
+                    width = 31,
+                    height = 32
+                },
+                {
+                    quad = love.graphics.newQuad(396, 50, 35, 36, atlas:getDimensions()),
+                    width = 35,
+                    height = 36
+                },
+                {
+                    quad = love.graphics.newQuad(436, 50, 36, 36, atlas:getDimensions()),
+                    width = 36,
+                    height = 36
+                },
+                {
+                    quad = love.graphics.newQuad(515, 50, 39, 37, atlas:getDimensions()),
+                    width = 39,
+                    height = 37
+                },
+                {
+                    quad = love.graphics.newQuad(395, 91, 39, 37, atlas:getDimensions()),
+                    width = 39,
+                    height = 37
+                },
+                {
+                    quad = love.graphics.newQuad(434, 89, 39, 37, atlas:getDimensions()),
+                    width = 39,
+                    height = 37
+                },
+                {
+                    quad = love.graphics.newQuad(475, 90, 38, 36, atlas:getDimensions()),
+                    width = 38,
+                    height = 36
+                },
+                {
+                    quad = love.graphics.newQuad(514, 90, 38, 36, atlas:getDimensions()),
+                    width = 38,
+                    height = 36
                 }
             },
-            load = function(self) self.elapsed_time = 0 end,
+            load = function(self)
+                self.elapsed_time = 0
+                self.current_frame = 1
+            end,
             update = function(self, dt)
                 self.elapsed_time = self.elapsed_time + dt
-                if self.elapsed_time > 0.5 then
-                    self.world:remove(self)
-                    self.change_state(self, self.states.inactive)  -- TODO: Provisional
+                --if self.elapsed_time > 0.5 then
+                --    self.world:remove(self)
+                --    self.change_state(self, self.states.inactive)  -- TODO: Provisional
+                --end
+                if self.elapsed_time > 0.07 then
+                    self.elapsed_time = 0
+                    self.current_frame = self.current_frame + 1
+                    if self.current_frame > 10 then
+                        self.world:remove(self)
+                        self.change_state(self, self.states.inactive)
+                    end
                 end
             end,
             draw = function(self)
+                xscale = 3
+                yscale = 3
                 love.graphics.draw(
                         atlas,
-                        self.state.quads[1].quad,
-                        self.x,
-                        self.y,
+                        self.state.quads[self.current_frame].quad,
+                        self.x + (self.width - xscale * self.width) / 2,
+                        self.y + (self.height - yscale * self.height) / 2,
                         0,
-                        self.width / self.state.quads[1].width,
-                        self.height/ self.state.quads[1].height
-                    )
+                        xscale,
+                        yscale
+                      )
             end
         },
         floor = {
@@ -155,6 +218,7 @@ end
 
 function Bomb:load(world)
     self.world = world
+    self.current_frame = 1
     -- TODO: ¿Preferimos que la bomba esté siempre inactiva tras ejecutar load o bien conservamos su estado anterior? De momento hemos comentado:
     -- self.change_state(self, self.states.inactive)
 end

@@ -50,7 +50,6 @@ function love.load()
     -- atlas: la textura que contiene todas las imágenes
     atlas = love.graphics.newImage("assets/atlas/arcade_platformerV2.png") -- Créditos: Grafixkid (https://opengameart.org/content/arcade-platformer-assets)
 
-
     change_screen(require("screens/menu"))
     log.info("Juego cargado")
 end
