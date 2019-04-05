@@ -34,7 +34,6 @@ local Bomb = {
                 local target_x  = self.x + self.vx * dt
                 local target_y = self.y + self.vy * dt
 
-                self.vy = self.vy + 300 * dt    -- gravedad
                 self.x, self.y, cols, len = self.world:move(self, target_x, target_y, self.collisions_filter)
                 local inside_player = false   -- con esto indicamos si la bomba ha abandonado o no nuestro cuerpo (para que inicialmente no choque con nosotros)
                 for i = 1, len do
@@ -81,7 +80,7 @@ local Bomb = {
             update = function(self, dt)
                 local target_x  = self.x + self.vx * dt
                 local target_y = self.y + self.vy * dt
-                self.vy = self.vy + 300 * dt    -- gravedad
+                self.vy = self.vy + (9.8 * dt)*50    -- gravedad
 
                 self.x, self.y, cols, len = self.world:move(self, target_x, target_y, self.collisions_filter)
 
@@ -184,6 +183,9 @@ function Bomb:launch(x, y, initialDirection, playerVx, playerVy)
         if initialDirection == "up" then
             self.vx  = 0 + playerVx
             self.vy = -350 + playerVy
+            if self.vy < -500 then
+                self.vy = -500
+            end
         elseif initialDirection == "down" then
             self.vx = 0
             self.vy = 350
