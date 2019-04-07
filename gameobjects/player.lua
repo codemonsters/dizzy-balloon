@@ -3,10 +3,10 @@ local Player = {
     width = 40,
     height = 40,
     velyini = -0.5,
-    montado = false,    -- TODO: eliminar montado, usar montura como boolean
-    montura = nil,  
+    montado = false, -- TODO: eliminar montado, usar montura como boolean
+    montura = nil,
     isPlayer = true,
-    vx = function (self)
+    vx = function(self)
         local vx_factor = 0
         if self.left then
             vx_factor = -1
@@ -16,7 +16,7 @@ local Player = {
         end
         return vx_factor * 180
     end,
-    vy = function (self)
+    vy = function(self)
         return -self.velocidad_y * 80 -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
     end,
     collisions_filter = function(item, other)
@@ -35,8 +35,11 @@ local Player = {
                     height = 18
                 }
             },
-            load = function(self) self.current_frame = 1 end,
-            update = function(self, dt) end
+            load = function(self)
+                self.current_frame = 1
+            end,
+            update = function(self, dt)
+            end
         },
         walking = {
             quads = {
@@ -70,7 +73,9 @@ local Player = {
                 if self.elapsed_time > 0.1 then
                     self.elapsed_time = 0
                     self.current_frame = self.current_frame + 1
-                    if self.current_frame > 4 then self.current_frame = 1 end
+                    if self.current_frame > 4 then
+                        self.current_frame = 1
+                    end
                 end
             end
         },
@@ -82,8 +87,11 @@ local Player = {
                     height = 18
                 }
             },
-            load = function(self) self.current_frame = 1 end,
-            update = function(self, dt) end
+            load = function(self)
+                self.current_frame = 1
+            end,
+            update = function(self, dt)
+            end
         }
     }
 }
@@ -117,7 +125,7 @@ function Player:update(dt)
     -- TODO: juntar estas dos llamadas a world:move en una
     --movimiento en el eje y
     self.x, ydespues, cols, len = self.world:move(self, self.x, self.y + self:vy() * dt, self.collisions_filter)
-    
+
     --colisiones en el eje y
     if len > 0 then -- checkeamos si nos podemos montar sobre un enemigo
         if cols[1].other.name == "Enemigo" and not self.montado then
@@ -133,25 +141,23 @@ function Player:update(dt)
             self.not_supported = false
         end
         if self.velocidad_y > 0 then -- si hay un choque en medio de un salto llendo hacia arriba, te das un cabezazo
-            self:cabezazo();
+            self:cabezazo()
         end
     end
 
     --El jugador aumenta constantemente la velocidad y, pero se resetea cada vez que toca el suelo o un enemigo cayendo
     if ydespues == self.y + self:vy() * dt then --debería caer si se consiguió mover en el eje y
-        
         if self.montado then
             -- si estamos fuera de los limites del enemigo en el eje x
-            if self.montura.x - self.x > self.montura.width or self.montura.x - self.x < - self.montura.width then        
+            if self.montura.x - self.x > self.montura.width or self.montura.x - self.x < -self.montura.width then
                 self:desmontar()
             end
         else -- el jugador está en el aire, ya sea subiendo o bajando
             self.velocidad_y = self.velocidad_y - 9.8 * dt
             self.not_supported = true
         end
-
     end
-    
+
     if self.montado == false then -- si lo hiciesemos cuando está montado caería a través del enemigo
         self.y = ydespues
     end
@@ -196,7 +202,7 @@ function Player:draw()
         self.y,
         0,
         self.width / self.state.quads[self.current_frame].width * self.bitmap_direction,
-        self.height/ self.state.quads[self.current_frame].height
+        self.height / self.state.quads[self.current_frame].height
     )
 end
 
@@ -225,7 +231,7 @@ function Player:empujar(vector, empujador)
         if len > 0 then --hay una colision con otra cosa al intentar moverlo, debe morir
             xtest, self.y, cols, len = self.world:move(self, self.x - vector.x, self.y, self.collisions_filter)
             if math.abs(xtest - self.x) <= 0.5 then --si no puede retroceder una distancia, se considera estrujado
-                self:morir()
+                self:die()
             end
         end
     end
@@ -237,7 +243,7 @@ function Player:empujar(vector, empujador)
         if len > 0 then --hay una colision con otra cosa al intentar moverlo
             self.x, ytest, cols, len = self.world:move(self, self.x, self.y - vector.y, self.collisions_filter)
             if math.abs(ytest - self.y) <= 0.5 then --si no puede retroceder una distancia, se considera estrujado
-                self:morir()
+                self:die()
             end
         end
 
@@ -252,7 +258,7 @@ function Player:desmontar()
     self.montado = false
 end
 
-function Player:morir()
+function Player:die()
     self.game.vidaperdida()
 end
 

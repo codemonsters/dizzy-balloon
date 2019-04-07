@@ -1,4 +1,4 @@
-local bump = require 'libraries/bump/bump'
+local bump = require "libraries/bump/bump"
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
 -- local jugador = PlayerClass.new()
@@ -29,16 +29,16 @@ local enemigos = {}
 local plataformas = {}
 --[[
 local niveles = {
-    
+
     nivel1 = {
 
         name = "1",
-        
+
         jugador_x_inicial = 1,
         jugador_y_inicial = WORLD_HEIGHT - jugador.height,
-        
+
         enemigos = {
-            
+
             enemigo1 = EnemyClass.new(),
             enemigo1:load(50 + EnemyClass.width, 120 + EnemyClass.height, world),
             enemigo1_x_inicial = 50 + EnemyClass.width,
@@ -48,7 +48,7 @@ local niveles = {
             enemigo2:load(50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world),
             enemigo2_x_inicial = 50 + EnemyClass.width * 2,
             enemigo2_y_inicial = 120 + EnemyClass.width * 2
-        
+
         },
 
         plataformas = {
@@ -56,10 +56,10 @@ local niveles = {
             bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 10, world),
             bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT, world),
             bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT, world)
-        
+
         },
 
-        
+
 
     },
 
@@ -95,7 +95,7 @@ local niveles = {
             bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT, world),
             bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT, world),
             bloquePlatA = BlockClass.new("Plataforma A", 100, WORLD_HEIGHT - 70, 100, 4, world)
-        
+
         },
 
         bloqueSalida = BlockClass.new("Salida", 0, 0, SCREEN_WIDTH, 1, world)
@@ -105,13 +105,11 @@ local niveles = {
 }
 --]]
 function pillarEscala()
-
     if (window_height >= window_width) then
-        return (window_width - bordes*2) / WORLD_WIDTH
+        return (window_width - bordes * 2) / WORLD_WIDTH
     else
-        return (window_height - bordes*2) / WORLD_HEIGHT
+        return (window_height - bordes * 2) / WORLD_HEIGHT
     end
-
 end
 
 local scaleCanvas = pillarEscala()
@@ -123,7 +121,6 @@ function game.loadlife()
 end
 
 function game.loadlevel()
-
     bloqueSuelo = BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, 10, world)
     bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, WORLD_HEIGHT, world)
     bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, WORLD_HEIGHT, world)
@@ -139,30 +136,26 @@ function game.loadlevel()
     bloquePlatC = BlockClass.new("Plataforma C", 475, WORLD_HEIGHT - 500, 20, 400, world)
     bloquePlatD = BlockClass.new("Plataforma D", 200, 200, 120, 4, world)
     --]]
-
     -- jugador:load(world, game)
     jugador_x_inicial = 1
     jugador_y_inicial = WORLD_HEIGHT - jugador.height
 
-    enemigo1 = EnemyClass.new()
-    enemigo1:load(50 + EnemyClass.width, 120 + EnemyClass.height, world)
+    enemigo1 = EnemyClass.new("enemigo1", 50 + EnemyClass.width, 120 + EnemyClass.height, world, game)
     enemigo1_x_inicial = 50 + EnemyClass.width
     enemigo1_y_inicial = 120 + EnemyClass.width
 
-    enemigo2 = EnemyClass.new()
-    enemigo2:load(50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world)
+    enemigo2 = EnemyClass.new("enemigo2", 50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world, game)
     enemigo2_x_inicial = 50 + EnemyClass.width * 2
     enemigo2_y_inicial = 120 + EnemyClass.width * 2
-    
+
     table.insert(enemigos, enemigo1)
     table.insert(enemigos, enemigo2)
-    
+
     -- sky:load(world)
 
     -- bomb:load(world)
 
     vidas = 3
-
 end
 
 function game.load()
@@ -170,23 +163,22 @@ function game.load()
 
     jugador = PlayerClass.new()
     jugador:load(world, game)
-    
+
     sky = SkyClass.new(world)
-        
+
     bomb = BombClass.new()
     bomb:load(world)
 
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
 
     game.loadlevel()
-    
 end
 
 function game.update(dt)
     jugador:update(dt)
 
     for i, enemigo in ipairs(enemigos) do
-        enemigo:update()
+        enemigo:update(dt)
     end
 
     sky:update(dt)
@@ -225,7 +217,6 @@ function game.draw()
         bloquePlatC:draw()
         bloquePlatD:draw()
         --]]
-        
         bomb:draw()
 
         -- puntos de las dos esquinas del mundo
@@ -234,8 +225,14 @@ function game.draw()
     end
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
     love.graphics.setBlendMode("alpha", "premultiplied")
-    love.graphics.draw(worldCanvas, (window_width / 2) - (WORLD_WIDTH * scaleCanvas / 2), (window_height / 2) - (WORLD_HEIGHT * scaleCanvas / 2),0, scaleCanvas, scaleCanvas)
-    
+    love.graphics.draw(
+        worldCanvas,
+        (window_width / 2) - (WORLD_WIDTH * scaleCanvas / 2),
+        (window_height / 2) - (WORLD_HEIGHT * scaleCanvas / 2),
+        0,
+        scaleCanvas,
+        scaleCanvas
+    )
 end
 
 function game.keypressed(key, scancode, isrepeat)
@@ -366,6 +363,16 @@ function game.vidaperdida()
         change_screen(require("screens/menu"))
     end
     game.loadlife()
+end
+
+function game.remove_enemy(enemy)
+    for i, v in ipairs(enemigos) do
+        if (v.id == enemy) then
+            table.remove(enemigos, i)
+            world:remove(enemy)
+            break
+        end
+    end
 end
 
 return game
