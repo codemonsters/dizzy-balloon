@@ -116,11 +116,6 @@ local Bomb = {
         exploding = {
             name = "exploding",
             quads = {
-                --{
-                --    quad = love.graphics.newQuad(194, 35, 12, 12, atlas:getDimensions()),
-                --    width = 12,
-                --    height = 12
-                --},
                 {
                     quad = love.graphics.newQuad(402, 14, 22, 30, atlas:getDimensions()),
                     width = 22,
@@ -191,22 +186,6 @@ local Bomb = {
                 end
             end,
             update = function(self, dt)
-                --self.elapsed_time = self.elapsed_time + dt
-                --if self.elapsed_time > 0.5 then
-                --    self.world:remove(self)
-                --    self.change_state(self, self.states.inactive)  -- TODO: Provisional
-                --end
-
-                --[[
-                if self.elapsed_time > 0.07 then
-                    self.elapsed_time = 0
-                    self.current_frame = self.current_frame + 1
-                    if self.current_frame > 10 then
-                        self.world:remove(self)
-                        self.change_state(self, self.states.inactive)
-                    end
-                end
-                --]]
                 self.elapsed_time = self.elapsed_time + dt
 
                 if self.elapsed_time > self.explosion_duration then
@@ -268,14 +247,11 @@ function Bomb.new(name)
     local bomb = {}
     bomb.name = name
     bomb.state = Bomb.states.inactive -- FIXME: Esto deberíamos hacerlo en el método load y no en new
+    bomb.world = world
+    bomb.current_frame = 1
     setmetatable(bomb, Bomb)
+    bomb.change_state(bomb, bomb.states.inactive)
     return bomb
-end
-
-function Bomb:load(world)
-    self.world = world
-    self.current_frame = 1
-    self.change_state(self, self.states.inactive)
 end
 
 function Bomb:update(dt)
