@@ -11,6 +11,8 @@
 local SeedClass = {
     x = 0,
     y = 0,
+    vx = 10,
+    vy = 0,
     width = 20,
     height = 20,
     image = love.graphics.newImage("assets/seed.png"),
@@ -25,15 +27,18 @@ local SeedClass = {
                     width = 14,
                     height = 16
                 }
-            },
+            },        
             load = function(self)
                 self.currentframe = 1
+                self.collisions_filter = function(item, other)
+                    return "cross"
+                end
             end,
             update = function(self, dt)
-                self.x  = self.x + 10 * dt
                 if  self.x > WORLD_WIDTH then 
                     self.x = 0 - self.width
                 end
+                self.x, self.y, cols, len = self.world:move(self, self.x + self.vx * dt, self.y, self.collisions_filter)
             end,
         },
         falling = {
@@ -150,10 +155,11 @@ function SeedClass.new(name, sky, world, x, y)
     seed.world = world
     seed.x = x
     seed.y = y
-    seed.state = SeedClass.states.sky
-    seed.currentFrame = 1
     seed.world:add(seed, seed.x, seed.y, SeedClass.width, SeedClass.height)
-    setmetatable(seed, SeedClass) 
+    setmetatable(seed, SeedClass)
+    --seed.state = SeedClass.states.sky
+    seed.currentFrame = 1
+    seed.change_state(seed, SeedClass.states.sky)
     return seed
 end
 
@@ -180,6 +186,8 @@ function SeedClass:draw()
         self.width / self.state.quads[self.currentFrame].width,
         self.height/ self.state.quads[self.currentFrame].height
     )
+    love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+
 end
 
 function SeedClass:change_state(new_state)
