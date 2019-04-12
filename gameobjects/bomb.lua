@@ -75,7 +75,7 @@ local Bomb = {
                 self.elapsed_time = 0
                 self.collisions_filter = function(item, other)
                     if other.isBlock then
-                        self.vx = 0.6 * self.vx
+                        self.vx = -0.6 * self.vx
                     end
 
                     return "bounce"

@@ -128,7 +128,7 @@ function Player:update(dt)
 
     --colisiones en el eje y
     if len > 0 then -- checkeamos si nos podemos montar sobre un enemigo
-        if cols[1].other.name == "Enemigo" and not self.montado then
+        if cols[1].other.isEnemy and not self.montado then
             if cols[1].other.y - self.y > cols[1].other.width then --cuando el jugador está sobre el enemigo, la y es menor a más altura
                 self.montado = true
                 self.montura = cols[1].other
