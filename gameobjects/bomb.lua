@@ -78,7 +78,7 @@ local Bomb = {
                         self.vx = -0.6 * self.vx
                     end
 
-                    return "bounce"
+                    return "slide"
                 end
             end,
             update = function(self, dt)
