@@ -57,10 +57,7 @@ function Enemy:update(dt)
 
             self.x = self.movSigx
         end
-    end
-
-    if len > 0 then
-        if (cols[1].other.name ~= "Player") then
+        if col.other.isBlock or col.other.isSeed then
             self.velocidad_x = self.velocidad_x * -1
         end
     end
@@ -76,7 +73,7 @@ function Enemy:update(dt)
             end
             self.y = self.movSigy
         end
-        if (col.other.name ~= "Player") then
+        if col.other.isBlock or col.other.isSeed then
             self.velocidad_y = self.velocidad_y * -1
         end
     end

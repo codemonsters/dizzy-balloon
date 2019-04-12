@@ -367,9 +367,9 @@ end
 
 function game.remove_enemy(enemy)
     for i, v in ipairs(enemigos) do
-        if (v.id == enemy) then
-            table.remove(enemigos, i)
+        if v == enemy then
             world:remove(enemy)
+            table.remove(enemigos, i)
             break
         end
     end
