@@ -268,14 +268,11 @@ function Bomb.new(name)
     local bomb = {}
     bomb.name = name
     bomb.state = Bomb.states.inactive -- FIXME: Esto deberíamos hacerlo en el método load y no en new
+    bomb.world = world
+    bomb.current_frame = 1
     setmetatable(bomb, Bomb)
+    bomb.change_state(bomb, bomb.states.inactive)
     return bomb
-end
-
-function Bomb:load(world)
-    self.world = world
-    self.current_frame = 1
-    self.change_state(self, self.states.inactive)
 end
 
 function Bomb:update(dt)

@@ -167,7 +167,6 @@ function game.load()
     sky = SkyClass.new(world)
 
     bomb = BombClass.new()
-    bomb:load(world)
 
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
 
