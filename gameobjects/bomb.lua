@@ -7,6 +7,7 @@ local Bomb = {
     width = 40,
     height = 40,
     isBomb = true,
+    directionDown = false,
     states = {
         inactive = {
             name = "inactive",
@@ -39,11 +40,13 @@ local Bomb = {
 
                 self.x, self.y, cols, len = self.world:move(self, target_x, target_y, self.collisions_filter)
                 local inside_player = false -- con esto indicamos si la bomba ha abandonado o no nuestro cuerpo (para que inicialmente no choque con nosotros)
-                for i = 1, len do
-                    if cols[i].other.isPlayer then
-                        inside_player = true
-                    else
-                        self.change_state(self, self.states.exploding)
+                if not self.directionDown then
+                    for i = 1, len do
+                        if cols[i].other.isPlayer then
+                            inside_player = true
+                        else
+                            self:explode()
+                        end
                     end
                 end
                 if not inside_player then
@@ -78,7 +81,7 @@ local Bomb = {
                         self.vx = -0.6 * self.vx
                     end
 
-                    return "bounce"
+                    return "slide"
                 end
             end,
             update = function(self, dt)
@@ -87,11 +90,13 @@ local Bomb = {
                 self.vy = self.vy + (9.8 * dt) * 50 -- gravedad
 
                 self.x, self.y, cols, len = self.world:move(self, target_x, target_y, self.collisions_filter)
-
-                -- la bomba explota si toca cualquier cosa (exceptuando un bloque)
-                for i = 1, len do
-                    if not cols[i].other.isBlock then
-                        self:explode()
+                
+                if not self.directionDown then
+                    -- la bomba explota si toca cualquier cosa (exceptuando un bloque)
+                    for i = 1, len do
+                        if not cols[i].other.isBlock then
+                            self:explode()
+                        end
                     end
                 end
 
@@ -274,21 +279,26 @@ function Bomb:launch(x, y, initialDirection, playerVx, playerVy)
         self.x = x
         self.y = y
         self:change_state(Bomb.states.prelaunching)
-        log.debug("New bomb launched")
+        --log.debug("New bomb launched")
         if initialDirection == "up" then
             self.vx = 0 + playerVx
             self.vy = -350 + playerVy
+            if self.vy > -350 then
+                self.vy = -350
+            end
+
             if self.vy < -500 then
                 self.vy = -500
             end
         elseif initialDirection == "down" then
             self.vx = 0
             self.vy = 350
+            self.directionDown = true
         else
             log.fatal("initialDirection should be 'up' or 'down'")
         end
-    else
-        log.debug("New bomb not launched because we already have an active bomb")
+    --else
+        --log.debug("New bomb not launched because we already have an active bomb")
     end
 end
 
