@@ -21,7 +21,7 @@ local worldCanvas = nil
 local bordes = 4
 local jugadorpuedesaltar = true
 local jugadorquieremoverse = false
-local jugadorquieredisparar = false
+--local jugadorquieredisparar = false
 local BlockClass = require("gameobjects/block")
 local gameFilter
 local vidas
@@ -184,7 +184,11 @@ function game.update(dt)
 
     if fireRequested then
         fireRequested = false
-        bomb:launch(jugador.x, jugador.y, fireInitialDirection, jugador:vx(), jugador:vy())
+        x,y  = jugador.x,jugador.y
+        if fireInitialDirection == "down" then
+            jugador.x, jugador.y = world:move(jugador, jugador.x, jugador.y-bomb.height*1.05)
+        end
+        bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
     end
     bomb:update(dt)
 end
@@ -275,7 +279,7 @@ end
 function love.mousepressed(x, y, button, istouch, presses)
     if button == 1 and not mobile then
         jugadorquieremoverse = true
-        jugadorquieredisparar = true
+        --jugadorquieredisparar = true
         mousepointer:touchpressed(x, y)
     end
 end
@@ -283,7 +287,7 @@ end
 function love.mousereleased(x, y, button, istouch, presses)
     if button == 1 and not mobile then
         jugadorquieremoverse = false
-        jugadorquieredisparar = false
+        --jugadorquieredisparar = false
         mousepointer:touchreleased(dx, dy)
     end
 end
@@ -303,7 +307,7 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
         rightFinger:touchpressed(x, y)
     else
         jugadorquieremoverse = true
-        jugadorquieredisparar = true
+        --jugadorquieredisparar = true
         leftFinger:touchpressed(x, y)
     end
 end
@@ -313,7 +317,7 @@ function love.touchreleased(id, x, y, dx, dy, pressure)
         rightFinger:touchreleased(dx, dy)
     else
         jugadorquieremoverse = false
-        jugadorquieredisparar = false
+        --jugadorquieredisparar = false
         leftFinger:touchreleased(dx, dy)
     end
 end
@@ -336,18 +340,24 @@ function game.pointermoved(pointer)
     if pointer.x < SCREEN_WIDTH / 2 then
         if jugadorquieremoverse == true then
             if pointer.x + pointer.movementdeadzone < pointer.x + pointer.dx then
-                jugador.left = false
                 jugador.right = true
-            elseif pointer.x - pointer.movementdeadzone > pointer.x + pointer.dx then
+            else
                 jugador.right = false
+            end
+
+            if pointer.x - pointer.movementdeadzone > pointer.x + pointer.dx then
                 jugador.left = true
+            else
+                jugador.left = false
             end
         end
-        if jugadorquieredisparar == true then
+        if bomb.state == bomb.states.inactive then
             if pointer.y + pointer.shootingdeadzone < pointer.y + pointer.dy then
-                log.debug("Disparo hacia abajo")
+                fireRequested = true
+                fireInitialDirection = "down"
             elseif pointer.y - pointer.shootingdeadzone > pointer.y + pointer.dy then
-                log.debug("Disparo hacia arriba")
+                fireRequested = true
+                fireInitialDirection = "up"
             end
         end
     end
