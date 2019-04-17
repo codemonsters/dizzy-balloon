@@ -50,7 +50,7 @@ local Player = {
                 },
                 {
                     quad = love.graphics.newQuad(72, 14, 18, 18, atlas:getDimensions()),
-                    width = 1    8,
+                    width = 18,
                     height = 18
                 },
                 {
@@ -82,7 +82,7 @@ local Player = {
         jumping = {
             quads = {
                 {
-                    quad = lo    ve.graphics.newQuad(40, 13, 17, 18, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(40, 13, 17, 18, atlas:getDimensions()),
                     width = 18,
                     height = 18
                 }
