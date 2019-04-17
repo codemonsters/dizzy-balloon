@@ -37,6 +37,7 @@ function SkyClass:deleteSeed(seed)
     for i, semilla in ipairs(self.semillas) do
         if semilla.name == seed.name then
             table.remove(self.semillas, i)
+            world:remove(seed)
             return
         end
     end
