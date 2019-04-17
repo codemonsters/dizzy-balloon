@@ -137,7 +137,7 @@ local SeedClass = {
             update = function(self, dt)
                 self.elapsed_time = self.elapsed_time + dt
                 if self.elapsed_time > 2 then
-                    self.sky:deleteSeed(self)
+                    self:die()
                 end
             end
         },
@@ -207,6 +207,10 @@ function SeedClass:change_state(new_state)
         self.state = new_state
         self.state.load(self)
     end
+end
+
+function SeedClass:die()
+    self.sky:deleteSeed(self)
 end
 
 return SeedClass

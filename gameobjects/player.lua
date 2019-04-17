@@ -116,10 +116,6 @@ function Player.new(world, game)
     return player
 end
 
-function Player:load(world, game)
-    
-end
-
 function Player:update(dt)
     --movimento en el eje x
     self.x, self.y, cols, len = self.world:move(self, self.x + self:vx() * dt, self.y, self.collisions_filter)

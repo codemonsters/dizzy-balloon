@@ -20,12 +20,6 @@ function BlockClass.new(name, x, y, width, height, world)
     return block
 end
 
-function BlockClass:load(world, x, y)
-    self.world = world
-    self.x, self.y = self.x, self.y
-    self.world:add(self, self.x, self.y, self.width, self.height)
-end
-
 function BlockClass:draw()
     love.graphics.draw(
         atlas,
