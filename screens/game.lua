@@ -27,6 +27,9 @@ local gameFilter
 local vidas
 local enemigos = {}
 local plataformas = {}
+local enemigos_muertos = 0
+local temporizador_respawn_enemigo = 0
+local TIEMPO_RESPAWN_ENEMIGO = 3
 --[[
 local niveles = {
 
@@ -141,12 +144,8 @@ function game.loadlevel()
     jugador_y_inicial = WORLD_HEIGHT - jugador.height
 
     enemigo1 = EnemyClass.new("enemigo1", 50 + EnemyClass.width, 120 + EnemyClass.height, world, game)
-    enemigo1_x_inicial = 50 + EnemyClass.width
-    enemigo1_y_inicial = 120 + EnemyClass.width
 
     enemigo2 = EnemyClass.new("enemigo2", 50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world, game)
-    enemigo2_x_inicial = 50 + EnemyClass.width * 2
-    enemigo2_y_inicial = 120 + EnemyClass.width * 2
 
     table.insert(enemigos, enemigo1)
     table.insert(enemigos, enemigo2)
@@ -166,7 +165,7 @@ function game.load()
 
     sky = SkyClass.new(world)
 
-    bomb = BombClass.new()
+    bomb = BombClass.new("Bomb", game)
 
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
 
@@ -174,6 +173,17 @@ function game.load()
 end
 
 function game.update(dt)
+    if enemigos_muertos > 0 then
+        temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
+        if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
+            enemigo = EnemyClass.new("enemigo", EnemyClass.width, EnemyClass.width, world, game)
+            table.insert(enemigos, enemigo)
+
+            enemigos_muertos = enemigos_muertos - 1
+            temporizador_respawn_enemigo = 0
+        end
+    end
+
     jugador:update(dt)
 
     for i, enemigo in ipairs(enemigos) do
@@ -379,7 +389,26 @@ function game.remove_enemy(enemy)
         if v == enemy then
             world:remove(enemy)
             table.remove(enemigos, i)
+            enemigos_muertos = enemigos_muertos + 1
             break
+        end
+    end
+end
+
+function game.kill_object(object)
+    log.debug("Matando el objeto " .. object.name)
+
+    if object.isEnemy then
+        game.drop_seed(object.x)
+    end
+
+    object:die()
+end
+
+function game.drop_seed(x)
+    for key,seed in pairs(sky.semillas) do --pseudocode
+        if math.abs(seed.x-x) < seed.width/2 then
+            seed:change_state(seed.states.falling)
         end
     end
 end
