@@ -96,8 +96,6 @@ function Enemy:draw()
         self.width / self.image:getWidth(),
         self.height / self.image:getHeight()
     )
-    love.graphics.print(self.x, 0, 0)
-    love.graphics.print(self.y, 50, 0)
 end
 
 function Enemy:montado(jugador)

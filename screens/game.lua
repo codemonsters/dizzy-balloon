@@ -222,9 +222,11 @@ function game.draw()
         --]]
         bomb:draw()
 
+        --[[
         -- puntos de las dos esquinas del mundo
         love.graphics.setColor(255, 255, 255)
         love.graphics.points(0, 0, WORLD_WIDTH - 1, WORLD_HEIGHT - 1)
+        --]]
     end
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
     love.graphics.setBlendMode("alpha", "premultiplied")

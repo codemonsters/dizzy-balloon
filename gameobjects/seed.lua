@@ -58,16 +58,28 @@ local SeedClass = {
             load = function(self) 
                 self.current_frame = 1
                 self.elapsed_time = 0
+                self.collisions_filter = function(item, other)
+                    if other.isSeed and other.state == other.states.sky then
+                        return "cross"
+                    else
+                        return "slide"
+                    end
+                end
             end,
             update = function(self, dt)
-                self.y = self.y + 100 * dt
+                target_y = self.y + 100 * dt
+                target_x = self.x
+                self.y = target_y
+                self.x = target_x
+                self.x, self.y, cols, len = self.world:move(self, target_x, target_y, self.collisions_filter)
                 if self.y + self.height >= WORLD_HEIGHT then
                     self.change_state(self, self.states.touchdown)
-                    self.elapsed_time = self.elapsed_time + dt
                     return
                 end
+                self.elapsed_time = self.elapsed_time + dt
                 if self.elapsed_time > 0.5 then
-                    self.elapsed_time = 0
+                    --self.elapsed_time = self.elapsed_time - 0.5
+                    self.elapsed_time = math.fmod(self.elapsed_time, 0.5)
                     self.current_frame = self.current_frame + 1
                     if self.current_frame > 2 then self.current_frame = 1 end
                 end
