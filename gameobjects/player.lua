@@ -50,7 +50,7 @@ local Player = {
                 },
                 {
                     quad = love.graphics.newQuad(72, 14, 18, 18, atlas:getDimensions()),
-                    width = 18,
+                    width = 1    8,
                     height = 18
                 },
                 {
@@ -82,7 +82,7 @@ local Player = {
         jumping = {
             quads = {
                 {
-                    quad = love.graphics.newQuad(40, 13, 17, 18, atlas:getDimensions()),
+                    quad = lo    ve.graphics.newQuad(40, 13, 17, 18, atlas:getDimensions()),
                     width = 18,
                     height = 18
                 }
@@ -98,25 +98,26 @@ local Player = {
 
 Player.__index = Player
 
-function Player:new()
-    local jugador = {}
-    setmetatable(jugador, Player)
-    return jugador
+function Player.new(world, game)
+    local player = {}
+    setmetatable(player, Player)
+    player.game = game
+    player.world = world
+    player.width = 40
+    player.height = Player.width
+    player.x = 1
+    player.y = WORLD_HEIGHT - Player.height
+    player.velocidad_y = Player.velyini --la velocidad y debe ser negativa para que haya diferencia en el movimiento de eje y para saber cuando aplicar aceleración
+    player.left, player.right, player.up, player.down, player.not_supported = false, false, false, false, false
+    player.offset = 0
+    player.bitmap_direction = 1
+    player.world:add(player, player.x, player.y, player.width, player.height)
+    player:change_state(Player.states.standing)
+    return player
 end
 
 function Player:load(world, game)
-    self.game = game
-    self.world = world
-    self.width = 40
-    self.height = Player.width
-    self.x = 1
-    self.y = WORLD_HEIGHT - self.height
-    self.velocidad_y = self.velyini --la velocidad y debe ser negativa para que haya diferencia en el movimiento de eje y para saber cuando aplicar aceleración
-    self.left, self.right, self.up, self.down, self.not_supported = false, false, false, false, false
-    self.offset = 0
-    self.bitmap_direction = 1
-    self.change_state(self, Player.states.standing)
-    self.world:add(self, self.x, self.y, self.width, self.height)
+    
 end
 
 function Player:update(dt)

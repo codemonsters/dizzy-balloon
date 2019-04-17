@@ -161,8 +161,7 @@ end
 function game.load()
     world = bump.newWorld(50)
 
-    jugador = PlayerClass.new()
-    jugador:load(world, game)
+    jugador = PlayerClass.new(world, game)
 
     sky = SkyClass.new(world)
 
