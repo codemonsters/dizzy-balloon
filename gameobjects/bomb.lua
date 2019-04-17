@@ -216,7 +216,7 @@ local Bomb = {
                     for i = 1, len do
                         if not cols[i].other.isBlock then
                             log.debug("La explosión ha alcanzado a: " .. cols[i].other.name)
-                            cols[i].other:die()
+                            self.game.kill_object(cols[i].other)
                         end
                     end
                 end
@@ -247,8 +247,9 @@ local Bomb = {
 }
 Bomb.__index = Bomb
 
-function Bomb.new(name)
+function Bomb.new(name, game)
     local bomb = {}
+    bomb.game = game
     bomb.name = name
     bomb.state = Bomb.states.inactive -- FIXME: Esto deberíamos hacerlo en el método load y no en new
     bomb.world = world

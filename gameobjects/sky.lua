@@ -15,7 +15,7 @@ function SkyClass.new(world)
         local semilla = SeedClass.new("seed" .. (i + 1), sky, world, i * SeedClass.width, 0)
         table.insert(sky.semillas, semilla)
     end
-    sky.semillas[10]:change_state(SeedClass.states.falling)
+    --sky.semillas[10]:change_state(SeedClass.states.falling)
 
     setmetatable(sky, SkyClass)
     return sky
