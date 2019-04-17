@@ -108,7 +108,7 @@ local niveles = {
 }
 --]]
 function pillarEscala()
-    if (window_height >= window_width) then
+    if window_height >= window_width then
         return (window_width - bordes * 2) / WORLD_WIDTH
     else
         return (window_height - bordes * 2) / WORLD_HEIGHT

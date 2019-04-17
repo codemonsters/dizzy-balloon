@@ -49,8 +49,8 @@ function Enemy:update(dt)
 
     if len > 0 then
         local col = cols[1]
-        if (col.other.name == "Player") then
-            if (not col.other.montado) then
+        if col.other.name == "Player" then
+            if not col.other.montado then
                 vector = {x = self.velocidad_x * 2, y = 0}
                 col.other:empujar(vector, self)
             end
@@ -66,8 +66,8 @@ function Enemy:update(dt)
 
     if len > 0 then
         local col = cols[1]
-        if (col.other.name == "Player") then
-            if (not col.other.montado) then
+        if col.other.name == "Player" then
+            if not col.other.montado then
                 vector = {x = 0, y = self.velocidad_y * 2}
                 col.other:empujar(vector, self)
             end
