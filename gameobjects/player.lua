@@ -126,7 +126,7 @@ function Player:update(dt)
     --colisiones en el eje y
     if len > 0 then -- checkeamos si nos podemos montar sobre un enemigo
         if cols[1].other.isEnemy and not self.montado then
-            if cols[1].other.y - self.y > cols[1].other.width then --cuando el jugador está sobre el enemigo, la y es menor a más altura
+            if cols[1].other.y - self.y > cols[1].other.height then --cuando el jugador está sobre el enemigo, la y es menor a más altura
                 self.montado = true
                 self.montura = cols[1].other
                 self.y = self.montura.y - self.height
@@ -232,7 +232,7 @@ function Player:empujar(vector, empujador)
             end
         end
     end
-    if vector.y ~= 0 then --Si se da en el eje y siempre va a ser hacia arriba
+    if vector.y ~= 0 then
         self.velocidad_y = 0
 
         self.x, self.y, cols, len = self.world:move(self, self.x, self.y + vector.y, self.collisions_filter)
@@ -251,7 +251,6 @@ function Player:empujar(vector, empujador)
 end
 
 function Player:desmontar()
-    self.montura.jugadorMontado = false
     self.montado = false
 end
 

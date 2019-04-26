@@ -8,6 +8,8 @@ local Bomb = {
     height = 40,
     isBomb = true,
     directionDown = false,
+    montado = false,
+    montura = nil,
     states = {
         inactive = {
             name = "inactive",
@@ -43,9 +45,16 @@ local Bomb = {
                 
                 for i = 1, len do
                     if cols[i].other.isPlayer then
-                        inside_player = true
+                        inside_player = true 
                     elseif not self.directionDown then
                         self:explode()
+                    elseif cols[i].other.isEnemy and not self.montado then
+                        if cols[i].other.y - self.y > cols[i].other.height*0.75 then --cuando la bomba está sobre el enemigo, la y es menor a más altura
+                            self.montado = true
+                            self.montura = cols[i].other
+                            self.y = self.montura.y - self.height
+                            self.montura:montado(self)
+                        end
                     end
                 end
                 if not inside_player then
@@ -102,7 +111,7 @@ local Bomb = {
                 -- explosión tras tiempo máximo
                 self.elapsed_time = self.elapsed_time + dt
                 if self.elapsed_time > 2.345 then
-                    self.change_state(self, self.states.exploding)
+                    self:explode()
                 end
             end,
             draw = function(self)
@@ -306,6 +315,19 @@ end
 function Bomb:explode()
     if self.state ~= Bomb.states.exploding then
         self.change_state(self, self.states.exploding)
+    end
+    if self.montado then
+        self.montado = false
+    end
+end
+
+function Bomb:empujar(vector, empujador)
+    if vector.x ~= 0 then
+        self.x, self.y, cols, len = self.world:move(self, self.x + vector.x, self.y, self.collisions_filter)
+    end
+    if vector.y ~= 0 then --Si se da en el eje y siempre va a ser hacia arriba
+        self.vy = 0
+        self.x, self.y, cols, len = self.world:move(self, self.x, self.y + vector.y, self.collisions_filter)
     end
 end
 
