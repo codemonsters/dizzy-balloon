@@ -18,6 +18,7 @@ local SeedClass = {
     image = love.graphics.newImage("assets/seed.png"),
     name = "Seed",
     isSeed = true,
+    player_over_seed = false,
     states = {
         sky = {
             name = "sky",
@@ -111,13 +112,88 @@ local SeedClass = {
                 }
             },
             load = function(self)
+                print("onthefloor.load")
                 self.elapsed_time = 0
                 self.currentframe = 1 
             end,
             update = function(self, dt)
                 self.elapsed_time = self.elapsed_time + dt
-                if self.elapsed_time > 3 then
+
+                -- comprobamos si tenemos encima un jugador
+                local player_over = false
+                local items, len = world:querySegment(self.x, self.y - 1, self.x + self.width, self.y - 1)
+                for i = 1, len do
+                    if items[i].isPlayer then
+                        player_over = true
+                        break
+                    end
+                end
+                if player_over then
+                    print("PLAYER OVER")
+                else
+                    print("PLAYER NOT OVER")
+                end
+                self.player_over_seed = player_over
+
+                if self.player_over_seed then
+                    self.change_state(self, self.states.evolving)
+                elseif self.elapsed_time > 3 then
                     self.change_state(self, self.states.rotting)
+                end
+            end
+        },
+        evolving = {
+            name = "evolving",
+            quads = {
+                {
+                    quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    width = 14,
+                    height = 14
+                }
+            },
+            load = function(self)
+                print("evolving.load")
+                self.currentframe = 1
+                self.elapsed_time = 0
+            end,
+            update = function(self, dt) 
+                self.elapsed_time = self.elapsed_time + dt
+                
+                -- comprobamos si tenemos encima un jugador
+                local player_over = false
+                local items, len = world:querySegment(self.x, self.y - 1, self.x + self.width, self.y - 1)
+                for i = 1, len do
+                    if items[i].isPlayer then
+                        player_over = true
+                        break
+                    end
+                end
+                self.player_over_seed = player_over
+
+                if not self.player_over_seed then
+                    self.change_state(self, self.states.rotting)
+                elseif self.elapsed_time > 3 then
+                    print("CAMBIO A BALLOON")
+                    self.change_state(self, self.states.balloon)
+                end
+            end
+        },
+        balloon = {
+            name = "balloon",
+            quads = {
+                {
+                    quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    width = 14,
+                    height = 14
+                }
+            },
+            load = function(self)
+                self.currentframe = 1
+            end,
+            update = function(self, dt)
+                print("*** BALLOON!!! ***")
+                if self.elapsed_time > 3 and self.player_over_seed then
+                    self.change_state(self, self.states.balloon)
                 end
             end
         },
@@ -141,20 +217,6 @@ local SeedClass = {
                 end
             end
         },
-        evolving = {
-            name ="evolving",
-            quads = {
-                {
-                    quad = love.graphics.newQuad(177, 67, 15, 13, atlas:getDimensions()),
-                    width = 15,
-                    height = 13
-                }
-            },
-            load = function(self)
-                self.currentframe = 1
-            end,
-            update = function(self, dt) end
-        }
     }
 }
 
