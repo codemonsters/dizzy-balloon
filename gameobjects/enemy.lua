@@ -1,9 +1,8 @@
 local Enemy = {
     name = "Enemigo",
-    jugador = nil,
-    jugadorMontado = false,
     x = 0,
     y = 0,
+    riders = nil,
     width = 40,
     height = 40,
     velocidad_x = 2,
@@ -27,6 +26,7 @@ Enemy.__index = Enemy
 
 function Enemy.new(name, x, y, world, game)
     local enemy = {}
+    enemy.riders = {}
     enemy.name = name
     enemy.game = game
     enemy.world = world
@@ -49,7 +49,7 @@ function Enemy:update(dt)
 
     if len > 0 then
         local col = cols[1]
-        if col.other.name == "Player" then
+        if col.other.isPlayer then
             if not col.other.montado then
                 vector = {x = self.velocidad_x * 2, y = 0}
                 col.other:empujar(vector, self)
@@ -57,7 +57,7 @@ function Enemy:update(dt)
 
             self.x = self.movSigx
         end
-        if col.other.isBlock or col.other.isSeed then
+        if col.other.isBlock or col.other.isSeed or col.other.isEnemy then
             self.velocidad_x = self.velocidad_x * -1
         end
     end
@@ -66,21 +66,26 @@ function Enemy:update(dt)
 
     if len > 0 then
         local col = cols[1]
-        if col.other.name == "Player" then
+        if col.other.isPlayer then
             if not col.other.montado then
                 vector = {x = 0, y = self.velocidad_y * 2}
                 col.other:empujar(vector, self)
             end
             self.y = self.movSigy
         end
-        if col.other.isBlock or col.other.isSeed then
+        if col.other.isBlock or col.other.isSeed or col.other.isEnemy then
             self.velocidad_y = self.velocidad_y * -1
         end
     end
-
-    if self.jugadorMontado then
-        vector = {x = self.velocidad_x, y = self.velocidad_y}
-        self.jugador:empujar(vector, self)
+    if table.getn(self.riders) > 0 then
+        for key, rider in ipairs(self.riders) do
+            if not rider.montado then -- eliminar de la tabla riders los que se desmonten
+                table.remove(self.riders, key)
+            else
+                vector = {x = self.velocidad_x, y = self.velocidad_y}
+                rider:empujar(vector, self)
+            end
+        end
     end
 end
 
@@ -98,9 +103,8 @@ function Enemy:draw()
     )
 end
 
-function Enemy:montado(jugador)
-    self.jugadorMontado = true
-    self.jugador = jugador
+function Enemy:montado(rider)
+    table.insert(self.riders, rider)
 end
 
 function Enemy:die()
