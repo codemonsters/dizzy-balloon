@@ -7,7 +7,6 @@ local Bomb = {
     width = 40,
     height = 40,
     isBomb = true,
-    directionDown = false,
     montado = false,
     montura = nil,
     states = {
@@ -18,6 +17,52 @@ local Bomb = {
             update = function(self, dt)
             end,
             draw = function(self)
+            end
+        },
+        planted = {
+            name = "planted",
+            quads = {
+                {
+                    quad = love.graphics.newQuad(194, 18, 12, 12, atlas:getDimensions()),
+                    width = 12,
+                    height = 12
+                }
+            },
+            load = function(self)
+
+                local items, len = world:queryRect(self.x, self.y + self.height, self.width, self.height)
+                for i = 1, len do
+                    if items[i].isEnemy then
+                        self.montado = true
+                        self.montura = items[i]
+                        self.y = self.montura.y - self.height
+                        self.montura:montado(self)
+                    end
+                end
+                self.world:add(self, self.x, self.y, self.width, self.height)
+                self.elapsed_time = 0
+                self.collisions_filter = function(item, other)
+                    return "slide"
+                end
+            end,
+            update = function(self, dt)
+                -- explosión tras tiempo máximo
+                self.elapsed_time = self.elapsed_time + dt
+                if self.elapsed_time > 2.345 then
+                    self:explode()
+                end
+            end,
+            draw = function(self)
+                love.graphics.draw(
+                    atlas,
+                    self.state.quads[1].quad,
+                    self.x,
+                    self.y,
+                    0,
+                    self.width / self.state.quads[1].width,
+                    self.height / self.state.quads[1].height
+                )
+
             end
         },
         prelaunching = {
@@ -46,15 +91,8 @@ local Bomb = {
                 for i = 1, len do
                     if cols[i].other.isPlayer then
                         inside_player = true 
-                    elseif not self.directionDown then
+                    else
                         self:explode()
-                    elseif cols[i].other.isEnemy and not self.montado then
-                        if cols[i].other.y - self.y > cols[i].other.height*0.75 then --cuando la bomba está sobre el enemigo, la y es menor a más altura
-                            self.montado = true
-                            self.montura = cols[i].other
-                            self.y = self.montura.y - self.height
-                            self.montura:montado(self)
-                        end
                     end
                 end
                 if not inside_player then
@@ -99,12 +137,10 @@ local Bomb = {
 
                 self.x, self.y, cols, len = self.world:move(self, target_x, target_y, self.collisions_filter)
                 
-                if not self.directionDown then
-                    -- la bomba explota si toca cualquier cosa (exceptuando un bloque)
-                    for i = 1, len do
-                        if not cols[i].other.isBlock then
-                            self:explode()
-                        end
+                -- la bomba explota si toca cualquier cosa (exceptuando un bloque)
+                for i = 1, len do
+                    if not cols[i].other.isBlock then
+                        self:explode()
                     end
                 end
 
@@ -287,9 +323,9 @@ function Bomb:launch(x, y, initialDirection, playerVx, playerVy)
     if self.state == Bomb.states.inactive then
         self.x = x
         self.y = y
-        self:change_state(Bomb.states.prelaunching)
         --log.debug("New bomb launched")
         if initialDirection == "up" then
+            self:change_state(Bomb.states.prelaunching)
             self.vx = 0 + playerVx
             self.vy = -350 + playerVy
             if self.vy > -350 then
@@ -299,11 +335,10 @@ function Bomb:launch(x, y, initialDirection, playerVx, playerVy)
             if self.vy < -500 then
                 self.vy = -500
             end
-            self.directionDown = false
         elseif initialDirection == "down" then
+        self:change_state(Bomb.states.planted)
             self.vx = 0
-            self.vy = 350
-            self.directionDown = true
+            self.vy = 0
         else
             log.fatal("initialDirection should be 'up' or 'down'")
         end

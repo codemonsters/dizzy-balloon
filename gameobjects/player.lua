@@ -20,7 +20,7 @@ local Player = {
         return -self.velocidad_y * 80 -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
     end,
     collisions_filter = function(item, other)
-        if other.isBomb and not other.directionDown then
+        if other.isBomb and other.state ~= other.states.planted then
             return nil
         elseif other.isSeed and other.state ~= other.states.falling then
             return "touch"
