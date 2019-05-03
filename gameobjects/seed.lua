@@ -121,7 +121,8 @@ local SeedClass = {
 
                 -- comprobamos si tenemos encima un jugador
                 local player_over = false
-                local items, len = world:querySegment(self.x, self.y - 1, self.x + self.width, self.y - 1)
+                -- local items, len = world:querySegment(self.x, self.y - 1, self.x + self.width, self.y - 1)
+                local items, len = world:queryRect(self.x,self.y - 2,self.x + self.width,self.y - 2)
                 for i = 1, len do
                     if items[i].isPlayer then
                         player_over = true
@@ -137,7 +138,7 @@ local SeedClass = {
 
                 if self.player_over_seed then
                     self.change_state(self, self.states.evolving)
-                elseif self.elapsed_time > 3 then
+                elseif self.elapsed_time > 5 then
                     self.change_state(self, self.states.rotting)
                 end
             end
@@ -161,7 +162,8 @@ local SeedClass = {
                 
                 -- comprobamos si tenemos encima un jugador
                 local player_over = false
-                local items, len = world:querySegment(self.x, self.y - 1, self.x + self.width, self.y - 1)
+                -- local items, len = world:querySegment(self.x, self.y - 1, self.x + self.width, self.y - 1)
+                local items, len = world:queryRect(self.x, self.y - 2, self.x + self.width, self.y - 2)
                 for i = 1, len do
                     if items[i].isPlayer then
                         player_over = true
@@ -182,9 +184,9 @@ local SeedClass = {
             name = "balloon",
             quads = {
                 {
-                    quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
-                    width = 14,
-                    height = 14
+                    quad = love.graphics.newQuad(125, 78, 16, 16, atlas:getDimensions()),
+                    width = 16,
+                    height = 16
                 }
             },
             load = function(self)
@@ -207,6 +209,7 @@ local SeedClass = {
                 } 
             },
             load = function(self)
+                print("*** ROTTING ***")
                 self.elapsed_time = 0
                 self.currentframe = 1
             end,
