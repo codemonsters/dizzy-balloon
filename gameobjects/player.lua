@@ -22,6 +22,8 @@ local Player = {
     collisions_filter = function(item, other)
         if other.isBomb and other.state ~= other.states.planted then
             return nil
+        elseif other.isSeed and other.state ~= other.states.falling then
+            return "touch"
         else
             return "slide"
         end
