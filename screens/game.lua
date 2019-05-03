@@ -193,10 +193,10 @@ function game.update(dt)
 
     if fireRequested then
         fireRequested = false
+        x,y  = jugador.x,jugador.y
         if bomb.state == bomb.states.inactive then
             if fireInitialDirection == "down" then
                 if not jugador.not_supported then
-                    x,y  = jugador.x,jugador.y
                     jugador.x, jugador.y = world:move(jugador, jugador.x, jugador.y-bomb.height*1.05)
                     bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
                 end
