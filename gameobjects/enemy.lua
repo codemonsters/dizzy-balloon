@@ -11,13 +11,10 @@ local Enemy = {
     image = love.graphics.newImage("assets/enemy.png"),
     enemyFilter = function(item, other)
         if other.isPlayer then
-            return "bounce"
-        elseif other.isBlock then
-            return "bounce"
-        elseif other.isSeed then
-            return "bounce"
+            return "slide"
         elseif other.isBomb then
-            other:explode()
+            return "slide"
+        else
             return "bounce"
         end
     end
@@ -45,38 +42,28 @@ function Enemy:update(dt)
     end
     self.movSigx = self.x + self.velocidad_x
     self.movSigy = self.y + self.velocidad_y
-    self.x, self.y, cols, len = self.world:move(self, self.x + self.velocidad_x, self.y)
 
+    --vemos si hay algún choque con el eje x
+    cols, len = self.world:queryRect(self.movSigx, self.y, self.width, self.height)
     if len > 0 then
-        local col = cols[1]
-        if col.other.isPlayer then
-            if not col.other.montado then
-                vector = {x = self.velocidad_x * 2, y = 0}
-                col.other:empujar(vector, self)
-            end
-
-            self.x = self.movSigx
+        for i = 1, len do
+            --print(cols[i].name)
         end
-        if col.other.isBlock or col.other.isSeed or col.other.isEnemy then
-            self.velocidad_x = self.velocidad_x * -1
+        local col = cols[1]
+        if col.isPlayer then
+            col:empujar({x = self.velocidad_x*2, y = 0}, self);
         end
     end
 
-    self.x, self.y, cols, len = self.world:move(self, self.x, self.y + self.velocidad_y)
-
+    --choques con el eje y
+    cols, len = self.world:queryRect(self.x, self.movSigy, self.width, self.height)
     if len > 0 then
         local col = cols[1]
-        if col.other.isPlayer then
-            if not col.other.montado then
-                vector = {x = 0, y = self.velocidad_y * 2}
-                col.other:empujar(vector, self)
-            end
-            self.y = self.movSigy
-        end
-        if col.other.isBlock or col.other.isSeed or col.other.isEnemy then
-            self.velocidad_y = self.velocidad_y * -1
+        if col.isPlayer then
+            col:empujar({x = 0, y = self.velocidad_y*2}, self);
         end
     end
+
     if table.getn(self.riders) > 0 then
         for key, rider in ipairs(self.riders) do
             if not rider.montado then -- eliminar de la tabla riders los que se desmonten
@@ -87,9 +74,27 @@ function Enemy:update(dt)
             end
         end
     end
+    
+    self.x, self.y, cols, len = self.world:move(self, self.movSigx, self.movSigy, self.enemyFilter)
+
+    if len > 0 then
+        local col = cols[1]
+        if col.other.isBlock or col.other.isSeed or col.other.isEnemy then
+            vecBounce = {x = col.bounce.x - col.touch.x, y = col.bounce.y - col.touch.y}
+            modulo = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
+            vectorUnitario = {x = 0, y = 0}
+            vectorUnitario.x = vecBounce.x / modulo
+            vectorUnitario.y = vecBounce.y / modulo
+            self.velocidad_x = vectorUnitario.x * 4
+            self.velocidad_y = vectorUnitario.y * 4
+        elseif col.other.isPlayer then
+            col.other:empujar({x = self.velocidad_x*2, y = self.velocidad_y*2}, self);
+        end
+    end
 end
 
 function Enemy:draw()
+
     if self.dead then
         return
     end
