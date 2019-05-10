@@ -81,12 +81,12 @@ function Enemy:update(dt)
         local col = cols[1]
         if col.other.isBlock or col.other.isSeed or col.other.isEnemy then
             vecBounce = {x = col.bounce.x - col.touch.x, y = col.bounce.y - col.touch.y}
+            
             modulo = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
-            vectorUnitario = {x = 0, y = 0}
-            vectorUnitario.x = vecBounce.x / modulo
-            vectorUnitario.y = vecBounce.y / modulo
-            self.velocidad_x = vectorUnitario.x * 4
-            self.velocidad_y = vectorUnitario.y * 4
+            vectorUnitario = {x = vecBounce.x / modulo, y = vecBounce.y / modulo}
+
+            self.velocidad_x = vectorUnitario.x * math.sqrt(8)
+            self.velocidad_y = vectorUnitario.y * math.sqrt(8)
         elseif col.other.isPlayer then
             col.other:empujar({x = self.velocidad_x*2, y = self.velocidad_y*2}, self);
         end
