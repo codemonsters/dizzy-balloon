@@ -146,6 +146,7 @@ function game.loadlevel()
     enemigo1 = EnemyClass.new("enemigo1", 50 + EnemyClass.width, 120 + EnemyClass.height, world, game)
 
     enemigo2 = EnemyClass.new("enemigo2", 50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world, game)
+    enemigo2:change_state(enemigo2.states.swiping)
 
     table.insert(enemigos, enemigo1)
     table.insert(enemigos, enemigo2)

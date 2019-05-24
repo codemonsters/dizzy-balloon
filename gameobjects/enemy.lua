@@ -1,4 +1,5 @@
 local Enemy = {
+    wipe = false,
     name = "Enemigo",
     x = 0,
     y = 0,
@@ -17,7 +18,101 @@ local Enemy = {
         else
             return "bounce"
         end
-    end
+    end,
+    states = {
+        moving = {
+            load = function(self)
+                self.velocidad_x = 2
+                self.velocidad_y = 2
+            end,
+            update = function(self, dt)
+                self.x, self.y, cols, len = self.world:move(self, self.movSigx, self.movSigy, self.enemyFilter)
+
+                if len > 0 then
+                    local col = cols[1]
+                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy then --calculo de velocidad tras el choque TODO: hacerlo mejor
+                        vecBounce = {x = col.bounce.x - col.touch.x, y = col.bounce.y - col.touch.y}
+                        
+                        moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
+                        vectorUnitario = {x = vecBounce.x / moduloBounce, y = vecBounce.y / moduloBounce}
+            
+                        moduloVelocidad = math.sqrt(math.pow(self.velocidad_y, 2) + math.pow(self.velocidad_x, 2))
+                        self.velocidad_x = vectorUnitario.x * moduloVelocidad
+                        self.velocidad_y = vectorUnitario.y * moduloVelocidad
+                        
+                        hipotenusa = math.sqrt(math.pow(self.velocidad_y, 2) + math.pow(self.velocidad_x, 2)) -- calculo del ángulo con relación a la vertical tras el choque
+                        seno = self.velocidad_y/hipotenusa
+                        anguloEnGradosConVertical = math.abs(math.asin(seno) * 360/(2*math.pi))
+
+                        if anguloEnGradosConVertical <= 15 then
+                            self:change_state(self.states.swiping)
+                        end
+                    elseif col.other.isPlayer then
+                        col.other:empujar({x = self.velocidad_x*2, y = self.velocidad_y*2}, self);
+                    end
+                end
+            end,
+            draw = function(self, dt)
+            end
+        },
+        swiping = {
+            initalVel = 8,
+            horizontal = true,
+            lastXvelocity = initalVel,
+            yAfterDiving = 0,
+            upBounceCounter = 0, -- cuenta los choques cuando el enemigo no puede seguir bajando
+            load = function(self)
+                self.velocidad_x = self.state.initalVel
+                self.velocidad_y = 0
+            end,
+            update = function(self, dt)
+                self.x, self.y, cols, len = self.world:move(self, self.movSigx, self.movSigy, self.enemyFilter)
+
+                if len > 0 then
+                    local col = cols[1]
+                    if col.other.isBlock then
+                        if self.state.horizontal then -- colisión llendo hacia arriba
+                            self.state.horizontal = false
+                            self.state.yAfterDiving = self.y
+                            self.state.lastXvelocity = self.velocidad_x
+                            self.velocidad_x = 0
+                            self.velocidad_y = 4
+                        else -- colisión llendo hacia abajo
+                            self.state.upBounceCounter = self.state.upBounceCounter + 1
+                            self.state.horizontal = true
+                            self.velocidad_x = -self.state.lastXvelocity
+                            self.velocidad_y = 0
+                        end
+                    elseif col.other.isPlayer then
+                        col.other:empujar({x = self.velocidad_x*2, y = self.velocidad_y*2}, self);
+                    end
+                end
+
+                if not self.state.horizontal then
+                    if math.abs(self.state.yAfterDiving - self.y) >= self.height then
+                        self.state.upBounceCounter = 0 -- reseteamos si el enemigo es capaz de bajar
+                        self.state.horizontal = true
+                        self.velocidad_x = -self.state.lastXvelocity
+                        self.velocidad_y = 0
+                    end
+                end
+
+                if self.state.upBounceCounter == 3 then
+                    self:change_state(self.states.moving)
+                end
+            end,
+            draw = function(self, dt)
+            end
+        },
+        dying = {
+            load = function(self)
+            end,
+            update = function(self, dt)
+            end,
+            draw = function(self, dt)
+            end
+        }
+    }
 }
 Enemy.__index = Enemy
 
@@ -32,6 +127,7 @@ function Enemy.new(name, x, y, world, game)
     enemy.y = y
     world:add(enemy, enemy.x, enemy.y, Enemy.width, Enemy.height)
     setmetatable(enemy, Enemy)
+    enemy:change_state(enemy.states.moving)
     return enemy
 end
 
@@ -46,12 +142,12 @@ function Enemy:update(dt)
     --vemos si hay algún choque con el eje x
     cols, len = self.world:queryRect(self.movSigx, self.y, self.width, self.height)
     if len > 0 then
-        for i = 1, len do
-            --print(cols[i].name)
-        end
         local col = cols[1]
         if col.isPlayer then
             col:empujar({x = self.velocidad_x*2, y = 0}, self);
+        end
+        if wipe and col.isBlock then
+
         end
     end
 
@@ -75,22 +171,7 @@ function Enemy:update(dt)
         end
     end
     
-    self.x, self.y, cols, len = self.world:move(self, self.movSigx, self.movSigy, self.enemyFilter)
-
-    if len > 0 then
-        local col = cols[1]
-        if col.other.isBlock or col.other.isSeed or col.other.isEnemy then
-            vecBounce = {x = col.bounce.x - col.touch.x, y = col.bounce.y - col.touch.y}
-            
-            modulo = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
-            vectorUnitario = {x = vecBounce.x / modulo, y = vecBounce.y / modulo}
-
-            self.velocidad_x = vectorUnitario.x * math.sqrt(8)
-            self.velocidad_y = vectorUnitario.y * math.sqrt(8)
-        elseif col.other.isPlayer then
-            col.other:empujar({x = self.velocidad_x*2, y = self.velocidad_y*2}, self);
-        end
-    end
+    self.state.update(self, dt)
 end
 
 function Enemy:draw()
@@ -106,6 +187,13 @@ function Enemy:draw()
         self.width / self.image:getWidth(),
         self.height / self.image:getHeight()
     )
+end
+
+function Enemy:change_state(new_state)
+    if self.state ~= new_state then
+        self.state = new_state
+        self.state.load(self)
+    end
 end
 
 function Enemy:montado(rider)
