@@ -6,8 +6,11 @@ local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
 -- local sky = SkyClass.new(world, game)
 local PointerClass = require("pointer")
-local BombClass = require("gameobjects/bomb")
 -- local bomb = BombClass.new()
+local BombClass = require("gameobjects/bomb")
+-- local balloon = BalloonClass.new()
+local BalloonClass = require("gameobjects/balloon")
+
 
 if mobile then
     leftFinger = PointerClass.new(game, "Izquierdo")
@@ -402,7 +405,8 @@ function game.remove_enemy(enemy)
 end
 
 function game.create_balloon_from_seed(seed)
-    print("CREAR BALON!!!")
+    --print("CREAR BALON!!!")
+    local balloon = BalloonClass.new(seed, world, game)
 end
 
 function game.kill_object(object)

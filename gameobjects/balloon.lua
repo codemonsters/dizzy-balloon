@@ -30,6 +30,7 @@ local BalloonClass = {
             load = function(self)
                 self.current_frame = 1
                 self.elapsed_time = 0
+                print("growing balloon")
             end,
             update = function(self, dt)
                 self.elapsed_time = self.elapsed_time + dt
@@ -91,6 +92,18 @@ local BalloonClass = {
 
 BalloonClass.__index = BalloonClass
 
+function BalloonClass.new(seed, world, game)
+    --print("SEED = " .. seed.name .. "; world = " .. world.name .. "; game = " .. game)
+    local balloon = {}
+    balloon.game = game
+    balloon.name = name
+    balloon.world = world
+    balloon.current_frame = 1
+    setmetatable(balloon, BalloonClass)
+    balloon.world:add(balloon, seed.x, seed.y, seed.width, seed.height)
+    balloon.change_state(balloon, BalloonClass.states.growing)
+    return balloon
+end
 function BalloonClass:update(dt)
     self.state.update(self, dt)
 end
@@ -104,6 +117,9 @@ function BalloonClass:change_state(new_state)
         self.state = new_state
         self.state.load(self)
     end
+end
+
+function BalloonClass:die()
 end
 
 return BalloonClass
