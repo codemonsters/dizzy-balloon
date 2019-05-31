@@ -14,6 +14,8 @@ local Enemy = {
             return "slide"
         elseif other.isBomb then
             return "slide"
+        elseif other.isMushroom then
+            return "bounce"
         else
             return "bounce"
         end
