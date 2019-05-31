@@ -21,9 +21,10 @@ local Enemy = {
     end,
     states = {
         moving = {
+            moduloVelocidad = math.sqrt(8), -- 2 unidades en el eje x y 2 en el y a 45º
             load = function(self)
-                self.velocidad_x = 2
-                self.velocidad_y = 2
+                self.velocidad_x = math.cos(self.direction) * self.state.moduloVelocidad
+                self.velocidad_y = math.sin(self.direction) * self.state.moduloVelocidad
             end,
             update = function(self, dt)
                 self.x, self.y, cols, len = self.world:move(self, self.movSigx, self.movSigy, self.enemyFilter)
@@ -36,15 +37,13 @@ local Enemy = {
                         moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
                         vectorUnitario = {x = vecBounce.x / moduloBounce, y = vecBounce.y / moduloBounce}
             
-                        moduloVelocidad = math.sqrt(math.pow(self.velocidad_y, 2) + math.pow(self.velocidad_x, 2))
-                        self.velocidad_x = vectorUnitario.x * moduloVelocidad
-                        self.velocidad_y = vectorUnitario.y * moduloVelocidad
+                        self.velocidad_x = vectorUnitario.x * self.state.moduloVelocidad
+                        self.velocidad_y = vectorUnitario.y * self.state.moduloVelocidad
                         
-                        hipotenusa = math.sqrt(math.pow(self.velocidad_y, 2) + math.pow(self.velocidad_x, 2)) -- calculo del ángulo con relación a la vertical tras el choque
-                        seno = self.velocidad_y/hipotenusa
-                        anguloEnGradosConVertical = math.abs(math.asin(seno) * 360/(2*math.pi))
+                        seno = self.velocidad_y/self.state.moduloVelocidad -- calculo del ángulo con relación a la vertical tras el choque
+                        anguloEnGradosConVertical = math.asin(seno) * 360/(2*math.pi)
 
-                        if anguloEnGradosConVertical <= 15 then
+                        if math.abs(anguloEnGradosConVertical) <= 15 then
                             self:change_state(self.states.swiping)
                         end
                     elseif col.other.isPlayer then
@@ -98,6 +97,7 @@ local Enemy = {
                 end
 
                 if self.state.upBounceCounter == 3 then
+                    self.direction = 45
                     self:change_state(self.states.moving)
                 end
             end,
@@ -116,13 +116,14 @@ local Enemy = {
 }
 Enemy.__index = Enemy
 
-function Enemy.new(name, x, y, world, game)
+function Enemy.new(name, x, y, world, game, direction)
     local enemy = {}
     enemy.riders = {}
     enemy.name = name
     enemy.game = game
     enemy.world = world
     enemy.dead = false
+    enemy.direction = direction
     enemy.x = x
     enemy.y = y
     world:add(enemy, enemy.x, enemy.y, Enemy.width, Enemy.height)
