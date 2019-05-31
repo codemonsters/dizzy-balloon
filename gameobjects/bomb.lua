@@ -231,7 +231,11 @@ local Bomb = {
                 self.current_height = self.initial_height
                 self.current_frame = 1
                 self.collisions_filter = function(item, other)
-                    return "cross"
+                    if other.isBlock then
+                        return nil
+                    else
+                        return "cross"
+                    end
                 end
             end,
             update = function(self, dt)
@@ -258,6 +262,9 @@ local Bomb = {
                     self.world:update(self, self.current_x, self.current_y, self.current_width, self.current_height)
                     local x, y, cols, len =
                         self.world:check(self, self.current_x, self.current_y, self.collisions_filter)
+                    if len == 0 then
+                        self.game.crearSeta(self.x, self.y)
+                    end
                     for i = 1, len do
                         if not cols[i].other.isBlock then
                             log.debug("La explosión ha alcanzado a: " .. cols[i].other.name)

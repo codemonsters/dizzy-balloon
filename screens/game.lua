@@ -469,4 +469,9 @@ function game.drop_seed(x)
     end
 end
 
+function game.crearSeta(x, y)
+    seta = MushroomClass.new("Seta", world, game, x, y)
+    table.insert(setas, seta)
+end
+
 return game
