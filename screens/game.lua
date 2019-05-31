@@ -29,7 +29,7 @@ local vidas
 local enemigos = {}
 local setas = {}
 local plataformas = {}
-local enemigos_muertos = 0
+local enemies_to_spawn = 0
 local temporizador_respawn_enemigo = 0
 local TIEMPO_RESPAWN_ENEMIGO = 3
 local niveles = {
@@ -51,6 +51,7 @@ local niveles = {
         
     }
 }
+local TIEMPO_RESPAWN_ENEMIGO = 1
 --[[
 local niveles = {
 
@@ -140,11 +141,11 @@ local scaleCanvas = pillarEscala()
 
 function game.loadlife()
     jugador.x, jugador.y = jugador_x_inicial, jugador_y_inicial
-    enemigo1.x, enemigo1.y = enemigo1_x_inicial, enemigo1_y_inicial
-    enemigo2.x, enemigo2.y = enemigo2_x_inicial, enemigo2_y_inicial
 end
 
 function game.loadlevel()
+    math.randomseed(os.time())
+    
     bloqueSuelo = BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, 10, world)
     bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, WORLD_HEIGHT, world)
     bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, WORLD_HEIGHT, world)
@@ -172,12 +173,7 @@ function game.loadlevel()
     jugador_x_inicial = 1
     jugador_y_inicial = WORLD_HEIGHT - jugador.height
 
-    enemigo1 = EnemyClass.new("enemigo1", 50 + EnemyClass.width, 120 + EnemyClass.height, world, game)
-
-    enemigo2 = EnemyClass.new("enemigo2", 50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world, game)
-
-    table.insert(enemigos, enemigo1)
-    table.insert(enemigos, enemigo2)
+    enemies_to_spawn = 5 -- numero de enemigos en el nivel 1
 
     -- sky:load(world)
 
@@ -201,13 +197,19 @@ function game.load()
 end
 
 function game.update(dt)
-    if enemigos_muertos > 0 then
+    if enemies_to_spawn > 0 then
         temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
         if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
-            enemigo = EnemyClass.new("enemigo", EnemyClass.width, EnemyClass.width, world, game)
+
+            if math.random() > 0.5 then
+                enemigo = EnemyClass.new("enemigoIzq", EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
+            else
+                enemigo = EnemyClass.new("enemigoDer", WORLD_WIDTH - EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
+            end
+
             table.insert(enemigos, enemigo)
 
-            enemigos_muertos = enemigos_muertos - 1
+            enemies_to_spawn = enemies_to_spawn - 1
             temporizador_respawn_enemigo = 0
         end
     end
@@ -419,6 +421,8 @@ function game.vidaperdida()
     vidas = vidas - 1
     if vidas <= 0 then
         world = nil
+        enemies_to_spawn = 0
+        temporizador_respawn_enemigo = 0
         enemigos = {}
         plataformas = {}
         change_screen(require("screens/menu"))
@@ -431,7 +435,7 @@ function game.remove_enemy(enemy)
         if v == enemy then
             world:remove(enemy)
             table.remove(enemigos, i)
-            enemigos_muertos = enemigos_muertos + 1
+            enemies_to_spawn = enemies_to_spawn + 1
             break
         end
     end
