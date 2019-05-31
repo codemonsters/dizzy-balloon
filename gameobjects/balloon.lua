@@ -104,6 +104,7 @@ function BalloonClass.new(seed, world, game)
     balloon.change_state(balloon, BalloonClass.states.growing)
     return balloon
 end
+
 function BalloonClass:update(dt)
     self.state.update(self, dt)
 end

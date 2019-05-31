@@ -10,7 +10,7 @@ local PointerClass = require("pointer")
 local BombClass = require("gameobjects/bomb")
 -- local balloon = BalloonClass.new()
 local BalloonClass = require("gameobjects/balloon")
-
+local MushroomClass = require("gameobjects/mushroom")
 
 if mobile then
     leftFinger = PointerClass.new(game, "Izquierdo")
@@ -29,9 +29,30 @@ local BlockClass = require("gameobjects/block")
 local gameFilter
 local vidas
 local enemigos = {}
+local setas = {}
 local plataformas = {}
 local enemies_to_spawn = 0
 local temporizador_respawn_enemigo = 0
+local TIEMPO_RESPAWN_ENEMIGO = 3
+local niveles = {
+    {
+        name = "Nivel 1",
+
+        load = {
+            enemies = function(world, game)
+                world.add(EnemyClass.new("enemigo1", 50 + EnemyClass.width, 120 + EnemyClass.height, world, game))
+                world.add(EnemyClass.new("enemigo2", 50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world, game))
+            end,
+            sky = function(world, game)
+                world.add(SkyClass.new(world))
+            end,
+            player = function(world, game)
+                world.add(PlayerClass.new(world))
+            end
+        }
+        
+    }
+}
 local TIEMPO_RESPAWN_ENEMIGO = 1
 --[[
 local niveles = {
@@ -136,6 +157,14 @@ function game.loadlevel()
     table.insert(plataformas, bloqueParizq)
     table.insert(plataformas, bloqueParder)
 
+    seta1 = MushroomClass.new("Seta 1", world, game, 500, 600)
+    seta2 = MushroomClass.new("Seta 2", world, game, 200, 400)
+    seta3 = MushroomClass.new("Seta 3", world, game, 300, 300)
+
+    table.insert(setas, seta1)
+    table.insert(setas, seta2)
+    table.insert(setas, seta3)
+
     --[[
     -- Plataformas de prueba:
     bloquePlatA = BlockClass.new("Plataforma A", 100, WORLD_HEIGHT - 70, 100, 4, world)
@@ -196,6 +225,10 @@ function game.update(dt)
 
     sky:update(dt)
 
+    for i, seta in ipairs(setas) do
+        seta:update(dt)
+    end
+
     if fireRequested then
         fireRequested = false
         x,y  = jugador.x,jugador.y
@@ -241,6 +274,10 @@ function game.draw()
         bloquePlatD:draw()
         --]]
         bomb:draw()
+
+        for i, seta in ipairs(setas) do
+            seta:draw()
+        end
 
         --[[
         -- puntos de las dos esquinas del mundo
@@ -410,6 +447,16 @@ end
 function game.create_balloon_from_seed(seed)
     --print("CREAR BALON!!!")
     local balloon = BalloonClass.new(seed, world, game)
+end
+
+function game.remove_mushroom(mushroom)
+    for i, v in ipairs(setas) do
+        if v == mushroom then
+            world:remove(mushroom)
+            table.remove(setas, i)
+            break
+        end
+    end
 end
 
 function game.kill_object(object)

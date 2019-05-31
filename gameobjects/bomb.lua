@@ -296,7 +296,7 @@ function Bomb.new(name, game)
     local bomb = {}
     bomb.game = game
     bomb.name = name
-    bomb.state = Bomb.states.inactive -- FIXME: Esto deberíamos hacerlo en el método load y no en new
+    bomb.state = Bomb.states.inactive
     bomb.world = world
     bomb.current_frame = 1
     setmetatable(bomb, Bomb)
