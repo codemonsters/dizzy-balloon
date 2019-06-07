@@ -9,6 +9,7 @@ local Bomb = {
     isBomb = true,
     montado = false,
     montura = nil,
+    lastExplosionHits = 0,
     states = {
         inactive = {
             name = "inactive",
@@ -243,7 +244,7 @@ local Bomb = {
 
                 if self.elapsed_time > self.explosion_duration then
                     self.world:remove(self)
-                    self.change_state(self, self.states.inactive)
+                    self.change_state(self, self.states.afterExplosion)
                 else
                     self.current_frame = math.floor(1 + #self.state.quads * self.elapsed_time / self.explosion_duration)
 
@@ -262,13 +263,11 @@ local Bomb = {
                     self.world:update(self, self.current_x, self.current_y, self.current_width, self.current_height)
                     local x, y, cols, len =
                         self.world:check(self, self.current_x, self.current_y, self.collisions_filter)
-                    if len == 0 then
-                        self.game.crearSeta(self.x, self.y)
-                    end
                     for i = 1, len do
                         if not cols[i].other.isBlock then
                             log.debug("La explosión ha alcanzado a: " .. cols[i].other.name)
                             self.game.kill_object(cols[i].other)
+                            lastExplosionHits = lastExplosionHits + 1
                         end
                     end
                 end
@@ -290,6 +289,16 @@ local Bomb = {
                     y_scale
                 )
                 love.graphics.rectangle("line", self.current_x, self.current_y, self.current_width, self.current_height)
+            end
+        },
+        afterExplosion = {
+            name = "after explosion",
+            load = function(self)
+                if lastExplosionHits == 0 then
+                    self.game.crearSeta(self.x, self.y)
+                end
+                lastExplosionHits = 0
+                self.change_state(self, self.states.inactive)
             end
         },
         floor = {
