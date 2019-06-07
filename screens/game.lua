@@ -32,106 +32,34 @@ local enemigos = {}
 local setas = {}
 local balloons = {}
 local plataformas = {}
-local enemies_to_spawn = 0
 local temporizador_respawn_enemigo = 0
 local TIEMPO_RESPAWN_ENEMIGO = 3
+local TIEMPO_RESPAWN_ENEMIGO = 1
+local nivel_actual = 1
+
 local niveles = {
+    -- en los load se crean todos los gameobjects menos los jugadores y los tres bloques que delimitan el mundo
     {
         name = "Nivel 1",
+        max_enemies = 2,
+        jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
 
-        load = {
-            enemies = function(world, game)
-                world.add(EnemyClass.new("enemigo1", 50 + EnemyClass.width, 120 + EnemyClass.height, world, game))
-                world.add(EnemyClass.new("enemigo2", 50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world, game))
-            end,
-            sky = function(world, game)
-                world.add(SkyClass.new(world))
-            end,
-            player = function(world, game)
-                world.add(PlayerClass.new(world))
-            end
-        }
-        
-    }
-}
-local TIEMPO_RESPAWN_ENEMIGO = 1
---[[
-local niveles = {
-
-    nivel1 = {
-
-        name = "1",
-
-        jugador_x_inicial = 1,
-        jugador_y_inicial = WORLD_HEIGHT - jugador.height,
-
-        enemigos = {
-
-            enemigo1 = EnemyClass.new(),
-            enemigo1:load(50 + EnemyClass.width, 120 + EnemyClass.height, world),
-            enemigo1_x_inicial = 50 + EnemyClass.width,
-            enemigo1_y_inicial = 120 + EnemyClass.width,
-
-            enemigo2 = EnemyClass.new(),
-            enemigo2:load(50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world),
-            enemigo2_x_inicial = 50 + EnemyClass.width * 2,
-            enemigo2_y_inicial = 120 + EnemyClass.width * 2
-
-        },
-
-        plataformas = {
-
-            bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 10, world),
-            bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT, world),
-            bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT, world)
-
-        },
-
-
-
+        load = function(world, game)
+            sky = SkyClass.new(world, game)
+        end
     },
+    {
+        name = "Nivel 2",
+        max_enemies = 3,
+        jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
 
-    nivel2 = {
-
-        name = "2",
-
-        jugador_x_inicial = 1,
-        jugador_y_inicial = WORLD_HEIGHT - jugador.height,
-
-        enemigos = {
-
-            enemigo1 = EnemyClass.new(),
-            enemigo1:load(50 + EnemyClass.width, 120 + EnemyClass.height, world),
-            enemigo1_x_inicial = 50 + EnemyClass.width,
-            enemigo1_y_inicial = 120 + EnemyClass.width,
-
-            enemigo2 = EnemyClass.new(),
-            enemigo2:load(50 + EnemyClass.width * 2, 120 + EnemyClass.height * 2, world),
-            enemigo2_x_inicial = 50 + EnemyClass.width * 2,
-            enemigo2_y_inicial = 120 + EnemyClass.width * 2,
-
-            enemigo3 = EnemyClass.new(),
-            enemigo3:load(50 + EnemyClass.width * 3, 120 + EnemyClass.height * 2, world),
-            enemigo3_x_inicial = 50 + EnemyClass.width * 2,
-            enemigo3_y_inicial = 120 + EnemyClass.height * 2
-
-        },
-
-        plataformas = {
-
-            bloqueSuelo = BlockClass.new("Suelo", 0, SCREEN_HEIGHT - 20, SCREEN_WIDTH, 10, world),
-            bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, SCREEN_HEIGHT, world),
-            bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, SCREEN_HEIGHT, world),
-            bloquePlatA = BlockClass.new("Plataforma A", 100, WORLD_HEIGHT - 70, 100, 4, world)
-
-        },
-
-        bloqueSalida = BlockClass.new("Salida", 0, 0, SCREEN_WIDTH, 1, world)
-
+        load = function(world, game)
+            sky = SkyClass.new(world, game)
+            table.insert(plataformas, BlockClass.new("Bloque 1", 150, 600, 400, 10, world))
+            table.insert(plataformas, BlockClass.new("Bloque 2", 200, 200, 300, 10, world))
+        end
     }
-
 }
---]]
 
 function pillarEscala()
     if window_height >= window_width then
@@ -144,46 +72,20 @@ end
 local scaleCanvas = pillarEscala()
 
 function game.loadlife()
-    jugador.x, jugador.y = jugador_x_inicial, jugador_y_inicial
+    jugador.x = nivel_actual.jugador_posicion_inicial[1]
+    jugador.y = nivel_actual.jugador_posicion_inicial[2]
 end
 
-function game.loadlevel()
-    math.randomseed(os.time())
-    
-    bloqueSuelo = BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, 10, world)
-    bloqueParizq = BlockClass.new("Pared Izquierda", -10, 0, 10, WORLD_HEIGHT, world)
-    bloqueParder = BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, WORLD_HEIGHT, world)
+function game.loadlevel(nivel)
+    nivel_actual = niveles[nivel]
+    nivel_actual.load(world, game)
 
-    table.insert(plataformas, bloqueSuelo)
-    table.insert(plataformas, bloqueParizq)
-    table.insert(plataformas, bloqueParder)
+    table.insert(plataformas, BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, 10, world))
+    table.insert(plataformas, BlockClass.new("Pared Izquierda", -10, 0, 10, WORLD_HEIGHT, world))
+    table.insert(plataformas, BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, WORLD_HEIGHT, world))
 
-    seta1 = MushroomClass.new("Seta 1", world, game, 500, 600)
-    seta2 = MushroomClass.new("Seta 2", world, game, 200, 400)
-    seta3 = MushroomClass.new("Seta 3", world, game, 300, 300)
+    game.loadlife()
 
-    table.insert(setas, seta1)
-    table.insert(setas, seta2)
-    table.insert(setas, seta3)
-
-    --[[
-    -- Plataformas de prueba:
-    bloquePlatA = BlockClass.new("Plataforma A", 100, WORLD_HEIGHT - 70, 100, 4, world)
-    bloquePlatB = BlockClass.new("Plataforma B", 600, 200, 40, 4, world)
-    bloquePlatC = BlockClass.new("Plataforma C", 475, WORLD_HEIGHT - 500, 20, 400, world)
-    bloquePlatD = BlockClass.new("Plataforma D", 200, 200, 120, 4, world)
-    --]]
-    -- jugador:load(world, game)
-    jugador_x_inicial = 1
-    jugador_y_inicial = WORLD_HEIGHT - jugador.height
-
-    enemies_to_spawn = 1 -- numero de enemigos en el nivel 1
-
-    -- sky:load(world)
-
-    -- bomb:load(world)
-
-    vidas = 3
 end
 
 function game.load()
@@ -191,29 +93,28 @@ function game.load()
 
     jugador = PlayerClass.new(world, game)
 
-    sky = SkyClass.new(world, game)
-
     bomb = BombClass.new("Bomb", game)
 
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
 
-    game.loadlevel()
+    nivel_actual = 1
+
+    vidas = 3
+
+    game.loadlevel(nivel_actual)
 end
 
 function game.update(dt)
-    if enemies_to_spawn > 0 then
+    -- comprobamos si debemos crear un enemigo nuevo
+    if nivel_actual.max_enemies > #enemigos then
         temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
         if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
-
             if math.random() > 0.5 then
                 enemigo = EnemyClass.new("enemigoIzq", EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
             else
                 enemigo = EnemyClass.new("enemigoDer", WORLD_WIDTH - EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
             end
-
             table.insert(enemigos, enemigo)
-
-            enemies_to_spawn = enemies_to_spawn - 1
             temporizador_respawn_enemigo = 0
         end
     end
@@ -255,9 +156,11 @@ function game.draw()
     love.graphics.setCanvas(worldCanvas) -- a partir de ahora dibujamos en el canvas
     do
         love.graphics.setBlendMode("alpha")
+        
         -- El fondo del mundo
         love.graphics.setColor(20, 00, 200)
         love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
+        
         -- objetos del juego
         jugador:draw()
 
@@ -275,24 +178,11 @@ function game.draw()
             plataforma:draw()
         end
 
-        --[[
-        -- Plataformas de prueba
-        bloquePlatA:draw()
-        bloquePlatB:draw()
-        bloquePlatC:draw()
-        bloquePlatD:draw()
-        --]]
         bomb:draw()
 
         for i, seta in ipairs(setas) do
             seta:draw()
         end
-
-        --[[
-        -- puntos de las dos esquinas del mundo
-        love.graphics.setColor(255, 255, 255)
-        love.graphics.points(0, 0, WORLD_WIDTH - 1, WORLD_HEIGHT - 1)
-        --]]
     end
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
     love.graphics.setBlendMode("alpha", "premultiplied")
@@ -433,7 +323,6 @@ function game.vidaperdida()
     vidas = vidas - 1
     if vidas <= 0 then
         world = nil
-        enemies_to_spawn = 0
         temporizador_respawn_enemigo = 0
         enemigos = {}
         plataformas = {}
@@ -447,7 +336,6 @@ function game.remove_enemy(enemy)
         if v == enemy then
             world:remove(enemy)
             table.remove(enemigos, i)
-            enemies_to_spawn = enemies_to_spawn + 1
             break
         end
     end
@@ -486,6 +374,11 @@ function game.drop_seed(x)
             seed:change_state(seed.states.falling)
         end
     end
+end
+
+function game.crearSeta(x, y)
+    seta = MushroomClass.new("Seta", world, game, x, y)
+    table.insert(setas, seta)
 end
 
 return game

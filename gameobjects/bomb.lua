@@ -9,6 +9,7 @@ local Bomb = {
     isBomb = true,
     montado = false,
     montura = nil,
+    lastExplosionHits = 0,
     states = {
         inactive = {
             name = "inactive",
@@ -231,7 +232,11 @@ local Bomb = {
                 self.current_height = self.initial_height
                 self.current_frame = 1
                 self.collisions_filter = function(item, other)
-                    return "cross"
+                    if other.isBlock then
+                        return nil
+                    else
+                        return "cross"
+                    end
                 end
             end,
             update = function(self, dt)
@@ -239,7 +244,7 @@ local Bomb = {
 
                 if self.elapsed_time > self.explosion_duration then
                     self.world:remove(self)
-                    self.change_state(self, self.states.inactive)
+                    self.change_state(self, self.states.afterExplosion)
                 else
                     self.current_frame = math.floor(1 + #self.state.quads * self.elapsed_time / self.explosion_duration)
 
@@ -262,6 +267,7 @@ local Bomb = {
                         if not cols[i].other.isBlock then
                             log.debug("La explosión ha alcanzado a: " .. cols[i].other.name)
                             self.game.kill_object(cols[i].other)
+                            lastExplosionHits = lastExplosionHits + 1
                         end
                     end
                 end
@@ -285,6 +291,16 @@ local Bomb = {
                 love.graphics.rectangle("line", self.current_x, self.current_y, self.current_width, self.current_height)
             end
         },
+        afterExplosion = {
+            name = "after explosion",
+            load = function(self)
+                if lastExplosionHits == 0 then
+                    self.game.crearSeta(self.x, self.y)
+                end
+                lastExplosionHits = 0
+                self.change_state(self, self.states.inactive)
+            end
+        },
         floor = {
             name = "floor"
         }
@@ -299,6 +315,7 @@ function Bomb.new(name, game)
     bomb.state = Bomb.states.inactive
     bomb.world = world
     bomb.current_frame = 1
+    bomb.lastExplosionHits = 0
     setmetatable(bomb, Bomb)
     bomb.change_state(bomb, bomb.states.inactive)
     return bomb
