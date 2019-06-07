@@ -119,7 +119,7 @@ local SeedClass = {
                 self.elapsed_time = self.elapsed_time + dt
 
                 -- comprobamos si tenemos encima un jugador
-                local player_over = false
+                local player_over = true
                 -- local items, len = world:querySegment(self.x, self.y - 1, self.x + self.width, self.y - 1)
                 local items, len = world:queryRect(self.x,self.y - 2,self.x + self.width,self.y - 2)
                 for i = 1, len do
@@ -128,17 +128,17 @@ local SeedClass = {
                         break
                     end
                 end
-                if player_over then
+                --[[if player_over then
                     print("PLAYER OVER")
                 else
                     print("PLAYER NOT OVER")
-                end
+                end--]]
                 self.player_over_seed = player_over
 
                 if self.player_over_seed then
                     self.change_state(self, self.states.evolving)
                 elseif self.elapsed_time > 5 then
-                    self.change_state(self, self.states.rotting)
+                    --self.change_state(self, self.states.rotting)
                 end
             end
         },
@@ -160,7 +160,7 @@ local SeedClass = {
                 self.elapsed_time = self.elapsed_time + dt
                 
                 -- comprobamos si tenemos encima un jugador
-                local player_over = false
+                local player_over = true
                 -- local items, len = world:querySegment(self.x, self.y - 1, self.x + self.width, self.y - 1)
                 local items, len = world:queryRect(self.x, self.y - 2, self.x + self.width, self.y - 2)
                 for i = 1, len do
@@ -172,9 +172,9 @@ local SeedClass = {
                 self.player_over_seed = player_over
 
                 if not self.player_over_seed then
-                    self.change_state(self, self.states.rotting)
-                elseif self.elapsed_time > 3 then
-                    print("CAMBIO A BALLOON")
+                    --self.change_state(self, self.states.rotting)
+                elseif self.elapsed_time > 1 then
+                    self.game.create_balloon_from_seed(self)
                     self.change_state(self, self.states.balloon)
                 end
             end
@@ -192,7 +192,6 @@ local SeedClass = {
                 self.currentframe = 1
             end,
             update = function(self, dt)
-                self.game.create_balloon_from_seed(self)
             end
         },
         rotting = {

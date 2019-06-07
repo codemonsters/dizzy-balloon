@@ -14,10 +14,21 @@ local Player = {
         if self.right then
             vx_factor = 1
         end
-        return vx_factor * 180
+        if montura then
+        print(montura.isBalloon)
+        end
+        if montura and montura.isBalloon then
+            return 0
+        else
+            return vx_factor * 180
+        end
     end,
     vy = function(self)
-        return -self.velocidad_y * 80 -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
+        if montura and montura.isBalloon then
+            return 0
+        else
+            return -self.velocidad_y * 80 -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
+        end
     end,
     collisions_filter = function(item, other)
         if other.isBomb and other.state ~= other.states.planted then
@@ -127,7 +138,7 @@ function Player:update(dt)
 
     --colisiones en el eje y
     if len > 0 then -- checkeamos si nos podemos montar sobre un enemigo
-        if cols[1].other.isEnemy and not self.montado then
+        if (cols[1].other.isEnemy or cols[1].other.isBalloon) and not self.montado then
             if cols[1].other.y - self.y > cols[1].other.height then --cuando el jugador está sobre el enemigo, la y es menor a más altura
                 self.montado = true
                 self.montura = cols[1].other
