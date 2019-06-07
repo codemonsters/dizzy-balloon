@@ -4,15 +4,16 @@ local SkyClass = {}
 
 SkyClass.__index = SkyClass
 
-function SkyClass.new(world)
+function SkyClass.new(world, game)
     local sky = {
         name = "sky",
         semillas = {}
     }
     sky.world = world
+    sky.game = game
 
     for i = 0, WORLD_WIDTH / SeedClass.width + 1 do
-        local semilla = SeedClass.new("seed" .. (i + 1), sky, world, i * SeedClass.width, 0)
+        local semilla = SeedClass.new("seed" .. (i + 1), sky, world, i * SeedClass.width, 0, sky.game)
         table.insert(sky.semillas, semilla)
     end
     --sky.semillas[10]:change_state(SeedClass.states.falling)

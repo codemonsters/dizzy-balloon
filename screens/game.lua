@@ -4,10 +4,12 @@ local PlayerClass = require("gameobjects/player")
 -- local jugador = PlayerClass.new()
 local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
--- local sky = SkyClass.new(world)
+-- local sky = SkyClass.new(world, game)
 local PointerClass = require("pointer")
-local BombClass = require("gameobjects/bomb")
 -- local bomb = BombClass.new()
+local BombClass = require("gameobjects/bomb")
+-- local balloon = BalloonClass.new()
+local BalloonClass = require("gameobjects/balloon")
 local MushroomClass = require("gameobjects/mushroom")
 
 if mobile then
@@ -129,6 +131,7 @@ local niveles = {
 
 }
 --]]
+
 function pillarEscala()
     if window_height >= window_width then
         return (window_width - bordes * 2) / WORLD_WIDTH
@@ -187,7 +190,7 @@ function game.load()
 
     jugador = PlayerClass.new(world, game)
 
-    sky = SkyClass.new(world)
+    sky = SkyClass.new(world, game)
 
     bomb = BombClass.new("Bomb", game)
 
@@ -439,6 +442,11 @@ function game.remove_enemy(enemy)
             break
         end
     end
+end
+
+function game.create_balloon_from_seed(seed)
+    --print("CREAR BALON!!!")
+    local balloon = BalloonClass.new(seed, world, game)
 end
 
 function game.remove_mushroom(mushroom)

@@ -15,7 +15,6 @@ local SeedClass = {
     vy = 0,
     width = 20,
     height = 20,
-    image = love.graphics.newImage("assets/seed.png"),
     name = "Seed",
     isSeed = true,
     player_over_seed = false,
@@ -193,10 +192,7 @@ local SeedClass = {
                 self.currentframe = 1
             end,
             update = function(self, dt)
-                print("*** BALLOON!!! ***")
-                if self.elapsed_time > 3 and self.player_over_seed then
-                    self.change_state(self, self.states.balloon)
-                end
+                self.game.create_balloon_from_seed(self)
             end
         },
         rotting = {
@@ -225,8 +221,9 @@ local SeedClass = {
 
 SeedClass.__index = SeedClass
 
-function SeedClass.new(name, sky, world, x, y)
+function SeedClass.new(name, sky, world, x, y, game)
     local seed = {}
+    seed.game = game
     seed.name = name
     seed.sky = sky
     seed.world = world
