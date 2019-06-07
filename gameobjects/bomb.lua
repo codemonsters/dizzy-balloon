@@ -315,6 +315,7 @@ function Bomb.new(name, game)
     bomb.state = Bomb.states.inactive
     bomb.world = world
     bomb.current_frame = 1
+    bomb.lastExplosionHits = 0
     setmetatable(bomb, Bomb)
     bomb.change_state(bomb, bomb.states.inactive)
     return bomb
