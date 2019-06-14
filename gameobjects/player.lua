@@ -14,21 +14,11 @@ local Player = {
         if self.right then
             vx_factor = 1
         end
-        if montura then
-        print(montura.isBalloon)
-        end
-        if montura and montura.isBalloon then
-            return 0
-        else
-            return vx_factor * 180
-        end
+
+        return vx_factor * 180
     end,
     vy = function(self)
-        if montura and montura.isBalloon then
-            return 0
-        else
-            return -self.velocidad_y * 80 -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
-        end
+        return -self.velocidad_y * 80 -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
     end,
     collisions_filter = function(item, other)
         if other.isBomb and other.state ~= other.states.planted then
@@ -130,11 +120,15 @@ function Player.new(world, game)
 end
 
 function Player:update(dt)
-    --movimento en el eje x
-    self.x, self.y, cols, len = self.world:move(self, self.x + self:vx() * dt, self.y, self.collisions_filter)
-    -- TODO: juntar estas dos llamadas a world:move en una
-    --movimiento en el eje y
-    self.x, ydespues, cols, len = self.world:move(self, self.x, self.y + self:vy() * dt, self.collisions_filter)
+
+    if not (self.montado and self.montura.isBalloon) then -- cuando estemos montados en el globo no nos podremos mover
+        --movimento en el eje x
+        self.x, self.y, cols, len = self.world:move(self, self.x + self:vx() * dt, self.y, self.collisions_filter)
+        -- TODO: juntar estas dos llamadas a world:move en una
+        --movimiento en el eje y
+        self.x, ydespues, cols, len = self.world:move(self, self.x, self.y + self:vy() * dt, self.collisions_filter)
+    end
+
 
     --colisiones en el eje y
     if len > 0 then -- checkeamos si nos podemos montar sobre un enemigo
@@ -178,7 +172,9 @@ function Player:update(dt)
     else
         if self.left or self.right then
             -- self.state = self.states.walking
-            self.change_state(self, Player.states.walking)
+            if not (self.montado and self.montura.isBalloon) then 
+                self.change_state(self, Player.states.walking)
+            end
         else
             -- self.state = self.states.standing
             self.change_state(self, Player.states.standing)

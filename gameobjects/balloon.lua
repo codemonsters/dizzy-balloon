@@ -29,7 +29,7 @@ local BalloonClass = {
             },        
             load = function(self)
                 self.elapsed_time = 0
-                self.expansion_duration = 0.1
+                self.expansion_duration = 2
                 self.initial_width = 16
                 self.initial_height = 16
                 self.final_width = 40
@@ -113,13 +113,6 @@ local BalloonClass = {
             
                         self.velocidad_x = vectorUnitario.x * self.state.moduloVelocidad
                         self.velocidad_y = vectorUnitario.y * self.state.moduloVelocidad
-                        
-                        seno = self.velocidad_y/self.state.moduloVelocidad -- calculo del ángulo con relación a la vertical tras el choque
-                        anguloEnGradosConVertical = math.asin(seno) * 360/(2*math.pi)
-
-                        if math.abs(anguloEnGradosConVertical) <= 15 then
-                            self:change_state(self.states.swiping)
-                        end
                     elseif col.other.isPlayer then
                         col.other:empujar({x = self.velocidad_x*2, y = self.velocidad_y*2}, self);
                     end
@@ -138,6 +131,31 @@ local BalloonClass = {
             end
         },
         flying_with_pilot = {
+            moduloVelocidad = math.sqrt(8) * 0.75,
+
+            vx = function(self)
+                local vx_factor = 0
+                if self.rider.left then
+                    vx_factor = -1
+                end
+                if self.rider.right then
+                    vx_factor = 1
+                end
+        
+                return vx_factor * self.state.moduloVelocidad
+            end,
+            vy = function(self)
+                local vy_factor = 0
+                if self.rider.down then
+                    vy_factor = 1
+                end
+                if self.rider.up then
+                    vy_factor = -1
+                end
+        
+                return vy_factor * self.state.moduloVelocidad
+            end,
+
             quads = {
                 {
                     quad = love.graphics.newQuad(125, 78, 16, 16, atlas:getDimensions()),
@@ -149,7 +167,14 @@ local BalloonClass = {
             
             end,
             update = function(self, dt)
-                
+                if not self.rider.montado then
+                    self:change_state(self.states.flying_alone)
+                    return
+                end
+
+                --movimento en el eje x
+                self.x, self.y, cols, len = self.world:move(self, self.x + self.state.vx(self), self.y + self.state.vy(self), self.collisions_filter)
+                self.rider.x, self.rider.y, cols, len = self.rider.world:move(self.rider, self.rider.x + self.state.vx(self), self.rider.y + self.state.vy(self))
             end,
 
             draw = function(self)
@@ -190,6 +215,7 @@ BalloonClass.__index = BalloonClass
 function BalloonClass.new(seed, world, game)
     --print("SEED = " .. seed.name .. "; world = " .. world.name .. "; game = " .. game)
     local balloon = {}
+    balloon.rider = nil
     balloon.x = seed.x
     balloon.y = seed.y
     balloon.game = game
@@ -203,7 +229,10 @@ function BalloonClass.new(seed, world, game)
 end
 
 function BalloonClass:montado(player)
-    self.change_state(self, BalloonClass.states.flying_with_pilot)
+    if self.state == self.states.flying_alone then
+        self.rider = player
+        self:change_state(BalloonClass.states.flying_with_pilot)
+    end
 end
 
 function BalloonClass:update(dt)

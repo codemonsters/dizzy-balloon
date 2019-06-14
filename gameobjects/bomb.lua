@@ -267,7 +267,7 @@ local Bomb = {
                         if not cols[i].other.isBlock then
                             log.debug("La explosión ha alcanzado a: " .. cols[i].other.name)
                             self.game.kill_object(cols[i].other)
-                            lastExplosionHits = lastExplosionHits + 1
+                            self.lastExplosionHits = self.lastExplosionHits + 1
                         end
                     end
                 end
@@ -294,10 +294,10 @@ local Bomb = {
         afterExplosion = {
             name = "after explosion",
             load = function(self)
-                if lastExplosionHits == 0 then
+                if self.lastExplosionHits == 0 then
                     self.game.crearSeta(self.x, self.y)
                 end
-                lastExplosionHits = 0
+                self.lastExplosionHits = 0
                 self.change_state(self, self.states.inactive)
             end
         },
