@@ -30,6 +30,7 @@ local gameFilter
 local vidas
 local enemigos = {}
 local setas = {}
+local balloons = {}
 local plataformas = {}
 local temporizador_respawn_enemigo = 0
 local TIEMPO_RESPAWN_ENEMIGO = 3
@@ -126,6 +127,10 @@ function game.update(dt)
         enemigo:update(dt)
     end
 
+    for i, globo in ipairs(balloons) do
+        globo:update(dt)
+    end
+
     sky:update(dt)
 
     for i, seta in ipairs(setas) do
@@ -163,6 +168,10 @@ function game.draw()
 
         for i, enemigo in ipairs(enemigos) do
             enemigo:draw()
+        end
+
+        for i, globo in ipairs(balloons) do
+            globo:draw()
         end
 
         sky:draw()
@@ -341,6 +350,8 @@ end
 function game.create_balloon_from_seed(seed)
     --print("CREAR BALON!!!")
     local balloon = BalloonClass.new(seed, world, game)
+    table.insert(balloons, balloon)
+    seed:die()
 end
 
 function game.remove_mushroom(mushroom)
