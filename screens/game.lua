@@ -35,6 +35,7 @@ local plataformas = {}
 local temporizador_respawn_enemigo = 0
 local TIEMPO_RESPAWN_ENEMIGO = 1
 local nivel_actual = 1
+local numero_nivel_actual = 1
 
 local niveles = {
     -- en los load se crean todos los gameobjects menos los jugadores y los tres bloques que delimitan el mundo
@@ -97,6 +98,7 @@ function game.load()
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
 
     nivel_actual = 1
+    numero_nivel_actual = 1
 
     vidas = 3
 
@@ -218,6 +220,10 @@ function game.keypressed(key, scancode, isrepeat)
     elseif key == "b" then
         vidas = vidas + 1
         log.debug("vidas: " .. vidas)
+    elseif key == "l" then
+        numero_nivel_actual = numero_nivel_actual + 1
+        nivel_actual = niveles[numero_nivel_actual]
+        log.debug("Cambio de nivel a: " .. nivel_actual.name)
     end
 end
 
