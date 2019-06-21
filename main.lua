@@ -9,6 +9,7 @@ end
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
 WORLD_WIDTH, WORLD_HEIGHT = 700, 700
+HUD_WIDTH = (SCREEN_WIDTH - WORLD_WIDTH) / 2
 
 local screen = nil
 
@@ -24,8 +25,10 @@ function love.load()
 
     love.graphics.setDefaultFilter("nearest", "linear") -- Cambiamos el filtro usado durante el escalado
 
-    font = love.graphics.newFont("assets/fonts/pixelmania.ttf", 14) -- https://www.dafont.com/es/pixelmania.font
-    love.graphics.setFont(font)
+    font_menu = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 50) -- Orange Juice 2.0 by Brittney Murphy Design https://brittneymurphydesign.com
+
+    font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
+    love.graphics.setFont(font_menu)
 
     -- scale the window of the game (without changing game width and heigth)
     window_width, window_height = love.window.getDesktopDimensions()

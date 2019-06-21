@@ -21,6 +21,7 @@ end
 
 -- local world = bump.newWorld(50)
 local worldCanvas = nil
+local hudCanvas = nil
 local bordes = 4
 local jugadorpuedesaltar = true
 local jugadorquieremoverse = false
@@ -93,6 +94,7 @@ function game.load()
     bomb = BombClass.new("Bomb", game)
 
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
+    hudCanvas = love.graphics.newCanvas(HUD_WIDTH, WORLD_HEIGHT)
 
     nivel_actual = 1
     numero_nivel_actual = 1
@@ -160,19 +162,28 @@ function game.update(dt)
 end
 
 function game.draw()
-    local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
-    love.graphics.setColor(255, 255, 255, 255)
-    --love.graphics.setFont(font)
-    love.graphics.printf("123", love.graphics.newFont(24), hud_width + WORLD_WIDTH, 100, hud_width, "center")
 
-    love.graphics.setCanvas(worldCanvas) -- a partir de ahora dibujamos en el canvas
+    love.graphics.setCanvas(hudCanvas) -- canvas del HUD
     do
         love.graphics.setBlendMode("alpha")
+        
+        -- El fondo del mundo
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.rectangle("fill", 0, 0, HUD_WIDTH, WORLD_HEIGHT)
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.printf("LVL - " .. 1, font_hud, 0, 100, HUD_WIDTH, "center" ) 
+        love.graphics.printf("LIVES x " .. 3, font_hud, 0, 160, HUD_WIDTH, "center" ) 
+        love.graphics.printf("BOMBS x " .. 9, font_hud, 0, 220, HUD_WIDTH, "center" ) 
+    end
 
+    love.graphics.setCanvas(worldCanvas) -- canvas del mundo
+    do
+        love.graphics.setBlendMode("alpha")
+        
         -- El fondo del mundo
         love.graphics.setColor(20, 00, 200)
         love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
-
+        
         -- objetos del juego
         jugador:draw()
 
@@ -196,12 +207,25 @@ function game.draw()
             seta:draw()
         end
     end
+
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
     love.graphics.setBlendMode("alpha", "premultiplied")
+
+    love.graphics.setColor(255,255,255)
+    love.graphics.draw(
+        hudCanvas,
+        window_width - HUD_WIDTH * scaleCanvas,
+        0,
+        0,
+        scaleCanvas,
+        scaleCanvas
+    )
+
+    love.graphics.setColor(255,255,255)
     love.graphics.draw(
         worldCanvas,
-        (window_width / 2) - (WORLD_WIDTH * scaleCanvas / 2),
-        (window_height / 2) - (WORLD_HEIGHT * scaleCanvas / 2),
+        (window_width - WORLD_WIDTH * scaleCanvas) / 2,
+        (window_height - WORLD_HEIGHT * scaleCanvas) / 2,
         0,
         scaleCanvas,
         scaleCanvas
