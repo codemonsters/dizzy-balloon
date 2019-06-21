@@ -43,7 +43,6 @@ local niveles = {
         name = "Nivel 1",
         max_enemies = 1,
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
-
         load = function(world, game)
             sky = SkyClass.new(world, game)
         end
@@ -52,7 +51,6 @@ local niveles = {
         name = "Nivel 2",
         max_enemies = 3,
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
-
         load = function(world, game)
             sky = SkyClass.new(world, game)
             table.insert(plataformas, BlockClass.new("Bloque 1", 150, 600, 400, 10, world))
@@ -85,7 +83,6 @@ function game.loadlevel(nivel)
     table.insert(plataformas, BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, WORLD_HEIGHT, world))
 
     game.loadlife()
-
 end
 
 function game.load()
@@ -111,9 +108,18 @@ function game.update(dt)
         temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
         if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
             if math.random() > 0.5 then
-                enemigo = EnemyClass.new("enemigoIzq", EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
+                enemigo =
+                    EnemyClass.new("enemigoIzq", EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
             else
-                enemigo = EnemyClass.new("enemigoDer", WORLD_WIDTH - EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
+                enemigo =
+                    EnemyClass.new(
+                    "enemigoDer",
+                    WORLD_WIDTH - EnemyClass.width,
+                    EnemyClass.height,
+                    world,
+                    game,
+                    math.random() * 360
+                )
             end
             table.insert(enemigos, enemigo)
             temporizador_respawn_enemigo = 0
@@ -139,10 +145,10 @@ function game.update(dt)
     if fireRequested then
         fireRequested = false
         if bomb.state == bomb.states.inactive and not (jugador.montado and jugador.montura.isBalloon) then
-            x,y  = jugador.x,jugador.y
+            x, y = jugador.x, jugador.y
             if fireInitialDirection == "down" then
                 if not jugador.not_supported then
-                    jugador.x, jugador.y = world:move(jugador, jugador.x, jugador.y-bomb.height*1.05)
+                    jugador.x, jugador.y = world:move(jugador, jugador.x, jugador.y - bomb.height * 1.05)
                     bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
                 end
             else
@@ -154,14 +160,19 @@ function game.update(dt)
 end
 
 function game.draw()
+    local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
+    love.graphics.setColor(255, 255, 255, 255)
+    --love.graphics.setFont(font)
+    love.graphics.printf("123", love.graphics.newFont(24), hud_width + WORLD_WIDTH, 100, hud_width, "center")
+
     love.graphics.setCanvas(worldCanvas) -- a partir de ahora dibujamos en el canvas
     do
         love.graphics.setBlendMode("alpha")
-        
+
         -- El fondo del mundo
         love.graphics.setColor(20, 00, 200)
         love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
-        
+
         -- objetos del juego
         jugador:draw()
 
@@ -388,8 +399,8 @@ function game.kill_object(object)
 end
 
 function game.drop_seed(x)
-    for key,seed in pairs(sky.semillas) do --pseudocode
-        if math.abs(seed.x-x) < seed.width/2 then
+    for key, seed in pairs(sky.semillas) do --pseudocode
+        if math.abs(seed.x - x) < seed.width / 2 then
             seed:change_state(seed.states.falling)
         end
     end
