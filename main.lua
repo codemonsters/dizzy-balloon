@@ -3,27 +3,27 @@ log = require "libraries/log/log" -- https://github.com/rxi/log.lua
 
 mobile = false
 
-if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
+if love.system.getOS() == "iOS" or love.system.getOS() == "Android" then
     mobile = true
 end
 
-SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720 -- 512, 288
-WORLD_WIDTH, WORLD_HEIGHT = 700, 700 -- 280, 280
+SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
+WORLD_WIDTH, WORLD_HEIGHT = 700, 700
 
 local screen = nil
 
 function change_screen(new_screen)
     screen = new_screen
     log.info("cargando pantalla: " .. screen.name)
-    screen.load()  
+    screen.load()
 end
 
 function love.load()
     log.level = "trace" -- trace / debug / info / warn / error / fatal
     log.info("Iniciado programa")
-    
+
     love.graphics.setDefaultFilter("nearest", "linear") -- Cambiamos el filtro usado durante el escalado
-    
+
     font = love.graphics.newFont("assets/fonts/pixelmania.ttf", 14) -- https://www.dafont.com/es/pixelmania.font
     love.graphics.setFont(font)
 
@@ -45,7 +45,7 @@ function love.load()
         {fullscreen = love.window.getFullscreen()}
     )
 
-    math.randomseed(os.time())  -- NOTE: Quizá redundante, parece que Love ya inicializa la semilla random automáticamente 
+    math.randomseed(os.time()) -- NOTE: Quizá redundante, parece que Love ya inicializa la semilla random automáticamente
 
     -- atlas: la textura que contiene todas las imágenes
     atlas = love.graphics.newImage("assets/atlas/arcade_platformerV2.png") -- Créditos: Grafixkid (https://opengameart.org/content/arcade-platformer-assets)
