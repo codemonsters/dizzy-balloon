@@ -307,21 +307,21 @@ function game.draw()
     love.graphics.setColor(255,255,255)
     love.graphics.draw(
         hudCanvas,
-        window_width - HUD_WIDTH * scaleCanvas,
+        window_width - HUD_WIDTH * game.scaleCanvas,
         0,
         0,
-        scaleCanvas,
-        scaleCanvas
+        game.scaleCanvas,
+        game.scaleCanvas
     )
 
     love.graphics.setColor(255,255,255)
     love.graphics.draw(
         worldCanvas,
-        (window_width - WORLD_WIDTH * scaleCanvas) / 2,
-        (window_height - WORLD_HEIGHT * scaleCanvas) / 2,
+        (window_width - WORLD_WIDTH * game.scaleCanvas) / 2,
+        (window_height - WORLD_HEIGHT * game.scaleCanvas) / 2,
         0,
-        scaleCanvas,
-        scaleCanvas
+        game.scaleCanvas,
+        game.scaleCanvas
     )
     game.state.draw(game)
 end
