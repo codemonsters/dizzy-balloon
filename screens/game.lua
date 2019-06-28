@@ -171,9 +171,33 @@ function game.draw()
         love.graphics.setColor(0, 0, 0)
         love.graphics.rectangle("fill", 0, 0, HUD_WIDTH, WORLD_HEIGHT)
         love.graphics.setColor(255, 255, 255)
-        love.graphics.printf("LVL - " .. 1, font_hud, 0, 100, HUD_WIDTH, "center" ) 
-        love.graphics.printf("LIVES x " .. 3, font_hud, 0, 160, HUD_WIDTH, "center" ) 
-        love.graphics.printf("BOMBS x " .. 9, font_hud, 0, 220, HUD_WIDTH, "center" ) 
+        love.graphics.printf("LVL - " .. numero_nivel_actual , font_hud, 0, 100, HUD_WIDTH, "center" ) 
+        love.graphics.printf("x " .. 3, font_hud, 140, 160, HUD_WIDTH, "left" ) 
+        love.graphics.printf("x " .. 9, font_hud, 140, 220, HUD_WIDTH, "left" ) 
+
+        ------------
+        local scale_factor = font_hud:getHeight() / PlayerClass.states.standing.quads[1].height
+        love.graphics.draw( -- dibujamos el jugador en el hud
+            atlas,
+            PlayerClass.states.standing.quads[1].quad,
+            95,
+            154,
+            0,
+            scale_factor,
+            scale_factor
+        )
+
+        local scale_factor = font_hud:getHeight() / BombClass.states.planted.quads[1].height
+        love.graphics.draw( -- dibujamos la bomba en el hud
+            atlas,
+            BombClass.states.planted.quads[1].quad,
+            94,
+            216,
+            0,
+            scale_factor,
+            scale_factor
+        )
+
     end
 
     love.graphics.setCanvas(worldCanvas) -- canvas del mundo
