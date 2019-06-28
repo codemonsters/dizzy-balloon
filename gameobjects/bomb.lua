@@ -43,7 +43,11 @@ local Bomb = {
                 self.world:add(self, self.x, self.y, self.width, self.height)
                 self.elapsed_time = 0
                 self.collisions_filter = function(item, other)
-                    return "slide"
+                    if other.isGoal then
+                        return
+                    else
+                        return "slide"
+                    end
                 end
             end,
             update = function(self, dt)
@@ -79,7 +83,11 @@ local Bomb = {
             load = function(self)
                 self.world:add(self, self.x, self.y, self.width, self.height)
                 self.collisions_filter = function(item, other)
-                    return "cross"
+                    if other.isGoal then
+                        return nil
+                    else
+                        return "cross"
+                    end
                 end
             end,
             update = function(self, dt)
@@ -126,8 +134,10 @@ local Bomb = {
                 self.collisions_filter = function(item, other)
                     if other.isBlock then
                         self.vx = -0.6 * self.vx
+                    elseif other.isGoal then
+                        return nil
                     end
-
+                    
                     return "slide"
                 end
             end,
@@ -234,6 +244,8 @@ local Bomb = {
                 self.collisions_filter = function(item, other)
                     if other.isBlock then
                         return nil
+                    elseif other.isGoal then
+                        return nil
                     else
                         return "cross"
                     end
@@ -264,7 +276,7 @@ local Bomb = {
                     local x, y, cols, len =
                         self.world:check(self, self.current_x, self.current_y, self.collisions_filter)
                     for i = 1, len do
-                        if not cols[i].other.isBlock then
+                        if not cols[i].other.isBlock and not cols[i].other.isGoal then
                             log.debug("La explosión ha alcanzado a: " .. cols[i].other.name)
                             self.game.kill_object(cols[i].other)
                             self.lastExplosionHits = self.lastExplosionHits + 1

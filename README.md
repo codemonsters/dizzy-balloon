@@ -46,6 +46,19 @@ Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
 * Hacemos tantos commit y push dentro la rama como sea necesario
 * Cuando consideremos el trabajo acabado mezclamos/publicamos los cambios en la rama principal (master): ```git checkout master; git merge nombre_rama```
 
+### Problemas con el usuario 
+
+* Para actualizar el url de origin con un nuevo nombre de usuario
+
+```git remote rm origin```
+```git remote add origin https://usuario@github.com/codemonsters/dizzy-balloon.git```
+
+### Android: Creación de un APK
+
+Requisitos:
+* love-android-sdl2 (aquí se explica como descargarla y prepararla: https://love2d.org/wiki/Game_Distribution#Android )
+* android-ndk-r14b  (descargas la versión 14b de la página oficial)
+
 ## Documentación
 
 * [Learn Lua In 15 Minutes](http://tylerneylon.com/a/learn-lua/)

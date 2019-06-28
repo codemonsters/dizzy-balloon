@@ -25,6 +25,8 @@ local Player = {
             return nil
         elseif other.isSeed and other.state ~= other.states.falling then
             return "touch"
+        elseif other.isGoal then
+            return "touch"
         else
             return "slide"
         end
@@ -121,49 +123,59 @@ end
 
 function Player:update(dt)
 
-    if not (self.montado and self.montura.isBalloon) then -- cuando estemos montados en el globo no nos podremos mover
-        --movimento en el eje x
-        self.x, self.y, cols, len = self.world:move(self, self.x + self:vx() * dt, self.y, self.collisions_filter)
-        -- TODO: juntar estas dos llamadas a world:move en una
-        --movimiento en el eje y
-        self.x, ydespues, cols, len = self.world:move(self, self.x, self.y + self:vy() * dt, self.collisions_filter)
-    end
 
+    local feetHeight = 5
+    local items, lenColFeet = world:queryRect(self.x, self.y + self.height + 1, self.width, feetHeight) --detector de los pies del jugador
 
-    --colisiones en el eje y
-    if len > 0 then -- checkeamos si nos podemos montar sobre un enemigo
-        if (cols[1].other.isEnemy or cols[1].other.isBalloon) and not self.montado then
-            if cols[1].other.y - self.y > cols[1].other.height then --cuando el jugador está sobre el enemigo, la y es menor a más altura
+    --colisiones con los pies del jugador SOLO al bajar
+    if self.velocidad_y < 0 then
+        for i = 1, lenColFeet do
+            if (items[i].isEnemy or items[i].isBalloon) and not self.montado then
                 self.montado = true
-                self.montura = cols[1].other
+                self.montura = items[i]
                 self.y = self.montura.y - self.height
+                self.not_supported = false
                 self.montura:montado(self)
+                
+            end
+            if self.not_supported == true then --si hay colision al bajar en el eje y
+                self.velocidad_y = self.velyini
+                self.not_supported = false
             end
         end
-        if self.velocidad_y < 0 then --si hay colision al bajar en el eje y
-            self.velocidad_y = self.velyini
-            self.not_supported = false
-        end
-        if self.velocidad_y > 0 then -- si hay un choque en medio de un salto llendo hacia arriba, te das un cabezazo
+    end
+
+    if lenColFeet == 0 then -- si no hubo choques con los pies, está en caída libre
+        self.not_supported = true
+    end
+
+    local headHeight = 10
+    local items, len = world:queryRect(self.x, self.y - headHeight, self.width, headHeight) --detector de la cabeza del jugador
+
+    --colisiones con la cabeza del jugador
+    for i = 1, len do
+        if self.velocidad_y > 0 then
             self:cabezazo()
         end
-    end
-
-    --El jugador aumenta constantemente la velocidad y, pero se resetea cada vez que toca el suelo o un enemigo cayendo
-    if ydespues == self.y + self:vy() * dt then --debería caer si se consiguió mover en el eje y
-        if self.montado then
-            -- si estamos fuera de los limites del enemigo en el eje x
-            if self.montura.x - self.x > self.montura.width or self.montura.x - self.x < -self.montura.width then
-                self:desmontar()
-            end
-        else -- el jugador está en el aire, ya sea subiendo o bajando
-            self.velocidad_y = self.velocidad_y - 9.8 * dt
-            self.not_supported = true
+        if items[i].isGoal then -- comprobamos si hemos tocado la meta
+            self.game.cambioDeNivel()
         end
     end
 
-    if self.montado == false then -- si lo hiciesemos cuando está montado caería a través del enemigo
+    if not (self.montado and self.montura.isBalloon) then -- cuando estemos montados en el globo no nos podremos mover
+        self.x, ydespues, cols, len = self.world:move(self, self.x + self:vx() * dt, self.y + self:vy() * dt, self.collisions_filter)
+    end
+
+    if self.not_supported then -- el jugador está en el aire, ya sea subiendo o bajando
+        self.velocidad_y = self.velocidad_y - 9.8 * dt
         self.y = ydespues
+    end
+
+    if self.montado then
+        -- si estamos fuera de los limites del enemigo en el eje x
+        if self.montura.x - self.x > self.montura.width or self.montura.x - self.x < -self.montura.width then
+            self:desmontar()
+        end
     end
 
     -- actualización del estado del jugador
@@ -180,6 +192,7 @@ function Player:update(dt)
             self.change_state(self, Player.states.standing)
         end
     end
+
     self.state.update(self, dt)
 end
 
@@ -261,6 +274,7 @@ end
 
 function Player:desmontar()
     self.montado = false
+    self.not_supported = true
 end
 
 function Player:die()
