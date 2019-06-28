@@ -81,8 +81,8 @@ game.states = {
 
             if fireRequested then
                 fireRequested = false
-                x,y  = jugador.x,jugador.y
-                if bomb.state == bomb.states.inactive then
+                if bomb.state == bomb.states.inactive and not (jugador.montado and jugador.montura.isBalloon) then
+                    x,y  = jugador.x,jugador.y
                     if fireInitialDirection == "down" then
                         if not jugador.not_supported then
                             jugador.x, jugador.y = world:move(jugador, jugador.x, jugador.y-bomb.height*1.05)

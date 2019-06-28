@@ -60,11 +60,37 @@ local BalloonClass = {
                         1 + (self.final_height / self.initial_height - 1) * self.elapsed_time / self.expansion_duration
                     self.current_height = self.initial_height * self.y_scale_factor
 
+                    self.old_x = self.current_x
+                    self.old_y = self.current_y
+
                     self.current_x = self.x - (self.current_width - self.initial_width) / 2
                     self.current_y = self.y - (self.current_height - self.initial_height)
 
                     -- Escalamos, movemos y comprobamos colisiones
+                    
                     self.world:update(self, self.current_x, self.current_y, self.current_width, self.current_height)
+                    local x, y, cols, len = self.world:check(self, self.current_x, self.current_y, self.collisions_filter)
+                    for i = 1, len do
+                        if cols[i].other.isPlayer then
+                            -- desplazamos al jugador
+                            log.debug("Globo alcanza a jugador mientras crece" .. cols[i].other.name)
+                            local shift_x = self.current_x - self.old_x
+                            local shift_y = self.current_y - self.old_y
+                            cols[i].other:translate(shift_x, shift_y)
+                        end
+                    end
+                    
+                    --local incrementoDeArea = 50
+                    --local items, len = world:queryRect(self.x - incrementoDeArea/2, self.y - incrementoDeArea/2, self.width + incrementoDeArea, self.height + incrementoDeArea)
+
+                    --colisiones con la zona de arriba del globo
+                    --for i = 1, len do
+                    --    if items[i].isPlayer then -- le hacemos rebotar para que no se quede atrapado
+                    --        items[i]:empujar({x = (items[i].x - self.x), y = (items[i].y - self.y)}, self);
+                    --        print(items[i].x - self.x)
+                    --        print(items[i].y - self.y)
+                    --    end
+                    --end
                 end
             end,
             draw = function(self)

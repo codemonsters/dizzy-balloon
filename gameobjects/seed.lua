@@ -121,7 +121,7 @@ local SeedClass = {
                 -- comprobamos si tenemos encima un jugador
                 local player_over = true
                 -- local items, len = world:querySegment(self.x, self.y - 1, self.x + self.width, self.y - 1)
-                local items, len = world:queryRect(self.x,self.y - 2,self.x + self.width,self.y - 2)
+                local items, len = world:queryRect(self.x,self.y - 2,self.width, 10)
                 for i = 1, len do
                     if items[i].isPlayer then
                         player_over = true

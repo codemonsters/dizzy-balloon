@@ -1,3 +1,5 @@
+local BalloonClass = require("gameobjects/balloon")
+
 local Player = {
     name = "Player",
     width = 40,
@@ -21,7 +23,9 @@ local Player = {
         return -self.velocidad_y * 80 -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
     end,
     collisions_filter = function(item, other)
-        if other.isBomb and other.state ~= other.states.planted then
+        if other.isBalloon and other.state == BalloonClass.states.growing then
+            return nil  -- TODO: Revisar si deberiamos resolver esta colisión también desde aquí y no solo desde balloon
+        elseif other.isBomb and other.state ~= other.states.planted then
             return nil
         elseif other.isSeed and other.state ~= other.states.falling then
             return "touch"
@@ -279,6 +283,10 @@ end
 
 function Player:die()
     self.game.vidaperdida()
+end
+
+function Player:translate(x, y)
+    self.x, self.y, cols, len = self.world:move(self, self.x + x, self.y + y, self.collisions_filter)
 end
 
 return Player
