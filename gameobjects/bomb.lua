@@ -136,9 +136,9 @@ local Bomb = {
                         self.vx = -0.6 * self.vx
                     elseif other.isGoal then
                         return nil
-                    else
-                        return "slide"
                     end
+                    
+                    return "slide"
                 end
             end,
             update = function(self, dt)
