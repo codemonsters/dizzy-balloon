@@ -241,7 +241,7 @@ function game.draw()
         love.graphics.rectangle("fill", 0, 0, HUD_WIDTH, WORLD_HEIGHT)
         love.graphics.setColor(255, 255, 255)
         love.graphics.printf("LVL - " .. numero_nivel_actual , font_hud, 0, 100, HUD_WIDTH, "center" ) 
-        love.graphics.printf("x " .. 3, font_hud, 140, 160, HUD_WIDTH, "left" ) 
+        love.graphics.printf("x " .. vidas, font_hud, 140, 160, HUD_WIDTH, "left" ) 
         love.graphics.printf("x " .. 9, font_hud, 140, 220, HUD_WIDTH, "left" ) 
 
         ------------
