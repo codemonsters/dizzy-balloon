@@ -35,6 +35,8 @@ local Player = {
             return nil
         elseif other.isSeed and other.state ~= other.states.falling then
             return "touch"
+        elseif other.isGoal then
+            return "touch"
         else
             return "slide"
         end
@@ -145,8 +147,10 @@ function Player:update(dt)
                 self.y = self.montura.y - self.height
                 self.montura:montado(self)
             end
+        elseif cols[1].other.isGoal then -- comprobamos si hemos tocado la meta
+            self.game.cambioDeNivel()
         end
-        if self.velocidad_y < 0 then --si hay colision al bajar en el eje y
+        if self.velocidad_y < 0 then -- si hay colision al bajar en el eje y
             self.velocidad_y = self.velyini
             self.not_supported = false
         end

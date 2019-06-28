@@ -11,6 +11,7 @@ local BombClass = require("gameobjects/bomb")
 -- local balloon = BalloonClass.new()
 local BalloonClass = require("gameobjects/balloon")
 local MushroomClass = require("gameobjects/mushroom")
+local GoalClass = require("gameobjects/goal")
 
 if mobile then
     leftFinger = PointerClass.new(game, "Izquierdo")
@@ -36,9 +37,127 @@ local temporizador_respawn_enemigo = 0
 local TIEMPO_RESPAWN_ENEMIGO = 3
 local TIEMPO_RESPAWN_ENEMIGO = 1
 local nivel_actual = 1
-local numero_nivel_actual = 1
+local numero_nivel_actual = 0
+inicioCambioNivel = 0
+finalCambioNivel = 5
+local state
 
-local niveles = {
+game.states = {
+    jugando = {
+        name = "Jugando",
+        load = function(self)
+        end,
+        update = function(self, dt)
+            -- comprobamos si debemos crear un enemigo nuevo
+            if game.niveles[numero_nivel_actual].max_enemies > #enemigos then
+                temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
+                if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then -- está cambiado para poder pasarse el "nivel 0"
+                    --if math.random() > 0.5 then
+                    --    enemigo = EnemyClass.new("enemigoIzq", EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
+                    --else
+                    --    enemigo = EnemyClass.new("enemigoDer", WORLD_WIDTH - EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
+                    --end
+                    enemigo = EnemyClass.new("enemigoDer", WORLD_WIDTH - EnemyClass.width, EnemyClass.height, world, game, 90)
+                    table.insert(enemigos, enemigo)
+                    temporizador_respawn_enemigo = 0
+                end
+            end
+
+            jugador:update(dt)
+
+            for i, enemigo in ipairs(enemigos) do
+                enemigo:update(dt)
+            end
+
+            for i, globo in ipairs(balloons) do
+                globo:update(dt)
+            end
+            if sky ~= nil then
+                sky:update(dt)
+            end
+
+            for i, seta in ipairs(setas) do
+                seta:update(dt)
+            end
+
+            if fireRequested then
+                fireRequested = false
+                x,y  = jugador.x,jugador.y
+                if bomb.state == bomb.states.inactive then
+                    if fireInitialDirection == "down" then
+                        if not jugador.not_supported then
+                            jugador.x, jugador.y = world:move(jugador, jugador.x, jugador.y-bomb.height*1.05)
+                            bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
+                        end
+                    else
+                        bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
+                    end
+                end
+            end
+            bomb:update(dt)
+
+        end,
+        draw = function(self)
+            love.graphics.setCanvas(worldCanvas) -- a partir de ahora dibujamos en el canvas
+            do
+                love.graphics.setBlendMode("alpha")
+            
+                -- El fondo del mundo
+                love.graphics.setColor(20, 00, 200)
+                love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
+            
+                -- objetos del juego
+                jugador:draw()
+    
+                for i, enemigo in ipairs(enemigos) do
+                    enemigo:draw()
+                end
+    
+                for i, globo in ipairs(balloons) do
+                    globo:draw()
+                end
+                if sky ~= nil then
+                    sky:draw()
+                end
+    
+                for i, plataforma in ipairs(plataformas) do
+                    plataforma:draw()
+                end
+    
+                bomb:draw()
+    
+                for i, seta in ipairs(setas) do
+                    seta:draw()
+                end
+            end
+            love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
+            love.graphics.setBlendMode("alpha", "premultiplied")
+            love.graphics.draw(
+                worldCanvas,
+                (window_width / 2) - (WORLD_WIDTH * game.scaleCanvas / 2),
+                (window_height / 2) - (WORLD_HEIGHT * game.scaleCanvas / 2),
+                0,
+                game.scaleCanvas,
+                game.scaleCanvas
+            )
+        end,
+    },
+    cambiandoDeNivel = {
+        load = function(self)
+        end,
+        update = function(self, dt)
+            print("game.states.cambiandoDeNivel, update")
+            numero_nivel_actual = numero_nivel_actual + 1
+            game.loadlevel(numero_nivel_actual)
+            print(game)
+            game.change_state(game.states.jugando)
+        end,
+        draw = function(self)
+        end,
+    }
+}
+
+game.niveles = {
     -- en los load se crean todos los gameobjects menos los jugadores y los tres bloques que delimitan el mundo
     {
         name = "Nivel 1",
@@ -70,132 +189,49 @@ function pillarEscala()
     end
 end
 
-local scaleCanvas = pillarEscala()
+game.scaleCanvas = pillarEscala()
 
 function game.loadlife()
     jugador.x = nivel_actual.jugador_posicion_inicial[1]
     jugador.y = nivel_actual.jugador_posicion_inicial[2]
+    world:update(jugador, jugador.x, jugador.y, jugador.width, jugador.height)
+    print("loadlife. pos jugador ahora = (" .. jugador.x ..", " .. jugador.y ..")")
 end
 
 function game.loadlevel(nivel)
-    nivel_actual = niveles[nivel]
+    numero_nivel_actual = nivel
+    print("numero_nivel_actual = " .. numero_nivel_actual)
+    nivel_actual = game.niveles[numero_nivel_actual]
     nivel_actual.load(world, game)
 
     table.insert(plataformas, BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, 10, world))
     table.insert(plataformas, BlockClass.new("Pared Izquierda", -10, 0, 10, WORLD_HEIGHT, world))
     table.insert(plataformas, BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, WORLD_HEIGHT, world))
 
+    finalCambioNivel = love.timer.getTime()
     game.loadlife()
 
 end
 
 function game.load()
     world = bump.newWorld(50)
-
     jugador = PlayerClass.new(world, game)
-
     bomb = BombClass.new("Bomb", game)
-
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
-
-    nivel_actual = 1
-    numero_nivel_actual = 1
-
+    numero_nivel_actual = 0
     vidas = 3
-
-    game.loadlevel(nivel_actual)
+    salida = GoalClass.new("Salida", 0, -1, WORLD_WIDTH, 1, world)
+    game.state = game.states.cambiandoDeNivel
+    game.change_state(game.state)
+    --game.loadlevel(numero_nivel_actual)
 end
 
 function game.update(dt)
-    -- comprobamos si debemos crear un enemigo nuevo
-    if nivel_actual.max_enemies > #enemigos then
-        temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
-        if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
-            if math.random() > 0.5 then
-                enemigo = EnemyClass.new("enemigoIzq", EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
-            else
-                enemigo = EnemyClass.new("enemigoDer", WORLD_WIDTH - EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
-            end
-            table.insert(enemigos, enemigo)
-            temporizador_respawn_enemigo = 0
-        end
-    end
-
-    jugador:update(dt)
-
-    for i, enemigo in ipairs(enemigos) do
-        enemigo:update(dt)
-    end
-
-    for i, globo in ipairs(balloons) do
-        globo:update(dt)
-    end
-
-    sky:update(dt)
-
-    for i, seta in ipairs(setas) do
-        seta:update(dt)
-    end
-
-    if fireRequested then
-        fireRequested = false
-        x,y  = jugador.x,jugador.y
-        if bomb.state == bomb.states.inactive then
-            if fireInitialDirection == "down" then
-                if not jugador.not_supported then
-                    jugador.x, jugador.y = world:move(jugador, jugador.x, jugador.y-bomb.height*1.05)
-                    bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
-                end
-            else
-                bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
-            end
-        end
-    end
-    bomb:update(dt)
+    game.state.update(game, dt)
 end
 
 function game.draw()
-    love.graphics.setCanvas(worldCanvas) -- a partir de ahora dibujamos en el canvas
-    do
-        love.graphics.setBlendMode("alpha")
-        
-        -- El fondo del mundo
-        love.graphics.setColor(20, 00, 200)
-        love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
-        
-        -- objetos del juego
-        jugador:draw()
-
-        for i, enemigo in ipairs(enemigos) do
-            enemigo:draw()
-        end
-
-        for i, globo in ipairs(balloons) do
-            globo:draw()
-        end
-
-        sky:draw()
-
-        for i, plataforma in ipairs(plataformas) do
-            plataforma:draw()
-        end
-
-        bomb:draw()
-
-        for i, seta in ipairs(setas) do
-            seta:draw()
-        end
-    end
-    love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
-    love.graphics.setBlendMode("alpha", "premultiplied")
-    love.graphics.draw(
-        worldCanvas,
-        (window_width / 2) - (WORLD_WIDTH * scaleCanvas / 2),
-        (window_height / 2) - (WORLD_HEIGHT * scaleCanvas / 2),
-        0,
-        scaleCanvas,
-        scaleCanvas
-    )
+    game.state.draw(game)
 end
 
 function game.keypressed(key, scancode, isrepeat)
@@ -221,8 +257,9 @@ function game.keypressed(key, scancode, isrepeat)
         log.debug("vidas: " .. vidas)
     elseif key == "l" then
         numero_nivel_actual = numero_nivel_actual + 1
-        nivel_actual = niveles[numero_nivel_actual]
-        log.debug("Cambio de nivel a: " .. nivel_actual.name)
+        game.loadlevel(numero_nivel_actual)
+    elseif key == "z" then
+        print("Posición del jugador (x, y) = " .. jugador.x .. ", " .. jugador.y)
     end
 end
 
@@ -237,6 +274,13 @@ function game.keyreleased(key, scancode, isrepeat)
         jugador.down = false
     elseif key == "d" or key == "right" then
         jugador.right = false
+    end
+end
+
+function game.cambioDeNivel()
+    if finalCambioNivel - inicioCambioNivel >= 5 then
+        inicioCambioNivel = love.timer.getTime()
+        game.change_state(game.states.cambiandoDeNivel)
     end
 end
 
@@ -385,6 +429,13 @@ end
 function game.crearSeta(x, y)
     seta = MushroomClass.new("Seta", world, game, x, y)
     table.insert(setas, seta)
+end
+
+function game.change_state(new_state)
+    if game.state ~= new_state then
+        game.state = new_state
+        game.state.load(self)
+    end
 end
 
 return game
