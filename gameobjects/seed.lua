@@ -138,7 +138,7 @@ local SeedClass = {
                 if self.player_over_seed then
                     self.change_state(self, self.states.evolving)
                 elseif self.elapsed_time > 5 then
-                    --self.change_state(self, self.states.rotting)
+                    self.change_state(self, self.states.rotting)
                 end
             end
         },
@@ -172,7 +172,7 @@ local SeedClass = {
                 self.player_over_seed = player_over
 
                 if not self.player_over_seed then
-                    --self.change_state(self, self.states.rotting)
+                    self.change_state(self, self.states.rotting)
                 elseif self.elapsed_time > 1 then
                     self.game.create_balloon_from_seed(self)
                     self.change_state(self, self.states.balloon)

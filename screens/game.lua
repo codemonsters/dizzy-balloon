@@ -34,7 +34,6 @@ local setas = {}
 local balloons = {}
 local plataformas = {}
 local temporizador_respawn_enemigo = 0
-local TIEMPO_RESPAWN_ENEMIGO = 3
 local TIEMPO_RESPAWN_ENEMIGO = 1
 local nivel_actual = 1
 local numero_nivel_actual = 0
@@ -161,9 +160,8 @@ game.niveles = {
     -- en los load se crean todos los gameobjects menos los jugadores y los tres bloques que delimitan el mundo
     {
         name = "Nivel 1",
-        max_enemies = 2,
+        max_enemies = 1,
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
-
         load = function(world, game)
             sky = SkyClass.new(world, game)
         end
@@ -172,7 +170,6 @@ game.niveles = {
         name = "Nivel 2",
         max_enemies = 3,
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
-
         load = function(world, game)
             sky = SkyClass.new(world, game)
             table.insert(plataformas, BlockClass.new("Bloque 1", 150, 600, 400, 10, world))
@@ -210,7 +207,6 @@ function game.loadlevel(nivel)
 
     finalCambioNivel = love.timer.getTime()
     game.loadlife()
-
 end
 
 function game.load()
@@ -238,11 +234,13 @@ function game.keypressed(key, scancode, isrepeat)
     if key == "q" then
         change_screen(require("screens/menu"))
     elseif key == "w" or key == "up" then
+        jugador.up = true
         fireRequested = true
         fireInitialDirection = "up"
     elseif key == "a" or key == "left" then
         jugador.left = true
     elseif key == "s" or key == "down" then
+        jugador.down = true
         fireRequested = true
         fireInitialDirection = "down"
     elseif key == "d" or key == "right" then
@@ -338,7 +336,7 @@ end
 
 function game.pointerreleased(pointer)
     if pointer.x < SCREEN_WIDTH / 2 then
-        jugador.left, jugador.right = false, false
+        jugador.left, jugador.right, jugador.up, jugador.down = false, false, false, false
     else
         jugadorpuedesaltar = true
     end
@@ -357,6 +355,18 @@ function game.pointermoved(pointer)
                 jugador.left = true
             else
                 jugador.left = false
+            end
+
+            if pointer.y + pointer.movementdeadzone < pointer.y + pointer.dy then
+                jugador.down = true
+            else
+                jugador.down = false
+            end
+
+            if pointer.y - pointer.movementdeadzone > pointer.y + pointer.dy then
+                jugador.up = true
+            else
+                jugador.up = false
             end
         end
         if pointer.y + pointer.shootingdeadzone < pointer.y + pointer.dy then
@@ -419,8 +429,8 @@ function game.kill_object(object)
 end
 
 function game.drop_seed(x)
-    for key,seed in pairs(sky.semillas) do --pseudocode
-        if math.abs(seed.x-x) < seed.width/2 then
+    for key, seed in pairs(sky.semillas) do --pseudocode
+        if math.abs(seed.x - x) < seed.width / 2 then
             seed:change_state(seed.states.falling)
         end
     end
