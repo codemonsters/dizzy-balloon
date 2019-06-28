@@ -31,6 +31,7 @@ local jugadorquieremoverse = false
 local BlockClass = require("gameobjects/block")
 local gameFilter
 local vidas
+local bombasAereas
 local enemigos = {}
 local setas = {}
 local balloons = {}
@@ -90,8 +91,9 @@ game.states = {
                             jugador.x, jugador.y = world:move(jugador, jugador.x, jugador.y-bomb.height*1.05)
                             bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
                         end
-                    else
+                    elseif bombasAereas > 0 then
                         bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
+                        bombasAereas = bombasAereas - 1
                     end
                 end
             end
@@ -220,6 +222,7 @@ function game.load()
     hudCanvas = love.graphics.newCanvas(HUD_WIDTH, WORLD_HEIGHT)
     numero_nivel_actual = 0
     vidas = 3
+    bombasAereas = 9
     salida = GoalClass.new("Salida", 0, -1, WORLD_WIDTH, 1, world)
     game.state = game.states.cambiandoDeNivel
     game.change_state(game.state)
@@ -242,7 +245,7 @@ function game.draw()
         love.graphics.setColor(255, 255, 255)
         love.graphics.printf("LVL - " .. numero_nivel_actual , font_hud, 0, 100, HUD_WIDTH, "center" ) 
         love.graphics.printf("x " .. vidas, font_hud, 140, 160, HUD_WIDTH, "left" ) 
-        love.graphics.printf("x " .. 9, font_hud, 140, 220, HUD_WIDTH, "left" ) 
+        love.graphics.printf("x " .. bombasAereas, font_hud, 140, 220, HUD_WIDTH, "left" ) 
 
         ------------
         local scale_factor = font_hud:getHeight() / PlayerClass.states.standing.quads[1].height

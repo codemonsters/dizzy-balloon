@@ -277,9 +277,13 @@ local Bomb = {
                         self.world:check(self, self.current_x, self.current_y, self.collisions_filter)
                     for i = 1, len do
                         if not cols[i].other.isBlock and not cols[i].other.isGoal and not cols[i].other.isLimit then
-                            log.debug("La explosión ha alcanzado a: " .. cols[i].other.name)
-                            self.game.kill_object(cols[i].other)
-                            self.lastExplosionHits = self.lastExplosionHits + 1
+                            if not cols[i].other.isSeed or (cols[i].other.isSeed and cols[i].other.state ~= cols[i].other.states.sky) then
+                                log.debug("La explosión ha alcanzado a: " .. cols[i].other.name)
+                                self.game.kill_object(cols[i].other)
+                                self.lastExplosionHits = self.lastExplosionHits + 1
+                            elseif cols[i].other.isSeed and cols[i].other.state == cols[i].other.states.sky then
+                                self.lastExplosionHits = self.lastExplosionHits + 1
+                            end
                         end
                     end
                 end
