@@ -12,6 +12,7 @@ local BombClass = require("gameobjects/bomb")
 local BalloonClass = require("gameobjects/balloon")
 local MushroomClass = require("gameobjects/mushroom")
 local GoalClass = require("gameobjects/goal")
+local LimitClass = require("gameobjects/limit")
 
 if mobile then
     leftFinger = PointerClass.new(game, "Izquierdo")
@@ -205,6 +206,7 @@ function game.loadlevel(nivel)
     table.insert(plataformas, BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, 10, world))
     table.insert(plataformas, BlockClass.new("Pared Izquierda", -10, 0, 10, WORLD_HEIGHT, world))
     table.insert(plataformas, BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, WORLD_HEIGHT, world))
+    table.insert(plataformas, LimitClass.new("Techo", 0, 0, WORLD_WIDTH, 20, world)) -- El limite es necesario para bloquear el escape de enemigos y otros objetos excepto las semillas y el jugador
 
     finalCambioNivel = love.timer.getTime()
     game.loadlife()
