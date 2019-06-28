@@ -61,6 +61,8 @@ local SeedClass = {
                 self.collisions_filter = function(item, other)
                     if other.isSeed and other.state == other.states.sky then
                         return "cross"
+                    elseif other.isLimit then
+                        return "cross"
                     else
                         return "slide"
                     end

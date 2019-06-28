@@ -17,6 +17,8 @@ local Enemy = {
             return "slide"
         elseif other.isMushroom then
             return "bounce"
+        elseif other.isLimit then
+            return "bounce"
         else
             return "bounce"
         end

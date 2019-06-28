@@ -12,8 +12,9 @@ function menu.draw()
     love.graphics.setColor(255, 0, 0, 255)
     love.graphics.printf(
         "DIZZY BALLOON\n\n=PRESS FIRE TO START=",
+        font_menu,
         0,
-        math.floor((SCREEN_HEIGHT - font:getHeight() * 2) / 2),
+        math.floor((SCREEN_HEIGHT - font_menu:getHeight() * 2) / 2),
         SCREEN_WIDTH,
         "center"
     )
