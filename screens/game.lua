@@ -53,13 +53,12 @@ game.states = {
             -- comprobamos si debemos crear un enemigo nuevo
             if game.niveles[numero_nivel_actual].max_enemies > #enemigos then
                 temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
-                if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then -- está cambiado para poder pasarse el "nivel 0"
-                    --if math.random() > 0.5 then
-                    --    enemigo = EnemyClass.new("enemigoIzq", EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
-                    --else
-                    --    enemigo = EnemyClass.new("enemigoDer", WORLD_WIDTH - EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
-                    --end
-                    enemigo = EnemyClass.new("enemigoDer", WORLD_WIDTH - EnemyClass.width, EnemyClass.height, world, game, 90)
+                if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
+                    if math.random() > 0.5 then
+                        enemigo = EnemyClass.new("enemigoIzq", EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
+                    else
+                        enemigo = EnemyClass.new("enemigoDer", WORLD_WIDTH - EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
+                    end
                     table.insert(enemigos, enemigo)
                     temporizador_respawn_enemigo = 0
                 end
@@ -164,7 +163,7 @@ game.niveles = {
     -- en los load se crean todos los gameobjects menos los jugadores y los tres bloques que delimitan el mundo
     {
         name = "Nivel 1",
-        max_enemies = 1,
+        max_enemies = 2,
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
         load = function(world, game)
             sky = SkyClass.new(world, game)
