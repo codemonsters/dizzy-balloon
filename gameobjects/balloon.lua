@@ -68,7 +68,6 @@ local BalloonClass = {
                         1 + (self.final_height / self.initial_height - 1) * self.elapsed_time / self.expansion_duration
                     self.current_height = self.initial_height * self.y_scale_factor
 
-                    self.old_x = self.current_x
                     self.old_y = self.current_y
 
                     self.current_x = self.x - (self.current_width - self.initial_width) / 2
@@ -83,9 +82,8 @@ local BalloonClass = {
                         if cols[i].other.isPlayer then
                             -- desplazamos al jugador
                             log.debug("Globo alcanza a jugador mientras crece" .. cols[i].other.name)
-                            local shift_x = self.current_x - self.old_x
                             local shift_y = self.current_y - self.old_y
-                            cols[i].other:translate(shift_x / 2, shift_y * 2)
+                            cols[i].other:translate(0, shift_y * 2)
                         end
                     end
                 end
