@@ -227,6 +227,7 @@ function BalloonClass.new(seed, world, game)
     balloon.y = seed.y
     balloon.game = game
     balloon.name = name
+    balloon.dead = false
     balloon.world = world
     balloon.current_frame = 1
     setmetatable(balloon, BalloonClass)
@@ -243,10 +244,17 @@ function BalloonClass:montado(player)
 end
 
 function BalloonClass:update(dt)
+    if self.dead then
+        self.game.remove_balloon(self)
+        return
+    end
     self.state.update(self, dt)
 end
 
 function BalloonClass:draw()
+    if self.dead then
+        return
+    end
     self.state.draw(self)
 end
 
@@ -258,6 +266,7 @@ function BalloonClass:change_state(new_state)
 end
 
 function BalloonClass:die()
+    self.dead = true
 end
 
 return BalloonClass
