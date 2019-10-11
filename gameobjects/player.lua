@@ -122,6 +122,8 @@ function Player.new(world, game)
     player.left, player.right, player.up, player.down, player.not_supported = false, false, false, false, false
     player.offset = 0
     player.bitmap_direction = 1
+    player.invencible = false
+    player.inicioVida = 0
     player.world:add(player, player.x, player.y, player.width, player.height)
     player:change_state(Player.states.standing)
     return player
@@ -129,6 +131,9 @@ end
 
 function Player:update(dt)
 
+    if love.timer.getTime() - self.inicioVida >= 3 and self.invencible == true then
+        self.invencible = false
+    end
 
     local feetHeight = 5
     local items, lenColFeet = world:queryRect(self.x, self.y + self.height + 1, self.width, feetHeight) --detector de los pies del jugador
@@ -220,6 +225,12 @@ function Player:draw()
         self.offset = self.width
     end
 
+    if self.invencible == true then
+        love.graphics.setColor(0, 0, 255, 255)
+    else
+        love.graphics.setColor(255, 255, 255, 255)
+    end
+
     love.graphics.draw(
         atlas,
         self.state.quads[self.current_frame].quad,
@@ -229,6 +240,8 @@ function Player:draw()
         self.width / self.state.quads[self.current_frame].width * self.bitmap_direction,
         self.height / self.state.quads[self.current_frame].height
     )
+    
+    love.graphics.setColor(255, 255, 255, 255)
 end
 
 function Player:change_state(new_state)
@@ -284,7 +297,14 @@ function Player:desmontar()
 end
 
 function Player:die()
-    self.game.vidaperdida()
+    if self.invencible == false then
+        self.game.vidaperdida()
+    end
+end
+
+function Player:revive()
+    self.invencible = true
+    self.inicioVida = love.timer.getTime()
 end
 
 function Player:translate(x, y)

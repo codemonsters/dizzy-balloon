@@ -109,6 +109,7 @@ game.states = {
                 love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
             
                 -- objetos del juego
+
                 jugador:draw()
     
                 for i, enemigo in ipairs(enemigos) do
@@ -489,6 +490,7 @@ function game.vidaperdida()
         plataformas = {}
         change_screen(require("screens/menu"))
     else
+        jugador:revive()
         game.loadlife()
     end
 end
