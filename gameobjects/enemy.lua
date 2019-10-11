@@ -35,7 +35,7 @@ local Enemy = {
 
                 if len > 0 then
                     local col = cols[1]
-                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy then --calculo de velocidad tras el choque TODO: hacerlo mejor
+                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then --calculo de velocidad tras el choque TODO: hacerlo mejor
                         vecBounce = {x = col.bounce.x - col.touch.x, y = col.bounce.y - col.touch.y}
                         
                         moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
@@ -73,7 +73,7 @@ local Enemy = {
 
                 if len > 0 then
                     local col = cols[1]
-                    if col.other.isBlock then
+                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then
                         if self.state.horizontal then -- colisión llendo hacia arriba
                             self.state.horizontal = false
                             self.state.yAfterDiving = self.y
