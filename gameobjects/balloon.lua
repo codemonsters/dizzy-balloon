@@ -124,7 +124,7 @@ local BalloonClass = {
 
                 if len > 0 then
                     local col = cols[1]
-                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy then --calculo de velocidad tras el choque TODO: hacerlo mejor
+                    if not col.other.isBomb then -- col.other.isBlock or col.other.isSeed or col.other.isEnemy then
                         vecBounce = {x = col.bounce.x - col.touch.x, y = col.bounce.y - col.touch.y}
 
                         moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
@@ -180,7 +180,7 @@ local BalloonClass = {
                     return
                 end
 
-                --movimento en el eje x
+                --movimento en el eje x e y
                 self.x, self.y, cols, len =
                     self.world:move(
                     self,
@@ -192,7 +192,8 @@ local BalloonClass = {
                     self.rider.world:move(
                     self.rider,
                     self.rider.x + self.state.vx(self),
-                    self.rider.y + self.state.vy(self)
+                    self.rider.y + self.state.vy(self),
+                    self.rider.collisions_filter
                 )
             end,
             draw = function(self)
@@ -227,6 +228,7 @@ function BalloonClass.new(seed, world, game)
     balloon.y = seed.y
     balloon.game = game
     balloon.name = name
+    balloon.dead = false
     balloon.world = world
     balloon.current_frame = 1
     setmetatable(balloon, BalloonClass)
@@ -243,10 +245,17 @@ function BalloonClass:montado(player)
 end
 
 function BalloonClass:update(dt)
+    if self.dead then
+        self.game.remove_balloon(self)
+        return
+    end
     self.state.update(self, dt)
 end
 
 function BalloonClass:draw()
+    if self.dead then
+        return
+    end
     self.state.draw(self)
 end
 
@@ -258,6 +267,7 @@ function BalloonClass:change_state(new_state)
 end
 
 function BalloonClass:die()
+    self.dead = true
 end
 
 return BalloonClass
