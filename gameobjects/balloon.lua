@@ -124,7 +124,7 @@ local BalloonClass = {
 
                 if len > 0 then
                     local col = cols[1]
-                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy then --calculo de velocidad tras el choque TODO: hacerlo mejor
+                    if not col.other.isBomb then -- col.other.isBlock or col.other.isSeed or col.other.isEnemy then
                         vecBounce = {x = col.bounce.x - col.touch.x, y = col.bounce.y - col.touch.y}
 
                         moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
