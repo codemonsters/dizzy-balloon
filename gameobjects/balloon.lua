@@ -180,7 +180,7 @@ local BalloonClass = {
                     return
                 end
 
-                --movimento en el eje x
+                --movimento en el eje x e y
                 self.x, self.y, cols, len =
                     self.world:move(
                     self,
@@ -192,7 +192,8 @@ local BalloonClass = {
                     self.rider.world:move(
                     self.rider,
                     self.rider.x + self.state.vx(self),
-                    self.rider.y + self.state.vy(self)
+                    self.rider.y + self.state.vy(self),
+                    self.rider.collisions_filter
                 )
             end,
             draw = function(self)
