@@ -222,6 +222,9 @@ function game.load()
     numero_nivel_actual = 0
     vidas = 3
     bombasAereas = 9
+    enemigos = {}
+    setas = {}
+    balloons = {}
     salida = GoalClass.new("Salida", 0, -1, WORLD_WIDTH, 1, world)
     game.state = game.states.cambiandoDeNivel
     game.change_state(game.state)
