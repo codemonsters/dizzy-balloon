@@ -35,7 +35,7 @@ local Enemy = {
 
                 if len > 0 then
                     local col = cols[1]
-                    if not col.other.isBomb then -- if col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then
+                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then -- si se pone "if not other.col.isBomb" then da un error cuando el enemigo choca con algo, puede ser problema de la bomba no teniendo un collision_filter o algo por el estilo 
                         -- TODO: calculo de velocidad tras el choque
                         vecBounce = {x = col.bounce.x - col.touch.x, y = col.bounce.y - col.touch.y}
                         
