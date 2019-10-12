@@ -205,6 +205,10 @@ function game.loadlevel(nivel)
     nivel_actual = game.niveles[numero_nivel_actual]
     nivel_actual.load(world, game)
 
+    enemigos = {}
+    setas = {}
+    balloons = {}
+
     table.insert(plataformas, BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, 10, world))
     table.insert(plataformas, BlockClass.new("Pared Izquierda", -10, 0, 10, WORLD_HEIGHT, world))
     table.insert(plataformas, BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, WORLD_HEIGHT, world))
