@@ -505,6 +505,16 @@ function game.remove_enemy(enemy)
     end
 end
 
+function game.remove_balloon(balloon)
+    for i, v in ipairs(balloons) do
+        if v == balloon then
+            world:remove(balloon)
+            table.remove(balloons, i)
+            break
+        end
+    end
+end
+
 function game.create_balloon_from_seed(seed)
     --print("CREAR BALON!!!")
     local balloon = BalloonClass.new(seed, world, game)
