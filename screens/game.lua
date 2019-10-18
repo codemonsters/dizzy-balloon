@@ -200,6 +200,10 @@ function game.loadlife()
 end
 
 function game.loadlevel(nivel)
+    world = bump.newWorld(50)
+    jugador = PlayerClass.new(world, game)
+    bomb = BombClass.new("Bomb", game)
+    salida = GoalClass.new("Salida", 0, -1, WORLD_WIDTH, 1, world)
     numero_nivel_actual = nivel
     print("numero_nivel_actual = " .. numero_nivel_actual)
     nivel_actual = game.niveles[numero_nivel_actual]
@@ -219,18 +223,11 @@ function game.loadlevel(nivel)
 end
 
 function game.load()
-    world = bump.newWorld(50)
-    jugador = PlayerClass.new(world, game)
-    bomb = BombClass.new("Bomb", game)
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
     hudCanvas = love.graphics.newCanvas(HUD_WIDTH, WORLD_HEIGHT)
     numero_nivel_actual = 0
     vidas = 3
     bombasAereas = 9
-    enemigos = {}
-    setas = {}
-    balloons = {}
-    salida = GoalClass.new("Salida", 0, -1, WORLD_WIDTH, 1, world)
     game.state = game.states.cambiandoDeNivel
     game.change_state(game.state)
     --game.loadlevel(numero_nivel_actual)

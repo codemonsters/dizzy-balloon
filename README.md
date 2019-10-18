@@ -49,9 +49,7 @@ Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
 ### Problemas con el usuario 
 
 * Para actualizar el url de origin con un nuevo nombre de usuario
-
-```git remote rm origin```
-```git remote add origin https://usuario@github.com/codemonsters/dizzy-balloon.git```
+   Entrar en el archivo ```.gitconfig``` y eliminas user.
 
 ### Android: Creación de un APK
 
