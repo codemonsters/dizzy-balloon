@@ -24,7 +24,6 @@ end
 -- local world = bump.newWorld(50)
 local worldCanvas = nil
 local hudCanvas = nil
-local bordes = 4
 local jugadorpuedesaltar = true
 local jugadorquieremoverse = false
 --local jugadorquieredisparar = false
@@ -182,15 +181,15 @@ game.niveles = {
     }
 }
 
-function pillarEscala()
+function factorEscalaMundo()
     if window_height >= window_width then
-        return (window_width - bordes * 2) / WORLD_WIDTH
+        return window_width / WORLD_WIDTH
     else
-        return (window_height - bordes * 2) / WORLD_HEIGHT
+        return window_height / WORLD_HEIGHT
     end
 end
 
-game.scaleCanvas = pillarEscala()
+game.scaleCanvas = factorEscalaMundo()
 
 function game.loadlife()
     jugador.x = nivel_actual.jugador_posicion_inicial[1]
