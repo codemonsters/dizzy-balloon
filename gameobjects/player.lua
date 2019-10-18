@@ -123,7 +123,10 @@ function Player.new(world, game)
     player.offset = 0
     player.bitmap_direction = 1
     player.invencible = false
-    player.inicioVida = 0
+    player.tVivo = 0
+    player.tInvencible = 4
+    player.nBlinks = 8
+    player.nTramo = 0
     player.world:add(player, player.x, player.y, player.width, player.height)
     player:change_state(Player.states.standing)
     return player
@@ -131,7 +134,9 @@ end
 
 function Player:update(dt)
 
-    if love.timer.getTime() - self.inicioVida >= 3 and self.invencible == true then
+    self.tVivo = self.tVivo + dt
+
+    if self.invencible and self.tVivo >= self.tInvencible then
         self.invencible = false
     end
 
@@ -213,7 +218,15 @@ function Player:cabezazo()
 end
 
 function Player:draw()
+
     love.graphics.setColor(255, 255, 255, 255)
+
+    if self.invencible then
+        self.nTramo = (self.tVivo / self.tInvencible) * (self.nBlinks * 2) + 1
+        if (self.nTramo % 2 < 1) then --no dibujar
+            love.graphics.setColor(0, 0, 0, 0)
+        end
+    end
 
     -- TODO: eliminar offset y dibujar todos los frames del mismo tamaño
     if self.right then
@@ -223,12 +236,6 @@ function Player:draw()
     if self.left then
         self.bitmap_direction = -1
         self.offset = self.width
-    end
-
-    if self.invencible == true then
-        love.graphics.setColor(0, 0, 255, 255)
-    else
-        love.graphics.setColor(255, 255, 255, 255)
     end
 
     love.graphics.draw(
@@ -304,7 +311,7 @@ end
 
 function Player:revive()
     self.invencible = true
-    self.inicioVida = love.timer.getTime()
+    self.tVivo = 0
 end
 
 function Player:translate(x, y)
