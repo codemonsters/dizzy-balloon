@@ -17,7 +17,7 @@ local SeedClass = {
     height = 20,
     name = "Seed",
     isSeed = true,
-    player_over_seed = false,
+    player_over_timer = 0,
     states = {
         sky = {
             name = "sky",
@@ -74,7 +74,7 @@ local SeedClass = {
                 self.y = target_y
                 self.x = target_x
                 self.x, self.y, cols, len = self.world:move(self, target_x, target_y, self.collisions_filter)
-                if self.y + self.height >= WORLD_HEIGHT then
+                if self.y > self.height * 2 and len > 0 then -- la semilla se activará al contacto tras caer 2 veces su altura
                     self.change_state(self, self.states.touchdown)
                     return
                 end
@@ -116,29 +116,34 @@ local SeedClass = {
                 print("onthefloor.load")
                 self.elapsed_time = 0
                 self.currentframe = 1 
+                self.player_over_timer = 0
             end,
             update = function(self, dt)
-                self.elapsed_time = self.elapsed_time + dt
-
+                target_y = self.y + 100 * dt
+                self.x, self.y, cols, len = self.world:move(self, self.x, target_y, self.collisions_filter)
                 -- comprobamos si tenemos encima un jugador
-                local player_over = true
+                local player_over = false
                 -- local items, len = world:querySegment(self.x, self.y - 1, self.x + self.width, self.y - 1)
-                local items, len = world:queryRect(self.x,self.y - 2,self.width, 10)
+                local items, len = world:queryRect(self.x,self.y - self.height/3,self.width, self.height/3)
                 for i = 1, len do
                     if items[i].isPlayer then
                         player_over = true
+                        self.player_over_timer = self.player_over_timer + dt
                         break
                     end
+                end
+                if player_over == false then
+                    self.elapsed_time = self.elapsed_time + dt
                 end
                 --[[if player_over then
                     print("PLAYER OVER")
                 else
                     print("PLAYER NOT OVER")
                 end--]]
-                self.player_over_seed = player_over
 
-                if self.player_over_seed then
-                    self.change_state(self, self.states.evolving)
+                if self.player_over_timer > 2 then
+                    self.game.create_balloon_from_seed(self)
+                    self.change_state(self, self.states.balloon)
                 elseif self.elapsed_time > 5 then
                     self.change_state(self, self.states.rotting)
                 end
@@ -171,9 +176,9 @@ local SeedClass = {
                         break
                     end
                 end
-                self.player_over_seed = player_over
+                self.player_over_timer = player_over
 
-                if not self.player_over_seed then
+                if not self.player_over_timer then
                     self.change_state(self, self.states.rotting)
                 elseif self.elapsed_time > 1 then
                     self.game.create_balloon_from_seed(self)
