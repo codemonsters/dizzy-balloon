@@ -150,6 +150,7 @@ game.states = {
         update = function(self, dt)
             print("game.states.cambiandoDeNivel, update")
             numero_nivel_actual = numero_nivel_actual + 1
+            plataformas = {}
             game.loadlevel(numero_nivel_actual)
             print(game)
             game.change_state(game.states.jugando)
@@ -177,6 +178,16 @@ game.niveles = {
             sky = SkyClass.new(world, game)
             table.insert(plataformas, BlockClass.new("Bloque 1", 150, 600, 400, 10, world))
             table.insert(plataformas, BlockClass.new("Bloque 2", 200, 200, 300, 10, world))
+        end
+    },
+    {
+        name = "Nivel 3",
+        max_enemies = 4,
+        jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
+        load = function(world, game)
+            sky = SkyClass.new(world, game)
+            table.insert(plataformas, BlockClass.new("Bloque 1", 0, 345, 250, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 2", 450, 345, 250, 5, world))
         end
     }
 }
@@ -357,6 +368,7 @@ function game.keypressed(key, scancode, isrepeat)
         log.debug("vidas: " .. vidas)
     elseif key == "l" then
         numero_nivel_actual = numero_nivel_actual + 1
+        plataformas = {}
         game.loadlevel(numero_nivel_actual)
     elseif key == "z" then
         print("Posición del jugador (x, y) = " .. jugador.x .. ", " .. jugador.y)
