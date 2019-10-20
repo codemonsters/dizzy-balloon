@@ -231,8 +231,7 @@ function game.loadlevel(nivel)
     table.insert(plataformas, BlockClass.new("Pared Izquierda", -10, 0, 10, WORLD_HEIGHT, world))
     table.insert(plataformas, BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, WORLD_HEIGHT, world))
     table.insert(plataformas, LimitClass.new("Techo", 0, 0, WORLD_WIDTH, 20, world)) -- El limite es necesario para bloquear el escape de enemigos y otros objetos excepto las semillas y el jugador
-
-    finalCambioNivel = love.timer.getTime()
+    
     game.loadlife()
 end
 
@@ -394,6 +393,7 @@ function game.keyreleased(key, scancode, isrepeat)
 end
 
 function game.cambioDeNivel()
+    finalCambioNivel = love.timer.getTime()
     if finalCambioNivel - inicioCambioNivel >= 5 then
         inicioCambioNivel = love.timer.getTime()
         game.change_state(game.states.cambiandoDeNivel)
