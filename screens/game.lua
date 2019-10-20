@@ -193,6 +193,28 @@ game.niveles = {
             table.insert(plataformas, BlockClass.new("Bloque 5", 325, 650, 50, 25, world))
             table.insert(plataformas, BlockClass.new("Bloque 6", 300, 675, 100, 25, world))
         end
+    },
+    {
+        name = "Nivel 4",
+        max_enemies = 3,
+        jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
+        load = function(world, game)
+            sky = SkyClass.new(world, game)
+            table.insert(plataformas, BlockClass.new("Bloque 1", 150, 435, 400, 30, world))
+            table.insert(plataformas, BlockClass.new("Bloque 2", 335, 20, 30, 415, world))
+        end
+    },
+    {
+        name = "Nivel 5",
+        max_enemies = 6,
+        jugador_posicion_inicial = {330, WORLD_HEIGHT - PlayerClass.height},
+        load = function(world, game)
+            sky = SkyClass.new(world, game)
+            table.insert(plataformas, BlockClass.new("Bloque 1", 160, 20, 15, 235, world))
+            table.insert(plataformas, BlockClass.new("Bloque 2", 525, 20, 15, 235, world))
+            table.insert(plataformas, BlockClass.new("Bloque 3", 160, 465, 15, 235, world))
+            table.insert(plataformas, BlockClass.new("Bloque 4", 525, 465, 15, 235, world))
+        end
     }
 }
 
