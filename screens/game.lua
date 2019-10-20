@@ -186,8 +186,12 @@ game.niveles = {
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
         load = function(world, game)
             sky = SkyClass.new(world, game)
-            table.insert(plataformas, BlockClass.new("Bloque 1", 0, 345, 250, 5, world))
-            table.insert(plataformas, BlockClass.new("Bloque 2", 450, 345, 250, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 1", 0, 230, 175, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 2", 525, 230, 175, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 3", 0, 460, 250, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 4", 450, 460, 250, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 5", 325, 650, 50, 25, world))
+            table.insert(plataformas, BlockClass.new("Bloque 6", 300, 675, 100, 25, world))
         end
     }
 }
