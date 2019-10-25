@@ -35,7 +35,10 @@ function Pointer:touchmoved(dx, dy)
     if self.dx ~= nil and self.dy ~= nil then
         self.dx = self.dx + dx
         self.dy = self.dy + dy
-        self.game.pointermoved(self)
+        
+        if self.pressed then
+            self.game.pointermoved(self)
+        end
     end
 end
 
