@@ -60,13 +60,15 @@ local Enemy = {
             end
         },
         swiping = {
-            initalVel = 8,
-            horizontal = true,
-            lastXvelocity = initalVel,
-            yAfterDiving = 0,
-            upBounceCounter = 0, -- cuenta los choques cuando el enemigo no puede seguir bajando
+            
             load = function(self)
-                self.velocidad_x = self.state.initalVel
+                self.initalVel = 8
+                self.horizontal = true
+                self.lastXvelocity = self.initalVel
+                self.yAfterDiving = 0
+                self.upBounceCounter = 0
+                 -- cuenta los choques cuando el enemigo no puede seguir bajando
+                self.velocidad_x = self.initalVel
                 self.velocidad_y = 0
             end,
             update = function(self, dt)
@@ -74,17 +76,17 @@ local Enemy = {
 
                 if len > 0 then
                     local col = cols[1]
-                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then
-                        if self.state.horizontal then -- colisión llendo hacia arriba
-                            self.state.horizontal = false
-                            self.state.yAfterDiving = self.y
-                            self.state.lastXvelocity = self.velocidad_x
+                    if not col.other.isBomb then --col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then
+                        if self.horizontal then -- colisión yendo hacia arriba
+                            self.horizontal = false
+                            self.yAfterDiving = self.y
+                            self.lastXvelocity = self.velocidad_x
                             self.velocidad_x = 0
                             self.velocidad_y = 4
                         else -- colisión llendo hacia abajo
-                            self.state.upBounceCounter = self.state.upBounceCounter + 1
-                            self.state.horizontal = true
-                            self.velocidad_x = -self.state.lastXvelocity
+                            self.upBounceCounter = self.upBounceCounter + 1
+                            self.horizontal = true
+                            self.velocidad_x = -self.lastXvelocity
                             self.velocidad_y = 0
                         end
                     elseif col.other.isPlayer then
@@ -92,16 +94,16 @@ local Enemy = {
                     end
                 end
 
-                if not self.state.horizontal then
-                    if math.abs(self.state.yAfterDiving - self.y) >= self.height then
-                        self.state.upBounceCounter = 0 -- reseteamos si el enemigo es capaz de bajar
-                        self.state.horizontal = true
-                        self.velocidad_x = -self.state.lastXvelocity
+                if not self.horizontal then
+                    if math.abs(self.yAfterDiving - self.y) >= self.height then
+                        self.upBounceCounter = 0 -- reseteamos si el enemigo es capaz de bajar
+                        self.horizontal = true
+                        self.velocidad_x = -self.lastXvelocity
                         self.velocidad_y = 0
                     end
                 end
 
-                if self.state.upBounceCounter == 3 then
+                if self.upBounceCounter == 3 then
                     self.direction = 45
                     self:change_state(self.states.moving)
                 end
