@@ -42,6 +42,7 @@ local numero_nivel_actual = 0
 inicioCambioNivel = 0
 finalCambioNivel = 5
 local state
+local hud_width
 
 game.states = {
     jugando = {
@@ -136,11 +137,11 @@ game.states = {
             love.graphics.setBlendMode("alpha", "premultiplied")
             love.graphics.draw(
                 worldCanvas,
-                (window_width / 2) - (WORLD_WIDTH * game.scaleCanvas / 2),
-                (window_height / 2) - (WORLD_HEIGHT * game.scaleCanvas / 2),
+                (window_width / 2) - (WORLD_WIDTH * game.worldScaleCanvas / 2),
+                (window_height / 2) - (WORLD_HEIGHT * game.worldScaleCanvas / 2),
                 0,
-                game.scaleCanvas,
-                game.scaleCanvas
+                game.worldScaleCanvas,
+                game.worldScaleCanvas
             )
         end,
     },
@@ -226,7 +227,18 @@ function factorEscalaMundo()
     end
 end
 
-game.scaleCanvas = factorEscalaMundo()
+function factorEscalaPantalla()
+    if window_height >= window_width then
+        return window_width / SCREEN_WIDTH
+    else
+        return window_height / SCREEN_HEIGHT
+    end
+end
+
+game.worldScaleCanvas = factorEscalaMundo()
+game.screenScaleCanvas = factorEscalaPantalla()
+
+game.hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2 
 
 function game.loadlife()
     jugador.x = nivel_actual.jugador_posicion_inicial[1]
@@ -259,7 +271,7 @@ end
 
 function game.load()
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
-    hudCanvas = love.graphics.newCanvas(HUD_WIDTH, WORLD_HEIGHT)
+    hudCanvas = love.graphics.newCanvas(game.hud_width, SCREEN_HEIGHT)
     numero_nivel_actual = 0
     vidas = 3
     bombasAereas = 9
@@ -278,13 +290,13 @@ function game.draw()
     do
         love.graphics.setBlendMode("alpha")
         
-        -- El fondo del mundo
+        -- El fondo del canvas
         love.graphics.setColor(0, 0, 0)
-        love.graphics.rectangle("fill", 0, 0, HUD_WIDTH, WORLD_HEIGHT)
+        love.graphics.rectangle("fill", 0, 0, game.hud_width, SCREEN_HEIGHT)
         love.graphics.setColor(255, 255, 255)
-        love.graphics.printf("LVL - " .. numero_nivel_actual , font_hud, 0, 100, HUD_WIDTH, "center" ) 
-        love.graphics.printf("x " .. vidas, font_hud, 140, 160, HUD_WIDTH, "left" ) 
-        love.graphics.printf("x " .. bombasAereas, font_hud, 140, 220, HUD_WIDTH, "left" ) 
+        love.graphics.printf("LVL - " .. numero_nivel_actual , font_hud, 0, 100, game.hud_width, "center" ) 
+        love.graphics.printf("x " .. vidas, font_hud, 140, 160, game.hud_width, "left" ) 
+        love.graphics.printf("x " .. bombasAereas, font_hud, 140, 220, game.hud_width, "left" ) 
 
         ------------
         local scale_factor = font_hud:getHeight() / PlayerClass.states.standing.quads[1].height
@@ -311,60 +323,19 @@ function game.draw()
 
     end
 
-    love.graphics.setCanvas(worldCanvas) -- canvas del mundo
-    do
-        love.graphics.setBlendMode("alpha")
-        
-        -- El fondo del mundo
-        love.graphics.setColor(20, 00, 200)
-        love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
-        
-        -- objetos del juego
-        jugador:draw()
-
-        for i, enemigo in ipairs(enemigos) do
-            enemigo:draw()
-        end
-
-        for i, globo in ipairs(balloons) do
-            globo:draw()
-        end
-
-        sky:draw()
-
-        for i, plataforma in ipairs(plataformas) do
-            plataforma:draw()
-        end
-
-        bomb:draw()
-
-        for i, seta in ipairs(setas) do
-            seta:draw()
-        end
-    end
-
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
     love.graphics.setBlendMode("alpha", "premultiplied")
 
     love.graphics.setColor(255,255,255)
     love.graphics.draw(
         hudCanvas,
-        window_width - HUD_WIDTH * game.scaleCanvas,
+        window_width - game.hud_width * game.screenScaleCanvas,
         0,
         0,
-        game.scaleCanvas,
-        game.scaleCanvas
+        game.screenScaleCanvas,
+        game.screenScaleCanvas
     )
 
-    love.graphics.setColor(255,255,255)
-    love.graphics.draw(
-        worldCanvas,
-        (window_width - WORLD_WIDTH * game.scaleCanvas) / 2,
-        (window_height - WORLD_HEIGHT * game.scaleCanvas) / 2,
-        0,
-        game.scaleCanvas,
-        game.scaleCanvas
-    )
     game.state.draw(game)
 end
 
