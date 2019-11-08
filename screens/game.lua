@@ -260,10 +260,11 @@ function game.loadlevel(nivel)
     enemigos = {}
     setas = {}
     balloons = {}
+    local borderWidth = 50
 
-    table.insert(plataformas, BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, 10, world))
-    table.insert(plataformas, BlockClass.new("Pared Izquierda", -10, 0, 10, WORLD_HEIGHT, world))
-    table.insert(plataformas, BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, 10, WORLD_HEIGHT, world))
+    table.insert(plataformas, BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, borderWidth, world))
+    table.insert(plataformas, BlockClass.new("Pared Izquierda", -borderWidth, 0, borderWidth, WORLD_HEIGHT, world))
+    table.insert(plataformas, BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, borderWidth, WORLD_HEIGHT, world))
     table.insert(plataformas, LimitClass.new("Techo", 0, 0, WORLD_WIDTH, 20, world)) -- El limite es necesario para bloquear el escape de enemigos y otros objetos excepto las semillas y el jugador
     
     game.loadlife()
