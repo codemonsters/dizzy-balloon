@@ -53,12 +53,16 @@ Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
    
    ### En Windows:
    ```Step 1: Open Control panel. ```
+   
    ```Step 2: Click on Credential Manager.```
+   
    ```Step 3: Click on Windows Credentials under Manage your credentials page.```
+   
    ```Step 4: Under Generic Credentials click on github.```
+   
    ```Step 5: Click on Remove and then confirm by clicking Yes button.```
    
-   ### En Linux
+   ### En Linux:
    ```git config --global --unset-all```
    
 
