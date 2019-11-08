@@ -48,7 +48,11 @@ local BalloonClass = {
                     self.y = self.current_y
                     self.width = self.final_width
                     self.height = self.final_height
-                    self.change_state(self, self.states.flying_alone)
+                    if self.rider then  
+                        self.change_state(self, self.states.flying_with_pilot)
+                    else 
+                        self.change_state(self, self.states.flying_alone)
+                    end 
                 else
                     --local incrementoDeArea = 50
                     --local items, len = world:queryRect(self.x - incrementoDeArea/2, self.y - incrementoDeArea/2, self.width + incrementoDeArea, self.height + incrementoDeArea)
@@ -81,7 +85,6 @@ local BalloonClass = {
                     for i = 1, len do
                         if cols[i].other.isPlayer then
                             -- desplazamos al jugador
-                            log.debug("Globo alcanza a jugador mientras crece" .. cols[i].other.name)
                             local shift_y = self.current_y - self.old_y
                             cols[i].other:translate(0, shift_y * 2)
                         end
@@ -238,8 +241,8 @@ function BalloonClass.new(seed, world, game)
 end
 
 function BalloonClass:montado(player)
+    self.rider = player
     if self.state == self.states.flying_alone then
-        self.rider = player
         self:change_state(BalloonClass.states.flying_with_pilot)
     end
 end
