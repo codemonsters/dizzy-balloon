@@ -1,4 +1,3 @@
-local push = require "libraries/push/push" -- https://github.com/Ulydev/push
 log = require "libraries/log/log" -- https://github.com/rxi/log.lua
 
 mobile = false
@@ -7,8 +6,8 @@ if love.system.getOS() == "iOS" or love.system.getOS() == "Android" then
     mobile = true
 end
 
-SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720
-WORLD_WIDTH, WORLD_HEIGHT = 700, 700
+SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720 -- El juego se crea por completo dentro de una pantalla de este tamaño (y posteriormente se escala según sea necesario)
+WORLD_WIDTH, WORLD_HEIGHT = 720, 720 -- La zona de juego es parte de la pantalla y también tiene tamaño fijo
 
 local screen = nil
 
@@ -29,23 +28,25 @@ function love.load()
     font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
     love.graphics.setFont(font_menu)
 
-    -- scale the window of the game (without changing game width and heigth)
-    window_width, window_height = love.window.getDesktopDimensions()
-    if love.window.getFullscreen() == true then
+    local window_width, window_height = love.window.getDesktopDimensions()
+    if love.window.getFullscreen() then
         -- scale the window to match the screen resolution
-        log.debug("Escalando en pantalla completa")
+        log.debug("Corriendo en pantalla completa (resolución: " .. window_width .. " x " .. window_height .. " px)")
     else
-        -- make the window a bit smaller than the display
-        log.debug("Escalando dentro de una ventana")
-        window_width, window_height = window_width * .7, window_height * .7
+        -- definimos el tamaño inicial de la ventana
+        window_width, window_height = window_width * .8, window_height * .8
+        log.debug("Corriendo en una ventana de: " .. window_width .. " x " .. window_height .. " px")
+        love.window.setMode(
+            window_width,
+            window_height,
+            {
+                vsync = true,
+                resizable = true,
+                centered = true
+            }
+        )
     end
-    push:setupScreen(
-        SCREEN_WIDTH,
-        SCREEN_HEIGHT,
-        window_width,
-        window_height,
-        {fullscreen = love.window.getFullscreen()}
-    )
+    actualizaVariablesEscalado(window_width, window_height)
 
     math.randomseed(os.time()) -- NOTE: Quizá redundante, parece que Love ya inicializa la semilla random automáticamente
 
@@ -61,9 +62,11 @@ function love.update(dt)
 end
 
 function love.draw()
-    push:start()
     screen.draw()
-    push:finish()
+end
+
+function love.resize(w, h)
+    actualizaVariablesEscalado(w, h)
 end
 
 function love.keypressed(key, scancode, isrepeat)
@@ -77,4 +80,19 @@ end
 
 function love.keyreleased(key, scancode, isrepeat)
     screen.keyreleased(key, scancode, isrepeat)
+end
+
+function actualizaVariablesEscalado(window_width, window_height)
+    -- calcula el valor de las variables: factorEscala, desplazamientoX, desplazamientoY (utilizadas para escalar y desplazar el viewport del juego dentro de la ventana principal)
+
+    local factorEscalaAncho = window_width / SCREEN_WIDTH
+    local factorEscalaAlto = window_height / SCREEN_HEIGHT
+    if factorEscalaAncho < factorEscalaAlto then
+        factorEscala = factorEscalaAncho
+    else
+        factorEscala = factorEscalaAlto
+    end
+
+    desplazamientoX = (window_width - factorEscala * SCREEN_WIDTH) / 2
+    desplazamientoY = (window_height - factorEscala * SCREEN_HEIGHT) / 2
 end

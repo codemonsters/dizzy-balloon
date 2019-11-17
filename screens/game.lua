@@ -42,7 +42,9 @@ local numero_nivel_actual = 0
 inicioCambioNivel = 0
 finalCambioNivel = 5
 local state
-local hud_width
+
+local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
+local hud_height = SCREEN_HEIGHT
 
 game.states = {
     jugando = {
@@ -55,9 +57,25 @@ game.states = {
                 temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
                 if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
                     if math.random() > 0.5 then
-                        enemigo = EnemyClass.new("enemigoIzq", EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
+                        enemigo =
+                            EnemyClass.new(
+                            "enemigoIzq",
+                            EnemyClass.width,
+                            EnemyClass.height,
+                            world,
+                            game,
+                            math.random() * 360
+                        )
                     else
-                        enemigo = EnemyClass.new("enemigoDer", WORLD_WIDTH - EnemyClass.width, EnemyClass.height, world, game, math.random() * 360)
+                        enemigo =
+                            EnemyClass.new(
+                            "enemigoDer",
+                            WORLD_WIDTH - EnemyClass.width,
+                            EnemyClass.height,
+                            world,
+                            game,
+                            math.random() * 360
+                        )
                     end
                     table.insert(enemigos, enemigo)
                     temporizador_respawn_enemigo = 0
@@ -84,10 +102,10 @@ game.states = {
             if fireRequested then
                 fireRequested = false
                 if bomb.state == bomb.states.inactive and not (jugador.montado and jugador.montura.isBalloon) then
-                    x,y  = jugador.x,jugador.y
+                    x, y = jugador.x, jugador.y
                     if fireInitialDirection == "down" then
                         if not jugador.not_supported then
-                            jugador.x, jugador.y = world:move(jugador, jugador.x, jugador.y-bomb.height*1.05)
+                            jugador.x, jugador.y = world:move(jugador, jugador.x, jugador.y - bomb.height * 1.05)
                             bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
                         end
                     elseif bombasAereas > 0 then
@@ -97,53 +115,62 @@ game.states = {
                 end
             end
             bomb:update(dt)
-
         end,
         draw = function(self)
             love.graphics.setCanvas(worldCanvas) -- a partir de ahora dibujamos en el canvas
             do
                 love.graphics.setBlendMode("alpha")
-            
+
                 -- El fondo del mundo
                 love.graphics.setColor(20, 00, 200)
-                love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
-            
+                love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH - 1, WORLD_HEIGHT - 1)
+
                 -- objetos del juego
 
                 jugador:draw()
-    
+
                 for i, enemigo in ipairs(enemigos) do
                     enemigo:draw()
                 end
-    
+
                 for i, globo in ipairs(balloons) do
                     globo:draw()
                 end
                 if sky ~= nil then
                     sky:draw()
                 end
-    
+
                 for i, plataforma in ipairs(plataformas) do
                     plataforma:draw()
                 end
-    
+
                 bomb:draw()
-    
+
                 for i, seta in ipairs(setas) do
                     seta:draw()
                 end
+
+                -- DEBUG: marcas en los extremos diagonales del canvas
+                love.graphics.setColor(100, 100, 255)
+                love.graphics.circle("line", 5, 5, 5)
+                love.graphics.circle("line", WORLD_WIDTH - 6, WORLD_HEIGHT - 6, 5)
             end
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
+
+            love.graphics.push()
+            love.graphics.translate(desplazamientoX, desplazamientoY)
+            love.graphics.scale(factorEscala, factorEscala)
             love.graphics.setBlendMode("alpha", "premultiplied")
             love.graphics.draw(
                 worldCanvas,
-                (window_width / 2) - (WORLD_WIDTH * game.worldScaleCanvas / 2),
-                (window_height / 2) - (WORLD_HEIGHT * game.worldScaleCanvas / 2),
+                (SCREEN_WIDTH - WORLD_WIDTH) / 2,
+                (SCREEN_HEIGHT - WORLD_HEIGHT) / 2,
                 0,
-                game.worldScaleCanvas,
-                game.worldScaleCanvas
+                1,
+                1
             )
-        end,
+            love.graphics.pop()
+        end
     },
     cambiandoDeNivel = {
         load = function(self)
@@ -157,7 +184,7 @@ game.states = {
             game.change_state(game.states.jugando)
         end,
         draw = function(self)
-        end,
+        end
     }
 }
 
@@ -219,32 +246,11 @@ game.niveles = {
     }
 }
 
-function factorEscalaMundo()
-    if window_height >= window_width then
-        return window_width / WORLD_WIDTH
-    else
-        return window_height / WORLD_HEIGHT
-    end
-end
-
-function factorEscalaPantalla()
-    if window_height >= window_width then
-        return window_width / SCREEN_WIDTH
-    else
-        return window_height / SCREEN_HEIGHT
-    end
-end
-
-game.worldScaleCanvas = factorEscalaMundo()
-game.screenScaleCanvas = factorEscalaPantalla()
-
-game.hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2 
-
 function game.loadlife()
     jugador.x = nivel_actual.jugador_posicion_inicial[1]
     jugador.y = nivel_actual.jugador_posicion_inicial[2]
     world:update(jugador, jugador.x, jugador.y, jugador.width, jugador.height)
-    print("loadlife. pos jugador ahora = (" .. jugador.x ..", " .. jugador.y ..")")
+    print("loadlife. pos jugador ahora = (" .. jugador.x .. ", " .. jugador.y .. ")")
 end
 
 function game.loadlevel(nivel)
@@ -266,13 +272,13 @@ function game.loadlevel(nivel)
     table.insert(plataformas, BlockClass.new("Pared Izquierda", -borderWidth, 0, borderWidth, WORLD_HEIGHT, world))
     table.insert(plataformas, BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, borderWidth, WORLD_HEIGHT, world))
     table.insert(plataformas, LimitClass.new("Techo", 0, 0, WORLD_WIDTH, 20, world)) -- El limite es necesario para bloquear el escape de enemigos y otros objetos excepto las semillas y el jugador
-    
+
     game.loadlife()
 end
 
 function game.load()
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
-    hudCanvas = love.graphics.newCanvas(game.hud_width, SCREEN_HEIGHT)
+    hudCanvas = love.graphics.newCanvas(hud_width, hud_height)
     numero_nivel_actual = 0
     vidas = 3
     bombasAereas = 9
@@ -286,56 +292,41 @@ function game.update(dt)
 end
 
 function game.draw()
+    love.graphics.clear(255, 255, 255) -- borramos la pantalla por completo
 
     love.graphics.setCanvas(hudCanvas) -- canvas del HUD
     do
         love.graphics.setBlendMode("alpha")
-        
+
         -- El fondo del canvas
         love.graphics.setColor(0, 0, 0)
-        love.graphics.rectangle("fill", 0, 0, game.hud_width, SCREEN_HEIGHT)
+        love.graphics.rectangle("fill", 0, 0, hud_width, SCREEN_HEIGHT)
         love.graphics.setColor(255, 255, 255)
-        love.graphics.printf("LVL - " .. numero_nivel_actual , font_hud, 0, 100, game.hud_width, "center" ) 
-        love.graphics.printf("x " .. vidas, font_hud, 140, 160, game.hud_width, "left" ) 
-        love.graphics.printf("x " .. bombasAereas, font_hud, 140, 220, game.hud_width, "left" ) 
+        love.graphics.printf("LVL - " .. numero_nivel_actual, font_hud, 0, 100, hud_width, "center")
+        love.graphics.printf("x " .. vidas, font_hud, 140, 160, hud_width, "left")
+        love.graphics.printf("x " .. bombasAereas, font_hud, 140, 220, hud_width, "left")
 
         ------------
-        local scale_factor = font_hud:getHeight() / PlayerClass.states.standing.quads[1].height
-        love.graphics.draw( -- dibujamos el jugador en el hud
-            atlas,
-            PlayerClass.states.standing.quads[1].quad,
-            95,
-            154,
-            0,
-            scale_factor,
-            scale_factor
-        )
+        love.graphics.draw(atlas, PlayerClass.states.standing.quads[1].quad, 95, 154, 0, 2, 2) -- dibujamos el jugador en el hud
 
-        local scale_factor = font_hud:getHeight() / BombClass.states.planted.quads[1].height
-        love.graphics.draw( -- dibujamos la bomba en el hud
-            atlas,
-            BombClass.states.planted.quads[1].quad,
-            94,
-            216,
-            0,
-            scale_factor,
-            scale_factor
-        )
+        love.graphics.draw(atlas, BombClass.states.planted.quads[1].quad, 94, 216, 0, 3, 3) -- dibujamos la bomba en el hud
 
+        -- DEBUG: marcas en los extremos diagonales del canvas
+        love.graphics.setColor(100, 100, 255)
+        love.graphics.circle("line", 5, 5, 5)
+        love.graphics.circle("line", hud_width - 6, hud_height - 6, 5)
     end
 
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
-    love.graphics.setBlendMode("alpha", "premultiplied")
 
-    love.graphics.setColor(255,255,255)
-    love.graphics.draw(
-        hudCanvas,
-        window_width - game.hud_width * game.screenScaleCanvas,
-        0,
-        0,
-        game.screenScaleCanvas,
-        game.screenScaleCanvas
-    )
+    love.graphics.push()
+    love.graphics.translate(desplazamientoX, desplazamientoY)
+    love.graphics.scale(factorEscala, factorEscala)
+
+    love.graphics.setBlendMode("alpha", "premultiplied")
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.draw(hudCanvas, SCREEN_WIDTH - hud_width, 0, 0, 1, 1)
+    love.graphics.pop()
 
     game.state.draw(game)
 end
