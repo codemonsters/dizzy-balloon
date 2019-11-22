@@ -19,6 +19,7 @@ function menu.update(dt)
 end
 
 function menu.draw()
+
     love.graphics.clear(255, 255, 255)
     love.graphics.push()
     love.graphics.translate(desplazamientoX, desplazamientoY)
