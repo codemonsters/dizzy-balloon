@@ -42,6 +42,8 @@ local numero_nivel_actual = 0
 inicioCambioNivel = 0
 finalCambioNivel = 5
 local state
+local gamepad = love.graphics.newImage("assets/gamepad.png")
+local circle = love.graphics.newImage("assets/circle.png")
 
 local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
 local hud_height = SCREEN_HEIGHT
@@ -280,6 +282,7 @@ end
 function game.load()
     worldCanvas = love.graphics.newCanvas(WORLD_WIDTH, WORLD_HEIGHT)
     hudCanvas = love.graphics.newCanvas(hud_width, hud_height)
+    gamepadCanvas = love.graphics.newCanvas(hud_width, hud_height)
     numero_nivel_actual = 0
     vidas = 3
     bombasAereas = 9
@@ -312,10 +315,25 @@ function game.draw()
 
         love.graphics.draw(atlas, BombClass.states.planted.quads[1].quad, 94, 216, 0, 3, 3) -- dibujamos la bomba en el hud
 
+        love.graphics.setColor(255, 0, 0)
+        love.graphics.draw(circle, 35, SCREEN_HEIGHT -280, 0, 1, 1)
+        love.graphics.setColor(255, 255, 255)
+
         -- DEBUG: marcas en los extremos diagonales del canvas
         --love.graphics.setColor(100, 100, 255)
         --love.graphics.circle("line", 5, 5, 5)
         --love.graphics.circle("line", hud_width - 6, hud_height - 6, 5)
+    end
+
+    love.graphics.setCanvas(gamepadCanvas) -- canvas del gamepad
+    do
+        love.graphics.setBlendMode("alpha")
+
+        -- El fondo del canvas
+        love.graphics.setColor(0, 0, 0)
+        love.graphics.rectangle("fill", 0, 0, hud_width, SCREEN_HEIGHT)
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.draw(gamepad, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
     end
 
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
@@ -327,6 +345,7 @@ function game.draw()
     love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(hudCanvas, SCREEN_WIDTH - hud_width, 0, 0, 1, 1)
+    love.graphics.draw(gamepadCanvas, 0, 0, 0, 1, 1)
     love.graphics.pop()
 
     game.state.draw(game)
