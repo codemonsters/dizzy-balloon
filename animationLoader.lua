@@ -1,62 +1,76 @@
 local animLoader = {}
 
-local animacionTest = {
+animacionTestJugador = {
     frame1  = {
-        setPlayer = function()
+        setParams = function(jugador)
             jugador.right = true
         end,
         time = 1
     },
     frame2  = {
-        setPlayer = function() 
+        setParams = function(jugador) 
             jugador.right = false
         end,
         time = 1
     },
     jump = {
-        setPlayer = function() 
+        setParams = function(jugador) 
             jugador.left = true
             jugador:jump()
         end,
         time = 0.5
     },
     pararse = {
-        setPlayer = function() 
+        setParams = function(jugador) 
             jugador.left = false
+
         end,
         time = 0.5
     }
 }
 
-function animLoader:load(jugador)
-    self.jugador = jugador
+local ordered_keys = {}
+
+function animLoader:applyAnim(target, anim)
+    self.target = target
+    self.anim = anim
+
+    -- Se necesita ordenar la tabla de animacion para iterar en orden por ella
+    for k in pairs(self.anim) do
+        table.insert(ordered_keys, k)
+    end
+    
+    table.sort(ordered_keys)
+
     self.counter = 0
     self.currFrame = 1
-    self:loadKeyFrame(self.currFrame)
+    self:loadKeyFrame(self.anim, self.currFrame)
     self.currFrame = self.currFrame + 1
-end 
+end
 
 function animLoader:update(dt)
-    self.counter = self.counter + dt
-    if self.counter >= self.keyFrame.time then
-        self:loadKeyFrame(self.currFrame)
+    if self.anim then
+        self.counter = self.counter + dt
+        if self.counter >= self.keyFrame.time then
+            self:loadKeyFrame(self.anim, self.currFrame)
 
-        self.counter = 0
-        self.currFrame = self.currFrame + 1
+            self.counter = 0
+            self.currFrame = self.currFrame + 1
+        end
     end
 end
 
-function animLoader:loadKeyFrame(index)
-    indice = 0
-    for k, keyFrame in pairs(animacionTest) do
-        indice = indice + 1
-        if indice == index then
-            print(k.." "..index.." "..indice)
-            self.keyFrame = animacionTest[k]
-        end
+function animLoader:loadKeyFrame(anim, index)
+    local k, v = ordered_keys[index], anim[ordered_keys[index]]
+    self.keyFrame = anim[k]
+
+    if not self.keyFrame then
+        print("Se acabo la animación")
+        self.anim = nil
+        return
     end
 
-    self.keyFrame.setPlayer()
+    self.keyFrame.setParams(self.target)
 end
 
 return animLoader

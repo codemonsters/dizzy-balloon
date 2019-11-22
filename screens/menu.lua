@@ -10,9 +10,12 @@ function menu.load()
     world = bump.newWorld(50)
     jugador = PlayerClass.new(world, nil)
     local borderWidth = 50
-    BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, borderWidth, world)
-    animLoader:load(jugador)
+    BlockClass.new("Suelo", 0, WORLD_HEIGHT, SCREEN_WIDTH, borderWidth, world)
+
+    -- asociar el animador al jugador y cargar una animación en el
+    animLoader:applyAnim(jugador, animacionTestJugador)
 end
+
 function menu.update(dt)
     jugador:update(dt)
     animLoader:update(dt)
