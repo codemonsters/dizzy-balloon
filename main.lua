@@ -69,10 +69,17 @@ function love.resize(w, h)
     actualizaVariablesEscalado(w, h)
 end
 
+
 function love.keypressed(key, scancode, isrepeat)
     if key == "escape" then
         log.info("Finalizado")
         love.event.quit()
+    elseif key == "f" then
+        if love.window.getFullscreen() then
+            love.window.setFullscreen(false)
+        else
+            love.window.setFullscreen(true)
+        end
     else
         screen.keypressed(key, scancode, isrepeat)
     end

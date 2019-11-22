@@ -50,6 +50,7 @@ game.states = {
     jugando = {
         name = "Jugando",
         load = function(self)
+            love.graphics.clear(0, 0, 0)
         end,
         update = function(self, dt)
             -- comprobamos si debemos crear un enemigo nuevo
@@ -151,9 +152,9 @@ game.states = {
                 end
 
                 -- DEBUG: marcas en los extremos diagonales del canvas
-                love.graphics.setColor(100, 100, 255)
-                love.graphics.circle("line", 5, 5, 5)
-                love.graphics.circle("line", WORLD_WIDTH - 6, WORLD_HEIGHT - 6, 5)
+                --love.graphics.setColor(100, 100, 255)
+                --love.graphics.circle("line", 5, 5, 5)
+                --love.graphics.circle("line", WORLD_WIDTH - 6, WORLD_HEIGHT - 6, 5)
             end
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
 
@@ -292,7 +293,7 @@ function game.update(dt)
 end
 
 function game.draw()
-    love.graphics.clear(255, 255, 255) -- borramos la pantalla por completo
+    love.graphics.clear(0, 0, 0) -- borramos la pantalla por completo
 
     love.graphics.setCanvas(hudCanvas) -- canvas del HUD
     do
@@ -312,9 +313,9 @@ function game.draw()
         love.graphics.draw(atlas, BombClass.states.planted.quads[1].quad, 94, 216, 0, 3, 3) -- dibujamos la bomba en el hud
 
         -- DEBUG: marcas en los extremos diagonales del canvas
-        love.graphics.setColor(100, 100, 255)
-        love.graphics.circle("line", 5, 5, 5)
-        love.graphics.circle("line", hud_width - 6, hud_height - 6, 5)
+        --love.graphics.setColor(100, 100, 255)
+        --love.graphics.circle("line", 5, 5, 5)
+        --love.graphics.circle("line", hud_width - 6, hud_height - 6, 5)
     end
 
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
