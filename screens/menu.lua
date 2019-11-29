@@ -73,6 +73,8 @@ end ]]
 function widgetsUpdate()
     suit.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.2)
     suit.layout:padding(0, SCREEN_HEIGHT * 0.04)
+    local mouseX, mouseY = love.mouse.getPosition()
+    suit.updateMouse((mouseX) * factorEscala, (mouseY) * factorEscala)
 
     if suit.Button("Jugar", suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
         game_screen = require("screens/game")
