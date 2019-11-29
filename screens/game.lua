@@ -207,8 +207,8 @@ game.niveles = {
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
         load = function(world, game)
             sky = SkyClass.new(world, game)
-            table.insert(plataformas, BlockClass.new("Bloque 1", 150, 600, 400, 10, world))
-            table.insert(plataformas, BlockClass.new("Bloque 2", 200, 200, 300, 10, world))
+            table.insert(plataformas, BlockClass.new("Bloque 1", 150, 620, 400, 10, world))
+            table.insert(plataformas, BlockClass.new("Bloque 2", 200, 220, 300, 10, world))
         end
     },
     {
@@ -217,12 +217,12 @@ game.niveles = {
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
         load = function(world, game)
             sky = SkyClass.new(world, game)
-            table.insert(plataformas, BlockClass.new("Bloque 1", 0, 230, 175, 5, world))
-            table.insert(plataformas, BlockClass.new("Bloque 2", 525, 230, 175, 5, world))
-            table.insert(plataformas, BlockClass.new("Bloque 3", 0, 460, 250, 5, world))
-            table.insert(plataformas, BlockClass.new("Bloque 4", 450, 460, 250, 5, world))
-            table.insert(plataformas, BlockClass.new("Bloque 5", 325, 650, 50, 25, world))
-            table.insert(plataformas, BlockClass.new("Bloque 6", 300, 675, 100, 25, world))
+            table.insert(plataformas, BlockClass.new("Bloque 1", 0, 250, 175, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 2", 525, 250, 175, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 3", 0, 480, 250, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 4", 450, 480, 250, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 5", 325, 670, 50, 25, world))
+            table.insert(plataformas, BlockClass.new("Bloque 6", 300, 695, 100, 25, world))
         end
     },
     {
@@ -231,8 +231,8 @@ game.niveles = {
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
         load = function(world, game)
             sky = SkyClass.new(world, game)
-            table.insert(plataformas, BlockClass.new("Bloque 1", 150, 435, 400, 30, world))
-            table.insert(plataformas, BlockClass.new("Bloque 2", 335, 20, 30, 415, world))
+            table.insert(plataformas, BlockClass.new("Bloque 1", 150, 455, 400, 30, world))
+            table.insert(plataformas, BlockClass.new("Bloque 2", 335, 20, 30, 435, world))
         end
     },
     {
@@ -243,8 +243,8 @@ game.niveles = {
             sky = SkyClass.new(world, game)
             table.insert(plataformas, BlockClass.new("Bloque 1", 160, 20, 15, 235, world))
             table.insert(plataformas, BlockClass.new("Bloque 2", 525, 20, 15, 235, world))
-            table.insert(plataformas, BlockClass.new("Bloque 3", 160, 465, 15, 235, world))
-            table.insert(plataformas, BlockClass.new("Bloque 4", 525, 465, 15, 235, world))
+            table.insert(plataformas, BlockClass.new("Bloque 3", 160, 485, 15, 235, world))
+            table.insert(plataformas, BlockClass.new("Bloque 4", 525, 485, 15, 235, world))
         end
     }
 }
@@ -252,6 +252,21 @@ game.niveles = {
 function game.loadlife()
     jugador.x = nivel_actual.jugador_posicion_inicial[1]
     jugador.y = nivel_actual.jugador_posicion_inicial[2]
+    local timesUp = 0 -- TODO: eliminar variable timesUp
+    for i = jugador.y, 0, jugador.height / -2 do
+        local items, len = world:queryRect(jugador.x, jugador.y, jugador.width, jugador.height)
+        while len > 0 do
+            jugador.x = jugador.x + jugador.width / 2
+            if jugador.x >= WORLD_WIDTH - jugador.width then -- no hay mas espacio a la derecha
+                timesUp = timesUp + 1
+                jugador.x = nivel_actual.jugador_posicion_inicial[1]
+                break
+            end
+            items, len = world:queryRect(jugador.x, jugador.y, jugador.width, jugador.height)
+        end
+        jugador.y = jugador.y - jugador.height / 2
+    end
+    jugador.y = nivel_actual.jugador_posicion_inicial[2] - timesUp * (jugador.height / 2)
     world:update(jugador, jugador.x, jugador.y, jugador.width, jugador.height)
     print("loadlife. pos jugador ahora = (" .. jugador.x .. ", " .. jugador.y .. ")")
 end
