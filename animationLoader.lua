@@ -37,6 +37,33 @@ animacionTestJugador = {
     target = nil -- el objeto animado
 }
 
+animacionTestEnemigo = {
+    keyFrames = {
+        e_frame1  = {
+            setParams = function(enemigo)
+                enemigo.velocidad_x = math.sqrt(8)
+            end,
+            time = 1
+        },
+
+        e_frame2  = {
+            setParams = function(enemigo)
+                enemigo.velocidad_x = math.sqrt(8) * -1
+            end,
+            time = 1
+        },
+        
+    },
+    
+    orderedKeys = {}, -- claves de los keyframes ordenados
+
+    currFrame = nil, -- el keyframe que se está ejecutando
+    frameIndex = 1,
+    
+    target = nil -- el objeto animado
+}
+
+
 local animList = {}
 
 function animLoader:applyAnim(target, anim)
@@ -52,18 +79,18 @@ function animLoader:applyAnim(target, anim)
     
     table.sort(anim.orderedKeys)
 
-    self.counter = 0
+    anim.counter = 0
     self:loadKeyFrame(anim, anim.frameIndex)
 end
 
 function animLoader:update(dt)
     for numAnim, anim in pairs(animList) do
         if anim then
-            self.counter = self.counter + dt
-            if self.counter >= anim.currFrame.time then
+            anim.counter = anim.counter + dt
+            if anim.counter >= anim.currFrame.time then
                 self:loadKeyFrame(anim, anim.frameIndex + 1)
     
-                self.counter = 0
+                anim.counter = 0
             end
         end
     end
@@ -74,7 +101,7 @@ function animLoader:loadKeyFrame(anim, index)
 
     local k, v = anim.orderedKeys[index], anim.keyFrames[anim.orderedKeys[index]]
     anim.currFrame = anim.keyFrames[k]
-
+    print(k)
     if not anim.currFrame then
         print("Se acabo la animación")
         table.remove(animList, findIndexInTable(animList, anim))
