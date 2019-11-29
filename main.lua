@@ -1,4 +1,5 @@
 log = require "libraries/log/log" -- https://github.com/rxi/log.lua
+suit = require "libraries/suit"
 
 mobile = false
 

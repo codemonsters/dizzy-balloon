@@ -19,6 +19,8 @@ end
 function menu.update(dt)
     jugador:update(dt)
     animLoader:update(dt)
+
+    widgetsUpdate()
 end
 
 function menu.draw()
@@ -45,7 +47,11 @@ function menu.draw()
     love.graphics.line(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, SCREEN_WIDTH - 11, SCREEN_HEIGHT - 1)
     love.graphics.line(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 11)
 
+    widgetsDraw()
+
     love.graphics.pop()
+
+
 end
 
 function menu.keypressed(key, scancode, isrepeat)
@@ -58,9 +64,52 @@ end
 function menu.keyreleased(key, scancode, isrepeat)
 end
 
-function love.mousepressed(id, x, y, dx, dy, pressure)
+--[[ function love.mousepressed(id, x, y, dx, dy, pressure)
     game_screen = require("screens/game")
     change_screen(game_screen)
+end ]]
+
+
+function widgetsUpdate()
+    suit.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.2)
+    suit.layout:padding(0, SCREEN_HEIGHT * 0.04)
+
+    if suit.Button("Jugar", suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
+        game_screen = require("screens/game")
+        change_screen(game_screen)
+    end
+    if suit.Button("Preferencias", suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
+        print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
+    end
+    if suit.Button("Instrucciones", suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
+        os.exit()
+    end
+    if suit.Button("Salir", suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
+        os.exit()
+    end
+
+
+    local input = {text = ""} -- text input data
+
+
+
+
+    --[[ if suit.Button("Jugar", 0, 0).hit then
+        show_message = true
+        print("BOTÓN JUGAR PULSADO")
+    end
+    if suit.Button("Instrucciones", 0, 200).hit then
+        show_message = true
+        print("BOTÓN INSTRUCCIONES PULSADO")
+    end    
+    if suit.Button("Preferencias", 0, 300).hit then
+        show_message = true
+        print("BOTÓN PREFERENCIAS PULSADO")
+    end ]]
+end
+
+function widgetsDraw()
+    suit.draw()
 end
 
 return menu
