@@ -101,9 +101,8 @@ function animLoader:loadKeyFrame(anim, index)
 
     local k, v = anim.orderedKeys[index], anim.keyFrames[anim.orderedKeys[index]]
     anim.currFrame = anim.keyFrames[k]
-    print(k)
+
     if not anim.currFrame then
-        print("Se acabo la animación")
         table.remove(animList, findIndexInTable(animList, anim))
     else
         anim.currFrame.setParams(anim.target)
