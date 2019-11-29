@@ -125,7 +125,7 @@ game.states = {
                 love.graphics.setBlendMode("alpha")
 
                 -- El fondo del mundo
-                love.graphics.setColor(20, 00, 200)
+                love.graphics.setColor(192, 0, 109)
                 love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH - 1, WORLD_HEIGHT - 1)
 
                 -- objetos del juego
