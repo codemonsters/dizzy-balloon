@@ -10,9 +10,12 @@ local negro = {1, 1, 1, 1}
 function menu.load()
     world = bump.newWorld(50)
     jugador = PlayerClass.new(world, nil)
-    enemigo1 = EnemyClass.new(enemigo, WORLD_HEIGHT, WORLD_HEIGHT/2, world, nil, 0)
+    enemigo1 = EnemyClass.new(enemigo, SCREEN_WIDTH * 0.05, PlayerClass.height * 3, world, nil, 0)
     local borderWidth = 50
     BlockClass.new("Suelo", 0, WORLD_HEIGHT, SCREEN_WIDTH, borderWidth, world)
+    BlockClass.new("ParedIzquierda", 0, 0, 1, SCREEN_HEIGHT, world)
+    BlockClass.new("ParedDerecha", SCREEN_WIDTH, 0, 1, SCREEN_HEIGHT, world)
+    BlockClass.new("Techo", 0, 0, SCREEN_WIDTH, 1, world)
 
 
     animLoader:applyAnim(enemigo1, animacionTestEnemigo)

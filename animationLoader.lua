@@ -2,31 +2,42 @@ local animLoader = {}
 
 animacionTestJugador = {
     keyFrames = {
-        frame1  = {
+        derecha1  = {
             setParams = function(jugador)
                 jugador.right = true
             end,
-            time = 1
+            time = 2
         },
-        frame2  = {
+        izquierda1  = {
             setParams = function(jugador) 
                 jugador.right = false
+                jugador.left = true
             end,
             time = 1
         },
+        pararse = {
+            setParams = function(jugador)
+                jugador.right = false 
+                jugador.left = false
+            end,
+            time = 0.5
+        },
+        derecha2 = {
+            setParams = function(jugador) 
+                jugador.left = false
+                jugador.right = true
+            end,
+            time = 0.5
+        },
+
         jump = {
             setParams = function(jugador) 
-                jugador.left = true
+                jugador.right = false
                 jugador:jump()
             end,
             time = 0.5
         },
-        pararse = {
-            setParams = function(jugador) 
-                jugador.left = false
-            end,
-            time = 0.5
-        }
+
     },
     
     orderedKeys = {}, -- claves de los keyframes ordenados
@@ -42,13 +53,20 @@ animacionTestEnemigo = {
         e_frame1  = {
             setParams = function(enemigo)
                 enemigo.velocidad_x = math.sqrt(8)
+                enemigo.velocidad_y = -math.sqrt(8)
             end,
-            time = 1
+            time = 3.5
         },
 
         e_frame2  = {
             setParams = function(enemigo)
-                enemigo.velocidad_x = math.sqrt(8) * -1
+                enemigo.velocidad_x = -math.sqrt(8)
+            end,
+            time = 2.2
+        },
+       e_frame3  = {
+            setParams = function(enemigo)
+                enemigo.velocidad_y = -math.sqrt(8)
             end,
             time = 1
         },
@@ -101,7 +119,7 @@ function animLoader:loadKeyFrame(anim, index)
 
     local k, v = anim.orderedKeys[index], anim.keyFrames[anim.orderedKeys[index]]
     anim.currFrame = anim.keyFrames[k]
-
+    --print(k)
     if not anim.currFrame then
         table.remove(animList, findIndexInTable(animList, anim))
     else
