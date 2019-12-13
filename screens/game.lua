@@ -1,4 +1,4 @@
-local bump = require "libraries/bump/bump"
+    local bump = require "libraries/bump/bump"
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
 -- local jugador = PlayerClass.new()
@@ -249,24 +249,24 @@ game.niveles = {
     }
 }
 
+function game.getNewRespawnPos()
+    local respawnX, respawnY = jugador.x, jugador.y
+    local x, y, cols, len = jugador.world:check(jugador, jugador.x, jugador.y, jugador.collisions_filter)
+    for i = 1, len do
+        if cols[i].other.x + cols[i].other.width <= WORLD_WIDTH - jugador.width then
+            respawnX = cols[i].other.x + cols[i].other.width
+        else
+            respawnY = cols[i].other.y - jugador.height
+            respawnX = nivel_actual.jugador_posicion_inicial[1]
+        end
+    end
+    return respawnX, respawnY
+end
+
 function game.loadlife()
     jugador.x = nivel_actual.jugador_posicion_inicial[1]
     jugador.y = nivel_actual.jugador_posicion_inicial[2]
-    local timesUp = 0 -- TODO: eliminar variable timesUp
-    for i = jugador.y, 0, jugador.height / -2 do
-        local items, len = world:queryRect(jugador.x, jugador.y, jugador.width, jugador.height)
-        while len > 0 do
-            jugador.x = jugador.x + jugador.width / 2
-            if jugador.x >= WORLD_WIDTH - jugador.width then -- no hay mas espacio a la derecha
-                timesUp = timesUp + 1
-                jugador.x = nivel_actual.jugador_posicion_inicial[1]
-                break
-            end
-            items, len = world:queryRect(jugador.x, jugador.y, jugador.width, jugador.height)
-        end
-        jugador.y = jugador.y - jugador.height / 2
-    end
-    jugador.y = nivel_actual.jugador_posicion_inicial[2] - timesUp * (jugador.height / 2)
+    jugador.x, jugador.y = game.getNewRespawnPos()
     world:update(jugador, jugador.x, jugador.y, jugador.width, jugador.height)
     print("loadlife. pos jugador ahora = (" .. jugador.x .. ", " .. jugador.y .. ")")
 end
