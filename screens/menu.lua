@@ -69,45 +69,30 @@ end
     change_screen(game_screen)
 end ]]
 
-
+--ESta función hace cosas :)
 function widgetsUpdate()
     suit.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.2)
-    suit.layout:padding(0, SCREEN_HEIGHT * 0.04)
+    suit.layout:padding(0, SCREEN_WIDTH * 0.04)
     local mouseX, mouseY = love.mouse.getPosition()
-    suit.updateMouse((mouseX) * factorEscala, (mouseY) * factorEscala)
 
-    if suit.Button("Jugar", suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
+    suit.updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
+    print(mouseX .. "\t" .. mouseY .. "\t" .. factorEscalaAlto .. "\t" .. factorEscalaAncho)
+
+    if suit.Button("Jugar", suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         game_screen = require("screens/game")
         change_screen(game_screen)
     end
-    if suit.Button("Preferencias", suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
+    if suit.Button("Preferencias", suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
     if suit.Button("Instrucciones", suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
-        os.exit()
+        print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
     if suit.Button("Salir", suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
         os.exit()
     end
 
 
-    local input = {text = ""} -- text input data
-
-
-
-
-    --[[ if suit.Button("Jugar", 0, 0).hit then
-        show_message = true
-        print("BOTÓN JUGAR PULSADO")
-    end
-    if suit.Button("Instrucciones", 0, 200).hit then
-        show_message = true
-        print("BOTÓN INSTRUCCIONES PULSADO")
-    end    
-    if suit.Button("Preferencias", 0, 300).hit then
-        show_message = true
-        print("BOTÓN PREFERENCIAS PULSADO")
-    end ]]
 end
 
 function widgetsDraw()
