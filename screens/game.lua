@@ -215,6 +215,14 @@ game.niveles = {
         name = "Nivel 3",
         max_enemies = 4,
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
+        plataformas = { -- TODO: cambiar definicion de plataformas 
+            { name = "Bloque 1", x = 0, y = 250, width = 175, height = 5 },
+            { name = "Bloque 2", x = 525, y = 250, width = 175, height = 5},
+            { name = "Bloque 3", x = 0, y = 480, width = 250, height = 5},
+            { name = "Bloque 4", x = 450, y = 480, width = 250, height = 5},
+            { name = "Bloque 5", x = 325, y = 670, width = 50, height = 25},
+            { name = "Bloque 6", x = 300, y = 695, width = 100, height = 25}
+        }
         load = function(world, game)
             sky = SkyClass.new(world, game)
             table.insert(plataformas, BlockClass.new("Bloque 1", 0, 250, 175, 5, world))
