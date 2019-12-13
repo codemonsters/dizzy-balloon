@@ -1,4 +1,4 @@
-    local bump = require "libraries/bump/bump"
+local bump = require "libraries/bump/bump"
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
 -- local jugador = PlayerClass.new()
