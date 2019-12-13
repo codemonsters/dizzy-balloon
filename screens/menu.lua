@@ -30,14 +30,7 @@ function menu.draw()
     love.graphics.translate(desplazamientoX, desplazamientoY)
     love.graphics.scale(factorEscala, factorEscala)
     love.graphics.setColor(255, 0, 0, 255)
-    love.graphics.printf(
-        "DIZZY BALLOON\n\n=PRESS FIRE TO START=",
-        font_menu,
-        0,
-        math.floor((SCREEN_HEIGHT - font_menu:getHeight() * 2) / 2),
-        SCREEN_WIDTH,
-        "center"
-    )
+    
     jugador:draw()
 
     -- DEBUG: marcas en los extremos diagonales de la pantalla
@@ -71,14 +64,20 @@ end ]]
 
 --ESta función hace cosas :)
 function widgetsUpdate()
-    suit.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.2)
-    suit.layout:padding(0, SCREEN_WIDTH * 0.04)
+    suit.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.1)
+    suit.layout:padding(0, SCREEN_WIDTH * 0.025)
     local mouseX, mouseY = love.mouse.getPosition()
+    love.graphics.setFont(font_buttons)
 
     suit.updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
-    print(mouseX .. "\t" .. mouseY .. "\t" .. factorEscalaAlto .. "\t" .. factorEscalaAncho)
 
-    if suit.Button("Jugar", suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+    suit.Label("Dizzy balloon", suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.20))
+
+
+    
+
+
+    if suit.Button("Jugar", {color = {normal = {bg = {0, 0, 0, 0.1}, fg = {0, 0, 0}}, hovered = {bg = {192, 57, 43}, fg = {255, 255, 255}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         game_screen = require("screens/game")
         change_screen(game_screen)
     end

@@ -25,6 +25,8 @@ function love.load()
     love.graphics.setDefaultFilter("nearest", "linear") -- Cambiamos el filtro usado durante el escalado
 
     font_menu = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 50) -- Orange Juice 2.0 by Brittney Murphy Design https://brittneymurphydesign.com
+    font_buttons = love.graphics.newFont("assets/fonts/GROBOLD.ttf", 50) -- Orange Juice 2.0 by Brittney Murphy Design https://brittneymurphydesign.com
+
 
     font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
     love.graphics.setFont(font_menu)
