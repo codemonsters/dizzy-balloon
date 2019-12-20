@@ -1,6 +1,8 @@
 local animLoader = {}
 -- No se puede poner nombres a los frames
 animacionTestJugador = {
+
+
     keyFrames = {
         {
             setParams = function(jugador)

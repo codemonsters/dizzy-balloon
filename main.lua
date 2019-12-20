@@ -1,4 +1,5 @@
 log = require "libraries/log/log" -- https://github.com/rxi/log.lua
+suit = require "libraries/suit"
 
 mobile = false
 
@@ -24,6 +25,8 @@ function love.load()
     love.graphics.setDefaultFilter("nearest", "linear") -- Cambiamos el filtro usado durante el escalado
 
     font_menu = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 50) -- Orange Juice 2.0 by Brittney Murphy Design https://brittneymurphydesign.com
+    font_buttons = love.graphics.newFont("assets/fonts/GROBOLD.ttf", 50) -- Orange Juice 2.0 by Brittney Murphy Design https://brittneymurphydesign.com
+
 
     font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
     love.graphics.setFont(font_menu)
@@ -92,8 +95,8 @@ end
 function actualizaVariablesEscalado(window_width, window_height)
     -- calcula el valor de las variables: factorEscala, desplazamientoX, desplazamientoY (utilizadas para escalar y desplazar el viewport del juego dentro de la ventana principal)
 
-    local factorEscalaAncho = window_width / SCREEN_WIDTH
-    local factorEscalaAlto = window_height / SCREEN_HEIGHT
+    factorEscalaAncho = window_width / SCREEN_WIDTH
+    factorEscalaAlto = window_height / SCREEN_HEIGHT
     if factorEscalaAncho < factorEscalaAlto then
         factorEscala = factorEscalaAncho
     else
