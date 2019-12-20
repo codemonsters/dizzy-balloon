@@ -81,11 +81,13 @@ local animList = {}
 
 function animLoader:applyAnim(target, anim)
     anim.target = target
-    
+
     table.insert(animList, anim)
     anim.number = table.getn(animList)
 
     anim.counter = 0
+    anim.frameIndex = 1
+    anim.currFrame = nil
     self:loadKeyFrame(anim, anim.frameIndex)
 end
 
@@ -93,7 +95,10 @@ function animLoader:update(dt)
     for numAnim, anim in pairs(animList) do
         if anim then
             anim.counter = anim.counter + dt
-            if anim.counter >= anim.currFrame.time then
+            if not anim.currFrame then
+                anim = nil
+            
+            elseif anim.counter >= anim.currFrame.time then
                 self:loadKeyFrame(anim, anim.frameIndex + 1)
     
                 anim.counter = 0
@@ -106,7 +111,7 @@ function animLoader:loadKeyFrame(anim, index)
     anim.frameIndex = index
 
     anim.currFrame = anim.keyFrames[index]
-    --print(k)
+
     if not anim.currFrame then
         table.remove(animList, findIndexInTable(animList, anim))
     else
