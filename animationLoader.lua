@@ -1,12 +1,7 @@
 local animLoader = {}
 
 animacionTestJugador = {
-menu
-    frame1  = {
-        setParams = function(jugador)
-            jugador.right = true
-        end,
-        time = 3
+
 
     keyFrames = {
         frame1  = {
@@ -34,7 +29,6 @@ menu
             end,
             time = 0.5
         }
-master
     },
     
     orderedKeys = {}, -- claves de los keyframes ordenados
