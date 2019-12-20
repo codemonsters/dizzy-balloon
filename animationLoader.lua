@@ -5,7 +5,7 @@ animacionTestJugador = {
         setParams = function(jugador)
             jugador.right = true
         end,
-        time = 1
+        time = 3
     },
     frame2  = {
         setParams = function(jugador) 

@@ -71,25 +71,26 @@ function widgetsUpdate()
 
     suit.updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
 
-    suit.Label("Dizzy balloon", suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.20))
+    suit.Label("DIZZY BALLOON", suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.20))
 
 
     
 
 
-    if suit.Button("Jugar", {color = {normal = {bg = {0, 0, 0, 0.1}, fg = {0, 0, 0}}, hovered = {bg = {192, 57, 43}, fg = {255, 255, 255}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+    if suit.Button("Jugar", {color = {normal = {bg = {0, 0, 0, 0.1}, fg = {0, 0, 0}}, active = {bg = {0, 0, 0, 0.1}, fg = {255, 255, 255}}}},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         game_screen = require("screens/game")
         change_screen(game_screen)
     end
-    if suit.Button("Preferencias", suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+    if suit.Button("Preferencias", {color = {normal = {bg = {0, 0, 0, 0.1}, fg = {0, 0, 0}}, active = {bg = {0, 0, 0, 0.1}, fg = {255, 255, 255}}}}, suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
-    if suit.Button("Instrucciones", suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
+    if suit.Button("Instrucciones", {color = {normal = {bg = {0, 0, 0, 0.1}, fg = {0, 0, 0}}, active = {bg = {0, 0, 0, 0.1}, fg = {255, 255, 255}}}}, suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
-    if suit.Button("Salir", suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
+    if suit.Button("Salir", {color = {normal = {bg = {0, 0, 0, 0.1}, fg = {0, 0, 0}}, active = {bg = {0, 0, 0, 0.1}, fg = {255, 255, 255}}}}, suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)).hit then
         os.exit()
     end
+    
 
 
 end
