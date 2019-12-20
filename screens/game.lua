@@ -56,7 +56,7 @@ game.states = {
         end,
         update = function(self, dt)
             -- comprobamos si debemos crear un enemigo nuevo
-            if game.currentLevel.max_enemies > game.currentLevel.#enemies then
+            if game.currentLevel.max_enemies > #game.currentLevel.enemies then
                 temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
                 if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
                     if math.random() > 0.5 then
@@ -179,7 +179,7 @@ game.states = {
         load = function(self)
         end,
         update = function(self, dt)
-            game.loadlevel(LevelClass.new(game.levelDefinitions[(game.currentLevel.id + 1)], game))
+            game.loadlevel(LevelClass.new(LevelDefinitions[(game.currentLevel.id + 1)], game))
             game.change_state(game.states.jugando)
         end,
         draw = function(self)
@@ -226,7 +226,7 @@ function game.load()
     gamepadCanvas = love.graphics.newCanvas(hud_width, hud_height)
     vidas = 3
     bombasAereas = 9
-    game.currentLevel = LevelClass.new(game.levelDefinitions[1], game)
+    game.currentLevel = LevelClass.new(LevelDefinitions[1], game)
 end
 
 function game.update(dt)

@@ -2,6 +2,7 @@ local BlockClass = require("gameobjects/block")
 local SkyClass = require("gameobjects/sky")
 local GoalClass = require("gameobjects/goal")
 local LimitClass = require("gameobjects/limit")
+local bump = require "libraries/bump/bump"
 
 local LevelClass = {
     name = "Level"
