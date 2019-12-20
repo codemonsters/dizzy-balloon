@@ -280,7 +280,9 @@ local Bomb = {
                             if not cols[i].other.isSeed or (cols[i].other.isSeed and cols[i].other.state ~= cols[i].other.states.sky) then
                                 log.debug("La explosión ha alcanzado a: " .. cols[i].other.name)
                                 self.game.kill_object(cols[i].other)
-                                self.lastExplosionHits = self.lastExplosionHits + 1
+                                if not cols[i].other.isMushroom then
+                                    self.lastExplosionHits = self.lastExplosionHits + 1
+                                end
                             elseif cols[i].other.isSeed and cols[i].other.state == cols[i].other.states.sky then
                                 self.lastExplosionHits = self.lastExplosionHits + 1
                             end

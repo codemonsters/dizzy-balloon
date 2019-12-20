@@ -1,4 +1,4 @@
-local bump = require "libraries/bump/bump"
+    local bump = require "libraries/bump/bump"
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
 -- local jugador = PlayerClass.new()
@@ -125,8 +125,8 @@ game.states = {
                 love.graphics.setBlendMode("alpha")
 
                 -- El fondo del mundo
-                love.graphics.setColor(20, 00, 200)
-                love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH - 1, WORLD_HEIGHT - 1)
+                love.graphics.setColor(192, 0, 109)
+                love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
 
                 -- objetos del juego
 
@@ -207,8 +207,8 @@ game.niveles = {
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
         load = function(world, game)
             sky = SkyClass.new(world, game)
-            table.insert(plataformas, BlockClass.new("Bloque 1", 150, 600, 400, 10, world))
-            table.insert(plataformas, BlockClass.new("Bloque 2", 200, 200, 300, 10, world))
+            table.insert(plataformas, BlockClass.new("Bloque 1", 150, 620, 400, 10, world))
+            table.insert(plataformas, BlockClass.new("Bloque 2", 200, 220, 300, 10, world))
         end
     },
     {
@@ -217,12 +217,12 @@ game.niveles = {
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
         load = function(world, game)
             sky = SkyClass.new(world, game)
-            table.insert(plataformas, BlockClass.new("Bloque 1", 0, 230, 175, 5, world))
-            table.insert(plataformas, BlockClass.new("Bloque 2", 525, 230, 175, 5, world))
-            table.insert(plataformas, BlockClass.new("Bloque 3", 0, 460, 250, 5, world))
-            table.insert(plataformas, BlockClass.new("Bloque 4", 450, 460, 250, 5, world))
-            table.insert(plataformas, BlockClass.new("Bloque 5", 325, 650, 50, 25, world))
-            table.insert(plataformas, BlockClass.new("Bloque 6", 300, 675, 100, 25, world))
+            table.insert(plataformas, BlockClass.new("Bloque 1", 0, 250, 175, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 2", 525, 250, 175, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 3", 0, 480, 250, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 4", 450, 480, 250, 5, world))
+            table.insert(plataformas, BlockClass.new("Bloque 5", 325, 670, 50, 25, world))
+            table.insert(plataformas, BlockClass.new("Bloque 6", 300, 695, 100, 25, world))
         end
     },
     {
@@ -231,8 +231,8 @@ game.niveles = {
         jugador_posicion_inicial = {1, WORLD_HEIGHT - PlayerClass.height},
         load = function(world, game)
             sky = SkyClass.new(world, game)
-            table.insert(plataformas, BlockClass.new("Bloque 1", 150, 435, 400, 30, world))
-            table.insert(plataformas, BlockClass.new("Bloque 2", 335, 20, 30, 415, world))
+            table.insert(plataformas, BlockClass.new("Bloque 1", 150, 455, 400, 30, world))
+            table.insert(plataformas, BlockClass.new("Bloque 2", 335, 20, 30, 435, world))
         end
     },
     {
@@ -243,15 +243,30 @@ game.niveles = {
             sky = SkyClass.new(world, game)
             table.insert(plataformas, BlockClass.new("Bloque 1", 160, 20, 15, 235, world))
             table.insert(plataformas, BlockClass.new("Bloque 2", 525, 20, 15, 235, world))
-            table.insert(plataformas, BlockClass.new("Bloque 3", 160, 465, 15, 235, world))
-            table.insert(plataformas, BlockClass.new("Bloque 4", 525, 465, 15, 235, world))
+            table.insert(plataformas, BlockClass.new("Bloque 3", 160, 485, 15, 235, world))
+            table.insert(plataformas, BlockClass.new("Bloque 4", 525, 485, 15, 235, world))
         end
     }
 }
 
+function game.getNewRespawnPos()
+    local respawnX, respawnY = jugador.x, jugador.y
+    local x, y, cols, len = jugador.world:check(jugador, jugador.x, jugador.y, jugador.collisions_filter)
+    for i = 1, len do
+        if cols[i].other.x + cols[i].other.width <= WORLD_WIDTH - jugador.width then
+            respawnX = cols[i].other.x + cols[i].other.width
+        else
+            respawnY = cols[i].other.y - jugador.height
+            respawnX = nivel_actual.jugador_posicion_inicial[1]
+        end
+    end
+    return respawnX, respawnY
+end
+
 function game.loadlife()
     jugador.x = nivel_actual.jugador_posicion_inicial[1]
     jugador.y = nivel_actual.jugador_posicion_inicial[2]
+    jugador.x, jugador.y = game.getNewRespawnPos()
     world:update(jugador, jugador.x, jugador.y, jugador.width, jugador.height)
     print("loadlife. pos jugador ahora = (" .. jugador.x .. ", " .. jugador.y .. ")")
 end

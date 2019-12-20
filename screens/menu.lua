@@ -1,4 +1,5 @@
 local PlayerClass = require("gameobjects/player")
+local EnemyClass = require("gameobjects/enemy")
 local bump = require "libraries/bump/bump"
 local BlockClass = require("gameobjects/block")
 local animLoader = require("animationLoader")
@@ -9,15 +10,20 @@ local negro = {1, 1, 1, 1}
 function menu.load()
     world = bump.newWorld(50)
     jugador = PlayerClass.new(world, nil)
+    enemigo1 = EnemyClass.new(enemigo, WORLD_HEIGHT, WORLD_HEIGHT/2, world, nil, 0)
     local borderWidth = 50
     BlockClass.new("Suelo", 0, WORLD_HEIGHT, SCREEN_WIDTH, borderWidth, world)
 
+
+    animLoader:applyAnim(enemigo1, animacionTestEnemigo)
     -- asociar el animador al jugador y cargar una animación en el
     animLoader:applyAnim(jugador, animacionTestJugador)
+    
 end
 
 function menu.update(dt)
     jugador:update(dt)
+    enemigo1:update(dt)
     animLoader:update(dt)
 
     widgetsUpdate()
@@ -32,6 +38,7 @@ function menu.draw()
     love.graphics.setColor(255, 0, 0, 255)
     
     jugador:draw()
+    enemigo1:draw()
 
     -- DEBUG: marcas en los extremos diagonales de la pantalla
     love.graphics.setColor(255, 0, 0)
