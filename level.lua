@@ -19,7 +19,7 @@ function LevelClass.new(levelDefinition, game)
     level.levelDefinition = levelDefinition
     level.max_enemies = level.levelDefinition.max_enemies
     level.blocks = {}
-    for block in level.levelDefinition.blocks do --TODO revisar
+    for _, block in ipairs(level.levelDefinition.blocks) do
         table.insert(level.blocks, BlockClass.new(block.name, block.x, block.y, block.width, block.height, level.world))
     end
     level.enemies = {}

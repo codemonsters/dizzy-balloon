@@ -104,20 +104,21 @@ game.states = {
 
             if fireRequested then
                 fireRequested = false
-                if bomb.state == bomb.states.inactive and not (jugador.montado and jugador.montura.isBalloon) then
-                    x, y = jugador.x, jugador.y
+                -- TODO: Mover el jugador a su nivel (ej: a game.currentLevel.player)
+                if game.currentLevel.bomb.state == game.currentLevel.bomb.states.inactive and not (game.currentLevel.player.montado and game.currentLevel.player.montura.isBalloon) then
+                    x, y = game.currentLevel.player.x, game.currentLevel.player.y
                     if fireInitialDirection == "down" then
-                        if not jugador.not_supported then
-                            jugador.x, jugador.y = world:move(jugador, jugador.x, jugador.y - bomb.height * 1.05)
+                        if not game.currentLevel.player.not_supported then
+                            game.currentLevel.player.x, game.currentLevel.player.y = world:move(game.currentLevel.player, game.currentLevel.player.x, game.currentLevel.player.y - game.currentLevel.bomb.height * 1.05)
                             bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
                         end
                     elseif bombasAereas > 0 then
-                        bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
+                        game.currentLevel.bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
                         bombasAereas = bombasAereas - 1
                     end
                 end
             end
-            bomb:update(dt)
+            game.currentLevel.bomb:update(dt)
         end,
         draw = function(self)
             love.graphics.setCanvas(game.currentLevel.worldCanvas) -- a partir de ahora dibujamos en el canvas
@@ -147,7 +148,7 @@ game.states = {
                     block:draw()
                 end
 
-                bomb:draw()
+                game.currentLevel.bomb:draw()
 
                 for i, mushroom in ipairs(game.currentLevel.mushrooms) do
                     mushroom:draw()
@@ -202,8 +203,8 @@ function game.getNewRespawnPos()
 end
 
 function game.loadlife()
-    game.currentLevel.player.x = currentLevel.player_initial_respawn_position[1]
-    game.currentLevel.player.y = currentLevel.player_initial_respawn_position[2]
+    game.currentLevel.player.x = game.currentLevel.player_initial_respawn_position[1]
+    game.currentLevel.player.y = game.currentLevel.player_initial_respawn_position[2]
     game.currentLevel.x, game.currentLevel.y = game.getNewRespawnPos()
     game.currentLevel.world:update(game.currentLevel.player, game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
 end
@@ -212,8 +213,8 @@ function game.loadlevel(level)
     game.currentLevel = level --TODO: cambiar en todos los archivos las referencias de level.world a level.currentLevel.world
     game.currentLevel.player = PlayerClass.new(game.currentLevel.world, game)
     game.currentLevel.bomb = BombClass.new("Bomb", game)
+    
     local borderWidth = 50
-
     table.insert(game.currentLevel.blocks, BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, borderWidth, game.currentLevel.world))
     table.insert(game.currentLevel.blocks, BlockClass.new("Pared Izquierda", borderWidth, 0, borderWidth, WORLD_HEIGHT, game.currentLevel.world))
     table.insert(game.currentLevel.blocks, BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, borderWidth, WORLD_HEIGHT, game.currentLevel.world))
@@ -227,6 +228,12 @@ function game.load()
     vidas = 3
     bombasAereas = 9
     game.currentLevel = LevelClass.new(LevelDefinitions[1], game)
+    
+    game.loadlevel(game.currentLevel)
+    game.change_state(game.states.jugando)
+    
+    --game.state = game.states.cambiandoDeNivel
+    --game.change_state(game.state)
 end
 
 function game.update(dt)
