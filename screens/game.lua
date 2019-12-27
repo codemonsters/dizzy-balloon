@@ -1,7 +1,6 @@
 local bump = require "libraries/bump/bump"
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
--- local jugador = PlayerClass.new()
 local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
 -- local sky = SkyClass.new(world, game)
@@ -85,7 +84,7 @@ game.states = {
                 end
             end
 
-            jugador:update(dt)
+            game.currentLevel.player:update(dt)
 
             for i, enemy in ipairs(game.currentLevel.enemies) do
                 enemy:update(dt)
@@ -110,10 +109,10 @@ game.states = {
                     if fireInitialDirection == "down" then
                         if not game.currentLevel.player.not_supported then
                             game.currentLevel.player.x, game.currentLevel.player.y = world:move(game.currentLevel.player, game.currentLevel.player.x, game.currentLevel.player.y - game.currentLevel.bomb.height * 1.05)
-                            bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
+                            bomb:launch(x, y, fireInitialDirection, game.currentLevel.player:vx(), game.currentLevel.player:vy())
                         end
                     elseif bombasAereas > 0 then
-                        game.currentLevel.bomb:launch(x, y, fireInitialDirection, jugador:vx(), jugador:vy())
+                        game.currentLevel.bomb:launch(x, y, fireInitialDirection, game.currentLevel.player:vx(), game.currentLevel.player:vy())
                         bombasAereas = bombasAereas - 1
                     end
                 end
@@ -131,7 +130,7 @@ game.states = {
 
                 -- objetos del juego
 
-                jugador:draw()
+                game.currentLevel.player:draw()
 
                 for i, enemy in ipairs(game.currentLevel.enemies) do
                     enemy:draw()
@@ -189,13 +188,13 @@ game.states = {
 }
 
 function game.getNewRespawnPos()
-    local respawnX, respawnY = jugador.x, jugador.y
-    local x, y, cols, len = jugador.world:check(jugador, jugador.x, jugador.y, jugador.collisions_filter)
+    local respawnX, respawnY = game.currentLevel.player.x, game.currentLevel.player.y
+    local x, y, cols, len = game.currentLevel.player.world:check(game.currentLevel.player, game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.collisions_filter)
     for i = 1, len do
-        if cols[i].other.x + cols[i].other.width <= WORLD_WIDTH - jugador.width then
+        if cols[i].other.x + cols[i].other.width <= WORLD_WIDTH - game.currentLevel.player.width then
             respawnX = cols[i].other.x + cols[i].other.width
         else
-            respawnY = cols[i].other.y - jugador.height
+            respawnY = cols[i].other.y - game.currentLevel.player.height
             respawnX = nivel_actual.jugador_posicion_inicial[1]
         end
     end
@@ -322,7 +321,7 @@ function game.keypressed(key, scancode, isrepeat)
     elseif key == "l" then
         game.change_state(game.states.cambiandoDeNivel)
     elseif key == "z" then
-        print("Posición del jugador (x, y) = " .. jugador.x .. ", " .. jugador.y)
+        print("Posición del jugador (x, y) = " .. game.currentLevel.player.x .. ", " .. game.currentLevel.player.y)
     end
 end
 
