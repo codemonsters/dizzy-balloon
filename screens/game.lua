@@ -64,7 +64,7 @@ game.states = {
                             "enemigoIzq",
                             EnemyClass.width,
                             EnemyClass.height,
-                            world,
+                            game.currentLevel.world,
                             game,
                             math.random() * 360
                         )
@@ -74,7 +74,7 @@ game.states = {
                             "enemigoDer",
                             WORLD_WIDTH - EnemyClass.width,
                             EnemyClass.height,
-                            world,
+                            game.currentLevel.world,
                             game,
                             math.random() * 360
                         )
@@ -103,13 +103,12 @@ game.states = {
 
             if fireRequested then
                 fireRequested = false
-                -- TODO: Mover el jugador a su nivel (ej: a game.currentLevel.player)
                 if game.currentLevel.bomb.state == game.currentLevel.bomb.states.inactive and not (game.currentLevel.player.montado and game.currentLevel.player.montura.isBalloon) then
                     x, y = game.currentLevel.player.x, game.currentLevel.player.y
                     if fireInitialDirection == "down" then
                         if not game.currentLevel.player.not_supported then
-                            game.currentLevel.player.x, game.currentLevel.player.y = world:move(game.currentLevel.player, game.currentLevel.player.x, game.currentLevel.player.y - game.currentLevel.bomb.height * 1.05)
-                            bomb:launch(x, y, fireInitialDirection, game.currentLevel.player:vx(), game.currentLevel.player:vy())
+                            game.currentLevel.player.x, game.currentLevel.player.y = game.currentLevel.world:move(game.currentLevel.player, game.currentLevel.player.x, game.currentLevel.player.y - game.currentLevel.bomb.height * 1.05)
+                            game.currentLevel.bomb:launch(x, y, fireInitialDirection, game.currentLevel.player:vx(), game.currentLevel.player:vy())
                         end
                     elseif bombasAereas > 0 then
                         game.currentLevel.bomb:launch(x, y, fireInitialDirection, game.currentLevel.player:vx(), game.currentLevel.player:vy())
@@ -209,14 +208,14 @@ function game.loadlife()
 end
 
 function game.loadlevel(level)
-    game.currentLevel = level --TODO: cambiar en todos los archivos las referencias de level.world a level.currentLevel.world
+    game.currentLevel = level
     game.currentLevel.player = PlayerClass.new(game.currentLevel.world, game)
-    game.currentLevel.bomb = BombClass.new("Bomb", game)
+    game.currentLevel.bomb = BombClass.new("Bomb", game.currentLevel.world, game)
     
     local borderWidth = 50
-    table.insert(game.currentLevel.blocks, BlockClass.new("Suelo", 0, WORLD_HEIGHT, WORLD_WIDTH, borderWidth, game.currentLevel.world))
-    table.insert(game.currentLevel.blocks, BlockClass.new("Pared Izquierda", borderWidth, 0, borderWidth, WORLD_HEIGHT, game.currentLevel.world))
-    table.insert(game.currentLevel.blocks, BlockClass.new("Pared Derecha", WORLD_WIDTH, 0, borderWidth, WORLD_HEIGHT, game.currentLevel.world))
+    table.insert(game.currentLevel.blocks, BlockClass.new("Suelo", -borderWidth, WORLD_HEIGHT, WORLD_WIDTH + 2 * borderWidth, borderWidth, game.currentLevel.world))
+    table.insert(game.currentLevel.blocks, BlockClass.new("Pared Izquierda", -borderWidth, -borderWidth, borderWidth, WORLD_HEIGHT + 2 * borderWidth, game.currentLevel.world))
+    table.insert(game.currentLevel.blocks, BlockClass.new("Pared Derecha", WORLD_WIDTH, -borderWidth, borderWidth, WORLD_HEIGHT + 2 * borderWidth, game.currentLevel.world))
 
     game.loadlife()
 end

@@ -133,7 +133,7 @@ function Enemy.new(name, x, y, world, game, direction)
     enemy.direction = direction
     enemy.x = x
     enemy.y = y
-    world:add(enemy, enemy.x, enemy.y, Enemy.width, Enemy.height)
+    enemy.world:add(enemy, enemy.x, enemy.y, Enemy.width, Enemy.height)
     setmetatable(enemy, Enemy)
     enemy:change_state(enemy.states.moving)
     return enemy

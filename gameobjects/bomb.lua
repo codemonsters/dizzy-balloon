@@ -31,7 +31,7 @@ local Bomb = {
             },
             load = function(self)
 
-                local items, len = world:queryRect(self.x, self.y + self.height, self.width, self.height)
+                local items, len = self.world:queryRect(self.x, self.y + self.height, self.width, self.height)
                 for i = 1, len do
                     if items[i].isEnemy then
                         self.montado = true
@@ -326,7 +326,7 @@ local Bomb = {
 }
 Bomb.__index = Bomb
 
-function Bomb.new(name, game)
+function Bomb.new(name, world, game)
     local bomb = {}
     bomb.game = game
     bomb.name = name
