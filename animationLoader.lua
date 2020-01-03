@@ -1,8 +1,6 @@
 local animLoader = {}
 -- No se puede poner nombres a los frames
 animacionTestJugador = {
-
-
     keyFrames = {
         {
             setParams = function(jugador)
@@ -15,21 +13,21 @@ animacionTestJugador = {
                 jugador.right = false
                 jugador.left = true
             end,
-            time = 1
+            time = 1.75
         },
         {
             setParams = function(jugador)
                 jugador.right = false 
                 jugador.left = false
             end,
-            time = 0.5
+            time = 1.5
         },
         {
             setParams = function(jugador) 
                 jugador.left = false
                 jugador.right = true
             end,
-            time = 0.5
+            time = 0.15
         },
 
         {
@@ -62,13 +60,13 @@ animacionTestEnemigo = {
             setParams = function(enemigo)
                 enemigo.velocidad_x = -math.sqrt(8)
             end,
-            time = 2.2
+            time = 2.5
         },
         {
             setParams = function(enemigo)
                 enemigo.velocidad_y = -math.sqrt(8)
             end,
-            time = 1
+            time = 1.2
         },
     },
 
@@ -118,7 +116,7 @@ function animLoader:loadKeyFrame(anim, index)
         table.remove(animList, findIndexInTable(animList, anim))
     else
         anim.currFrame.setParams(anim.target)
-    end
+end
 end
 
 function findIndexInTable(tabla,valor)
