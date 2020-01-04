@@ -103,15 +103,35 @@ game.states = {
 
             if fireRequested then
                 fireRequested = false
-                if game.currentLevel.bomb.state == game.currentLevel.bomb.states.inactive and not (game.currentLevel.player.montado and game.currentLevel.player.montura.isBalloon) then
+                if
+                    game.currentLevel.bomb.state == game.currentLevel.bomb.states.inactive and
+                        not (game.currentLevel.player.montado and game.currentLevel.player.montura.isBalloon)
+                 then
                     x, y = game.currentLevel.player.x, game.currentLevel.player.y
                     if fireInitialDirection == "down" then
                         if not game.currentLevel.player.not_supported then
-                            game.currentLevel.player.x, game.currentLevel.player.y = game.currentLevel.world:move(game.currentLevel.player, game.currentLevel.player.x, game.currentLevel.player.y - game.currentLevel.bomb.height * 1.05)
-                            game.currentLevel.bomb:launch(x, y, fireInitialDirection, game.currentLevel.player:vx(), game.currentLevel.player:vy())
+                            game.currentLevel.player.x, game.currentLevel.player.y =
+                                game.currentLevel.world:move(
+                                game.currentLevel.player,
+                                game.currentLevel.player.x,
+                                game.currentLevel.player.y - game.currentLevel.bomb.height * 1.05
+                            )
+                            game.currentLevel.bomb:launch(
+                                x,
+                                y,
+                                fireInitialDirection,
+                                game.currentLevel.player:vx(),
+                                game.currentLevel.player:vy()
+                            )
                         end
                     elseif bombasAereas > 0 then
-                        game.currentLevel.bomb:launch(x, y, fireInitialDirection, game.currentLevel.player:vx(), game.currentLevel.player:vy())
+                        game.currentLevel.bomb:launch(
+                            x,
+                            y,
+                            fireInitialDirection,
+                            game.currentLevel.player:vx(),
+                            game.currentLevel.player:vy()
+                        )
                         bombasAereas = bombasAereas - 1
                     end
                 end
@@ -188,7 +208,13 @@ game.states = {
 
 function game.getNewRespawnPos()
     local respawnX, respawnY = game.currentLevel.player.x, game.currentLevel.player.y
-    local x, y, cols, len = game.currentLevel.player.world:check(game.currentLevel.player, game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.collisions_filter)
+    local x, y, cols, len =
+        game.currentLevel.player.world:check(
+        game.currentLevel.player,
+        game.currentLevel.player.x,
+        game.currentLevel.player.y,
+        game.currentLevel.player.collisions_filter
+    )
     for i = 1, len do
         if cols[i].other.x + cols[i].other.width <= WORLD_WIDTH - game.currentLevel.player.width then
             respawnX = cols[i].other.x + cols[i].other.width
@@ -204,18 +230,54 @@ function game.loadlife()
     game.currentLevel.player.x = game.currentLevel.player_initial_respawn_position[1]
     game.currentLevel.player.y = game.currentLevel.player_initial_respawn_position[2]
     game.currentLevel.x, game.currentLevel.y = game.getNewRespawnPos()
-    game.currentLevel.world:update(game.currentLevel.player, game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
+    game.currentLevel.world:update(
+        game.currentLevel.player,
+        game.currentLevel.player.x,
+        game.currentLevel.player.y,
+        game.currentLevel.player.width,
+        game.currentLevel.player.height
+    )
 end
 
 function game.loadlevel(level)
     game.currentLevel = level
     game.currentLevel.player = PlayerClass.new(game.currentLevel.world, game)
     game.currentLevel.bomb = BombClass.new("Bomb", game.currentLevel.world, game)
-    
+
     local borderWidth = 50
-    table.insert(game.currentLevel.blocks, BlockClass.new("Suelo", -borderWidth, WORLD_HEIGHT, WORLD_WIDTH + 2 * borderWidth, borderWidth, game.currentLevel.world))
-    table.insert(game.currentLevel.blocks, BlockClass.new("Pared Izquierda", -borderWidth, -borderWidth, borderWidth, WORLD_HEIGHT + 2 * borderWidth, game.currentLevel.world))
-    table.insert(game.currentLevel.blocks, BlockClass.new("Pared Derecha", WORLD_WIDTH, -borderWidth, borderWidth, WORLD_HEIGHT + 2 * borderWidth, game.currentLevel.world))
+    table.insert(
+        game.currentLevel.blocks,
+        BlockClass.new(
+            "Suelo",
+            -borderWidth,
+            WORLD_HEIGHT,
+            WORLD_WIDTH + 2 * borderWidth,
+            borderWidth,
+            game.currentLevel.world
+        )
+    )
+    table.insert(
+        game.currentLevel.blocks,
+        BlockClass.new(
+            "Pared Izquierda",
+            -borderWidth,
+            -borderWidth,
+            borderWidth,
+            WORLD_HEIGHT + 2 * borderWidth,
+            game.currentLevel.world
+        )
+    )
+    table.insert(
+        game.currentLevel.blocks,
+        BlockClass.new(
+            "Pared Derecha",
+            WORLD_WIDTH,
+            -borderWidth,
+            borderWidth,
+            WORLD_HEIGHT + 2 * borderWidth,
+            game.currentLevel.world
+        )
+    )
 
     game.loadlife()
 end
@@ -226,10 +288,10 @@ function game.load()
     vidas = 3
     bombasAereas = 9
     game.currentLevel = LevelClass.new(LevelDefinitions[1], game)
-    
+
     game.loadlevel(game.currentLevel)
     game.change_state(game.states.jugando)
-    
+
     --game.state = game.states.cambiandoDeNivel
     --game.change_state(game.state)
 end
@@ -259,7 +321,7 @@ function game.draw()
         love.graphics.draw(atlas, BombClass.states.planted.quads[1].quad, 94, 216, 0, 3, 3) -- dibujamos la bomba en el hud
 
         love.graphics.setColor(255, 0, 0)
-        love.graphics.draw(circle, 35, SCREEN_HEIGHT -280, 0, 1, 1)
+        love.graphics.draw(circle, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
         love.graphics.setColor(255, 255, 255)
 
         -- DEBUG: marcas en los extremos diagonales del canvas
@@ -400,7 +462,10 @@ end
 
 function game.pointerreleased(pointer)
     if pointer.x < SCREEN_WIDTH / 2 then
-        game.currentLevel.player.left, game.currentLevel.player.right, game.currentLevel.player.up, game.currentLevel.player.down = false, false, false, false
+        game.currentLevel.player.left,
+            game.currentLevel.player.right,
+            game.currentLevel.player.up,
+            game.currentLevel.player.down = false, false, false, false
     else
         jugadorpuedesaltar = true
     end
@@ -457,7 +522,7 @@ end
 function game.remove_enemy(enemy)
     for i, v in ipairs(game.currentLevel.enemies) do
         if v == enemy then
-            world:remove(enemy)
+            game.currentLevel.world:remove(enemy)
             table.remove(game.currentLevel.enemies, i)
             break
         end
@@ -467,15 +532,14 @@ end
 function game.remove_balloon(balloon)
     for i, v in ipairs(game.currentLevel.balloons) do
         if v == balloon then
-            world:remove(balloon)
-            table.remove(game.currentLevel.player, i)
+            game.currentLevel.world:remove(balloon)
+            table.remove(game.currentLevel.balloons, i)
             break
         end
     end
 end
 
 function game.create_balloon_from_seed(seed)
-    --print("CREAR BALON!!!")
     local balloon = BalloonClass.new(seed, game.currentLevel.world, game)
     table.insert(game.currentLevel.balloons, balloon)
     seed:die()
@@ -484,7 +548,7 @@ end
 function game.remove_mushroom(mushroom)
     for i, v in ipairs(game.currentLevel.mushrooms) do
         if v == mushroom then
-            world:remove(mushroom)
+            game.currentLevel.world:remove(mushroom)
             table.remove(game.currentLevel.mushrooms, i)
             break
         end

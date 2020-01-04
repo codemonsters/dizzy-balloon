@@ -27,7 +27,7 @@ local SeedClass = {
                     width = 14,
                     height = 16
                 }
-            },        
+            },
             load = function(self)
                 self.currentframe = 1
                 self.collisions_filter = function(item, other)
@@ -35,11 +35,11 @@ local SeedClass = {
                 end
             end,
             update = function(self, dt)
-                if  self.x > WORLD_WIDTH then 
+                if self.x > WORLD_WIDTH then
                     self.x = 0 - self.width
                 end
                 self.x, self.y, cols, len = self.world:move(self, self.x + self.vx * dt, self.y, self.collisions_filter)
-            end,
+            end
         },
         falling = {
             name = "falling",
@@ -55,7 +55,7 @@ local SeedClass = {
                     height = 19
                 }
             },
-            load = function(self) 
+            load = function(self)
                 self.current_frame = 1
                 self.elapsed_time = 0
                 self.collisions_filter = function(item, other)
@@ -83,7 +83,9 @@ local SeedClass = {
                     --self.elapsed_time = self.elapsed_time - 0.5
                     self.elapsed_time = math.fmod(self.elapsed_time, 0.5)
                     self.current_frame = self.current_frame + 1
-                    if self.current_frame > 2 then self.current_frame = 1 end
+                    if self.current_frame > 2 then
+                        self.current_frame = 1
+                    end
                 end
             end
         },
@@ -99,7 +101,7 @@ local SeedClass = {
             load = function(self)
                 self.currentframe = 1
             end,
-            update = function(self, dt) 
+            update = function(self, dt)
                 self.change_state(self, self.states.onthefloor)
             end
         },
@@ -115,7 +117,7 @@ local SeedClass = {
             load = function(self)
                 print("onthefloor.load")
                 self.elapsed_time = 0
-                self.currentframe = 1 
+                self.currentframe = 1
                 self.player_over_timer = 0
             end,
             update = function(self, dt)
@@ -124,7 +126,7 @@ local SeedClass = {
                 -- comprobamos si tenemos encima un jugador
                 local player_over = false
                 -- local items, len = world:querySegment(self.x, self.y - 1, self.x + self.width, self.y - 1)
-                local items, len = world:queryRect(self.x,self.y - self.height/3,self.width, self.height/3)
+                local items, len = self.world:queryRect(self.x, self.y - self.height / 3, self.width, self.height / 3)
                 for i = 1, len do
                     if items[i].isPlayer then
                         player_over = true
@@ -140,7 +142,6 @@ local SeedClass = {
                 else
                     print("PLAYER NOT OVER")
                 end--]]
-
                 if self.player_over_timer > 2 then
                     self.game.create_balloon_from_seed(self)
                     self.change_state(self, self.states.balloon)
@@ -163,13 +164,13 @@ local SeedClass = {
                 self.currentframe = 1
                 self.elapsed_time = 0
             end,
-            update = function(self, dt) 
+            update = function(self, dt)
                 self.elapsed_time = self.elapsed_time + dt
-                
+
                 -- comprobamos si tenemos encima un jugador
                 local player_over = true
                 -- local items, len = world:querySegment(self.x, self.y - 1, self.x + self.width, self.y - 1)
-                local items, len = world:queryRect(self.x, self.y - 2, self.x + self.width, self.y - 2)
+                local items, len = self.world:queryRect(self.x, self.y - 2, self.x + self.width, self.y - 2)
                 for i = 1, len do
                     if items[i].isPlayer then
                         player_over = true
@@ -208,7 +209,7 @@ local SeedClass = {
                     quad = love.graphics.newQuad(161, 66, 15, 14, atlas:getDimensions()),
                     width = 15,
                     height = 14
-                } 
+                }
             },
             load = function(self)
                 print("*** ROTTING ***")
@@ -221,7 +222,7 @@ local SeedClass = {
                     self:die()
                 end
             end
-        },
+        }
     }
 }
 
@@ -264,10 +265,9 @@ function SeedClass:draw()
         self.y,
         0,
         self.width / self.state.quads[self.currentFrame].width,
-        self.height/ self.state.quads[self.currentFrame].height
+        self.height / self.state.quads[self.currentFrame].height
     )
     love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
-
 end
 
 function SeedClass:change_state(new_state)
