@@ -141,7 +141,7 @@ function Player:update(dt)
     end
 
     local feetHeight = 5
-    local items, lenColFeet = world:queryRect(self.x, self.y + self.height + 1, self.width, feetHeight) --detector de los pies del jugador
+    local items, lenColFeet = self.world:queryRect(self.x, self.y + self.height + 1, self.width, feetHeight) --detector de los pies del jugador
 
     --colisiones con los pies del jugador SOLO al bajar
     if self.velocidad_y < 0 then
@@ -166,7 +166,7 @@ function Player:update(dt)
     end
 
     local headHeight = 10
-    local items, len = world:queryRect(self.x, self.y - headHeight, self.width, headHeight) --detector de la cabeza del jugador
+    local items, len = self.world:queryRect(self.x, self.y - headHeight, self.width, headHeight) --detector de la cabeza del jugador
 
     --colisiones con la cabeza del jugador
     for i = 1, len do
