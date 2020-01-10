@@ -1,30 +1,34 @@
---local PlayerClass = require("gameobjects/player")
---local EnemyClass = require("gameobjects/enemy")
---local bump = require "libraries/bump/bump"
---local BlockClass = require("gameobjects/block")
--- local animLoader = require("animationLoader")
+local PlayerClass = require("gameobjects/player")
+local EnemyClass = require("gameobjects/enemy")
+local bump = require "libraries/bump/bump"
+local BlockClass = require("gameobjects/block")
+local animLoader = require("animationLoader")
 
-local menu = {name = "Menú principal"}
+local menu = {
+    name = "Menú principal"
+}
+
+
 local negro = {1, 1, 1, 1}
 
 function menu.load()
-    -- world = bump.newWorld(50)
-    -- jugador = PlayerClass.new(world, nil)
-    -- enemigo1 = EnemyClass.new(enemigo, SCREEN_WIDTH * 0.05, PlayerClass.height * 3, world, nil, 0)
-    -- local borderWidth = 50
-    -- BlockClass.new("Suelo", 0, WORLD_HEIGHT, SCREEN_WIDTH, borderWidth, world)
-    -- BlockClass.new("ParedIzquierda", 0, 0, 1, SCREEN_HEIGHT, world)
-    -- BlockClass.new("ParedDerecha", SCREEN_WIDTH, 0, 1, SCREEN_HEIGHT, world)
-    -- BlockClass.new("Techo", 0, 0, SCREEN_WIDTH, 1, world)
-    -- animLoader:applyAnim(enemigo1, animacionTestEnemigo)
+    world = bump.newWorld(50)
+    jugador = PlayerClass.new(world, nil)
+    enemigo1 = EnemyClass.new(enemigo, SCREEN_WIDTH * 0.05, PlayerClass.height * 3, world, nil, 0)
+    local borderWidth = 50
+    BlockClass.new("Suelo", 0, WORLD_HEIGHT, SCREEN_WIDTH, borderWidth, world)
+    BlockClass.new("ParedIzquierda", 0, 0, 1, SCREEN_HEIGHT, world)
+    BlockClass.new("ParedDerecha", SCREEN_WIDTH, 0, 1, SCREEN_HEIGHT, world)
+    BlockClass.new("Techo", 0, 0, SCREEN_WIDTH, 1, world)
+    animLoader:applyAnim(enemigo1, animacionTestEnemigo)
     -- asociar el animador al jugador y cargar una animación en el
-    -- animLoader:applyAnim(jugador, animacionTestJugador)
+    animLoader:applyAnim(jugador, animacionTestJugador)
 end
 
 function menu.update(dt)
-    -- jugador:update(dt)
-    -- enemigo1:update(dt)
-    -- animLoader:update(dt)
+    jugador:update(dt)
+    enemigo1:update(dt)
+    animLoader:update(dt)
 
     widgetsUpdate()
 end
@@ -36,17 +40,17 @@ function menu.draw()
     love.graphics.scale(factorEscala, factorEscala)
     love.graphics.setColor(255, 0, 0, 255)
 
-    -- jugador:draw()
-    -- enemigo1:draw()
+    jugador:draw()
+    enemigo1:draw()
 
-    love.graphics.printf(
+    --[[love.graphics.printf(
         "DIZZY BALLOON\n\n=PRESS FIRE TO START=",
         font_menu,
         0,
         math.floor((SCREEN_HEIGHT - font_menu:getHeight() * 2) / 2),
         SCREEN_WIDTH,
         "center"
-    )
+    )]]
 
     -- DEBUG: marcas en los extremos diagonales de la pantalla
     love.graphics.setColor(255, 0, 0)

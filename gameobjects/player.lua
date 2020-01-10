@@ -173,7 +173,7 @@ function Player:update(dt)
         if self.velocidad_y > 0 and not items[i].isLimit then
             self:cabezazo()
         end
-        if items[i].isGoal then -- comprobamos si hemos tocado la meta
+        if items[i].isGoal and self.game then -- comprobamos si hemos tocado la meta
             self.game.cambioDeNivel()
         end
     end
@@ -304,7 +304,7 @@ function Player:desmontar()
 end
 
 function Player:die()
-    if self.invencible == false then
+    if self.invencible == false and self.game then
         self.game.vidaperdida()
     end
 end
