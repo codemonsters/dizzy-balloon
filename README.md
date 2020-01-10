@@ -85,3 +85,7 @@ Requisitos:
 ## Otros
 
 * Paleta de Colores: [http://paletton.com/#uid=75a0u0kw0u7kiBppJw+z8nUERiF](http://paletton.com/#uid=75a0u0kw0u7kiBppJw+z8nUERiF)
+* Creación de sfx:
+http://drpetter.se/project_sfxr.html (el original),  https://www.bfxr.net/ (el mejorado)
+* Iconos:
+https://fontawesome.com/icons?d=gallery
