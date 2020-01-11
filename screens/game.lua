@@ -193,7 +193,11 @@ game.states = {
     },
     cambiandoDeNivel = {
         load = function(self) -- cargamos el siguiente nivel y dibujamos su primer frame
-            game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[(game.currentLevel.id + 1)], game))
+            if LevelDefinitions[(game.currentLevel.id + 1)] == nil then
+                game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[1], game))
+            else
+                game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[(game.currentLevel.id + 1)], game))
+            end
             desplazamiento = 0
             
             love.graphics.setCanvas(game.nextLevel.worldCanvas) 
@@ -226,7 +230,7 @@ game.states = {
             love.graphics.pop()
         end,
         update = function(self, dt)
-            desplazamiento = desplazamiento + dt * 1000
+            desplazamiento = desplazamiento + dt * 10000
 
             if desplazamiento >= WORLD_HEIGHT then
                 posX = game.currentLevel.player.x
