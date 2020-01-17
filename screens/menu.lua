@@ -3,6 +3,7 @@ local EnemyClass = require("gameobjects/enemy")
 local bump = require "libraries/bump/bump"
 local BlockClass = require("gameobjects/block")
 local animLoader = require("animationLoader")
+local music = love.audio.newSource("assets/music/PP_Fight_or_Flight_FULL_Loop.wav", "stream")
 
 local menu = {
     name = "Menú principal"
@@ -23,7 +24,7 @@ function menu.load()
     animLoader:applyAnim(enemigo1, animacionTestEnemigo)
     -- asociar el animador al jugador y cargar una animación en el
     animLoader:applyAnim(jugador, animacionTestJugador)
-    local music = love.audio.newSource("assets/music/PP_Fight_or_Flight_FULL_Loop.wav", "stream")
+    
     music:setLooping(true)
     music:play()
 end
@@ -156,7 +157,7 @@ end
 function changeScreen()
     game_screen = require("screens/game")
     change_screen(game_screen)
-    love.audio.stop()
+    music:stop()
 end
 
 return menu

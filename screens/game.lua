@@ -47,6 +47,9 @@ local circle = love.graphics.newImage("assets/circle.png")
 local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
 local hud_height = SCREEN_HEIGHT
 
+local music = love.audio.newSource("assets/music/PP_Fight_or_Flight_Heavy_Loop.wav", "stream")
+
+
 game.states = {
     jugando = {
         name = "Jugando",
@@ -360,6 +363,9 @@ function game.load()
     game.loadlevel(game.currentLevel)
     game.change_state(game.states.jugando)
 
+    music:setLooping(true)
+    music:play()
+
     --game.state = game.states.cambiandoDeNivel
     --game.change_state(game.state)
 end
@@ -422,7 +428,7 @@ end
 
 function game.keypressed(key, scancode, isrepeat)
     if key == "q" then
-        change_screen(require("screens/menu"))
+        returnToMenu()
     elseif key == "w" or key == "up" then
         game.currentLevel.player.up = true
         fireRequested = true
@@ -452,7 +458,7 @@ end
 
 function game.keyreleased(key, scancode, isrepeat)
     if key == "q" then
-        change_screen(require("screens/menu"))
+        returnToMenu()
     elseif key == "w" or key == "up" then
         game.currentLevel.player.up = false
     elseif key == "a" or key == "left" then
@@ -576,7 +582,7 @@ function game.vidaperdida()
     vidas = vidas - 1
     if vidas <= 0 then
         temporizador_respawn_enemigo = 0
-        change_screen(require("screens/menu"))
+        returnToMenu()
     else
         game.currentLevel.player:revive()
         game.loadlife()
@@ -648,5 +654,7 @@ function game.change_state(new_state)
         game.state.load(self)
     end
 end
+
+function returnToMenu() change_screen(require("screens/menu")) music:stop() end
 
 return game
