@@ -31,6 +31,7 @@ local Enemy = {
                 self.velocidad_y = math.sin(self.direction) * self.moduloVelocidad
             end,
             update = function(self, dt)
+
                 self.x, self.y, cols, len = self.world:move(self, self.movSigx, self.movSigy, self.enemyFilter)
 
                 if len > 0 then
@@ -62,7 +63,7 @@ local Enemy = {
         swiping = {
             
             load = function(self)
-                self.initalVel = 8
+                self.initalVel = self.moduloVelocidad
                 self.horizontal = true
                 self.lastXvelocity = self.initalVel
                 self.yAfterDiving = 0
@@ -76,7 +77,7 @@ local Enemy = {
 
                 if len > 0 then
                     local col = cols[1]
-                    if not col.other.isBomb then --col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then
+                    if not col.other.isBomb and not col.other.isPlayer then --col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then
                         if self.horizontal then -- colisión yendo hacia arriba
                             self.horizontal = false
                             self.yAfterDiving = self.y
@@ -153,9 +154,6 @@ function Enemy:update(dt)
         local col = cols[1]
         if col.isPlayer then
             col:empujar({x = self.velocidad_x*2, y = 0}, self);
-        end
-        if wipe and col.isBlock then
-
         end
     end
 
