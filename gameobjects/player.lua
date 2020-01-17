@@ -146,7 +146,7 @@ function Player:update(dt)
     --colisiones con los pies del jugador SOLO al bajar
     if self.velocidad_y < 0 then
         for i = 1, lenColFeet do
-            if (items[i].isEnemy or items[i].isBalloon) and not self.montado and items[i].state == BalloonClass.states.flying_alone then
+            if  not self.montado and ((items[i].isBalloon and items[i].state == BalloonClass.states.flying_alone) or items[i].isEnemy) then
                 self.montado = true
                 self.montura = items[i]
                 self.y = self.montura.y - self.height

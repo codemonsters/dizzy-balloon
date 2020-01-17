@@ -172,10 +172,6 @@ game.states = {
                     mushroom:draw()
                 end
 
-                -- DEBUG: marcas en los extremos diagonales del canvas
-                --love.graphics.setColor(100, 100, 255)
-                --love.graphics.circle("line", 5, 5, 5)
-                --love.graphics.circle("line", WORLD_WIDTH - 6, WORLD_HEIGHT - 6, 5)
             end
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
 
@@ -191,45 +187,118 @@ game.states = {
                 1,
                 1
             )
+
             love.graphics.pop()
         end
     },
     cambiandoDeNivel = {
-        load = function(self)
+        load = function(self) -- cargamos el siguiente nivel y dibujamos su primer frame
+            if LevelDefinitions[(game.currentLevel.id + 1)] == nil then
+                game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[1], game))
+            else
+                game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[(game.currentLevel.id + 1)], game))
+            end
+            desplazamiento = 0
+            
+            love.graphics.setCanvas(game.nextLevel.worldCanvas) 
+            do
+                love.graphics.setColor(192, 0, 109)
+                love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
+                -- objetos del juego
+                love.graphics.setColor(255, 255, 255)
+
+                if game.nextLevel.sky ~= nil then
+                    game.nextLevel.sky:draw()
+                end
+
+                for i, block in ipairs(game.nextLevel.blocks) do
+                    block:draw()
+                end
+
+            end
+            love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
+            love.graphics.push()
+            
+            love.graphics.draw(
+                game.currentLevel.worldCanvas,
+                (SCREEN_WIDTH - WORLD_WIDTH) / 2,
+                (SCREEN_HEIGHT - WORLD_HEIGHT) / 2 + desplazamiento,
+                0,
+                1,
+                1
+            )
+            love.graphics.pop()
         end,
         update = function(self, dt)
-            game.loadlevel(LevelClass.new(LevelDefinitions[(game.currentLevel.id + 1)], game))
-            game.change_state(game.states.jugando)
+            desplazamiento = desplazamiento + dt * 1000
+
+            if desplazamiento >= WORLD_HEIGHT then
+                posX = game.currentLevel.player.x
+                game.currentLevel = game.nextLevel
+                game.loadlife(posX)
+                game.change_state(game.states.jugando)
+            end
         end,
         draw = function(self)
+
+            love.graphics.translate(desplazamientoX, desplazamientoY)
+            love.graphics.scale(factorEscala, factorEscala)
+            love.graphics.setBlendMode("alpha", "premultiplied")
+
+            love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
+            love.graphics.push()
+            
+            love.graphics.draw( -- el primer frame del anterior nivel es dibujado ya que sigue en memoria
+                game.currentLevel.worldCanvas,
+                (SCREEN_WIDTH - WORLD_WIDTH) / 2,
+                (SCREEN_HEIGHT - WORLD_HEIGHT) / 2 + desplazamiento,
+                0,
+                1,
+                1
+            )
+            love.graphics.draw(
+                game.nextLevel.worldCanvas,
+                (SCREEN_WIDTH - WORLD_WIDTH) / 2,
+                -WORLD_HEIGHT + desplazamiento,
+                0,
+                1,
+                1
+            )
+
+            love.graphics.pop()
         end
     }
 }
 
 function game.getNewRespawnPos()
     local respawnX, respawnY = game.currentLevel.player.x, game.currentLevel.player.y
-    local x, y, cols, len =
-        game.currentLevel.player.world:check(
-        game.currentLevel.player,
+    local cols, len = game.currentLevel.player.world:queryRect(
         game.currentLevel.player.x,
         game.currentLevel.player.y,
-        game.currentLevel.player.collisions_filter
+        game.currentLevel.player.width,
+        game.currentLevel.player.height
     )
     for i = 1, len do
-        if cols[i].other.x + cols[i].other.width <= WORLD_WIDTH - game.currentLevel.player.width then
-            respawnX = cols[i].other.x + cols[i].other.width
-        else
-            respawnY = cols[i].other.y - game.currentLevel.player.height
-            respawnX = nivel_actual.jugador_posicion_inicial[1]
+        if not cols[i].isPlayer then
+            if cols[i].x + cols[i].width <= WORLD_WIDTH - game.currentLevel.player.width then
+                respawnX = cols[i].x + cols[i].width
+            else
+                respawnY = cols[i].y - game.currentLevel.player.height
+                respawnX = nivel_actual.jugador_posicion_inicial[1]
+            end
         end
     end
     return respawnX, respawnY
 end
 
-function game.loadlife()
-    game.currentLevel.player.x = game.currentLevel.player_initial_respawn_position[1]
+function game.loadlife(posX)
+    if posX == nil then
+        game.currentLevel.player.x = game.currentLevel.player_initial_respawn_position[1]
+    else
+        game.currentLevel.player.x = posX
+    end
     game.currentLevel.player.y = game.currentLevel.player_initial_respawn_position[2]
-    game.currentLevel.x, game.currentLevel.y = game.getNewRespawnPos()
+    game.currentLevel.player.x, game.currentLevel.player.y = game.getNewRespawnPos()
     game.currentLevel.world:update(
         game.currentLevel.player,
         game.currentLevel.player.x,
@@ -240,46 +309,45 @@ function game.loadlife()
 end
 
 function game.loadlevel(level)
-    game.currentLevel = level
-    game.currentLevel.player = PlayerClass.new(game.currentLevel.world, game)
-    game.currentLevel.bomb = BombClass.new("Bomb", game.currentLevel.world, game)
+    level.player = PlayerClass.new(level.world, game)
+    level.bomb = BombClass.new("Bomb", level.world, game)
 
     local borderWidth = 50
     table.insert(
-        game.currentLevel.blocks,
+        level.blocks,
         BlockClass.new(
             "Suelo",
             -borderWidth,
             WORLD_HEIGHT,
             WORLD_WIDTH + 2 * borderWidth,
             borderWidth,
-            game.currentLevel.world
+            level.world
         )
     )
     table.insert(
-        game.currentLevel.blocks,
+        level.blocks,
         BlockClass.new(
             "Pared Izquierda",
             -borderWidth,
             -borderWidth,
             borderWidth,
             WORLD_HEIGHT + 2 * borderWidth,
-            game.currentLevel.world
+            level.world
         )
     )
     table.insert(
-        game.currentLevel.blocks,
+        level.blocks,
         BlockClass.new(
             "Pared Derecha",
             WORLD_WIDTH,
             -borderWidth,
             borderWidth,
             WORLD_HEIGHT + 2 * borderWidth,
-            game.currentLevel.world
+            level.world
         )
     )
 
-    game.loadlife()
+    return level
 end
 
 function game.load()
@@ -323,11 +391,7 @@ function game.draw()
         love.graphics.setColor(255, 0, 0)
         love.graphics.draw(circle, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
         love.graphics.setColor(255, 255, 255)
-
-        -- DEBUG: marcas en los extremos diagonales del canvas
-        --love.graphics.setColor(100, 100, 255)
-        --love.graphics.circle("line", 5, 5, 5)
-        --love.graphics.circle("line", hud_width - 6, hud_height - 6, 5)
+        
     end
 
     love.graphics.setCanvas(gamepadCanvas) -- canvas del gamepad

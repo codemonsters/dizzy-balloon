@@ -23,6 +23,9 @@ function menu.load()
     animLoader:applyAnim(enemigo1, animacionTestEnemigo)
     -- asociar el animador al jugador y cargar una animación en el
     animLoader:applyAnim(jugador, animacionTestJugador)
+    local music = love.audio.newSource("assets/music/PP_Fight_or_Flight_FULL_Loop.wav", "stream")
+    music:setLooping(true)
+    music:play()
 end
 
 function menu.update(dt)
@@ -66,8 +69,7 @@ end
 
 function menu.keypressed(key, scancode, isrepeat)
     if key == "space" then
-        game_screen = require("screens/game")
-        change_screen(game_screen)
+        changeScreen()
     end
 end
 
@@ -101,8 +103,7 @@ function widgetsUpdate()
             suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)
         ).hit
      then
-        game_screen = require("screens/game")
-        change_screen(game_screen)
+        changeScreen()
     end
     if
         suit.Button(
@@ -150,6 +151,12 @@ end
 
 function widgetsDraw()
     suit.draw()
+end
+
+function changeScreen()
+    game_screen = require("screens/game")
+    change_screen(game_screen)
+    love.audio.stop()
 end
 
 return menu
