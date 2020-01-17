@@ -53,6 +53,24 @@ local LevelDefinitions = {
         },
         max_enemies = 6,
         player_initial_respawn_position = {330, WORLD_HEIGHT - PlayerClass.height}
+    },
+    {
+        id = 6,
+        name = "Nivel 6",
+        blocks = {
+            { name = "Bloque 1", x = 250, y = 675, width = 125, height = 15},
+            { name = "Bloque 2", x = 425, y = 600, width = 125, height = 15},
+            { name = "Bloque 3", x = 600, y = 525, width = 125, height = 15},            
+            { name = "Bloque 4", x = 375, y = 475, width = 125, height = 15},
+            { name = "Bloque 4.5", x = 175, y = 425, width = 125, height = 15},
+            { name = "Bloque 5", x = 0, y = 375, width = 100, height = 15},
+            { name = "Bloque 6", x = 250, y = 300, width = 125, height = 15},
+            { name = "Bloque 7", x = 450, y = 225, width = 125, height = 15},
+            { name = "Bloque 8", x = 650, y = 150, width = 125, height = 15},
+
+        },
+        max_enemies = 0,
+        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height}
     }
 }
 
