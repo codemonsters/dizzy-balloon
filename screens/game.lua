@@ -272,18 +272,20 @@ game.states = {
 
 function game.getNewRespawnPos()
     local respawnX, respawnY = game.currentLevel.player.x, game.currentLevel.player.y
-    local x, y, cols, len = game.currentLevel.player.world:check(
-        game.currentLevel.player,
+    local cols, len = game.currentLevel.player.world:queryRect(
         game.currentLevel.player.x,
         game.currentLevel.player.y,
-        game.currentLevel.player.collisions_filter
+        game.currentLevel.player.width,
+        game.currentLevel.player.height
     )
     for i = 1, len do
-        if cols[i].other.x + cols[i].other.width <= WORLD_WIDTH - game.currentLevel.player.width then
-            respawnX = cols[i].other.x + cols[i].other.width
-        else
-            respawnY = cols[i].other.y - game.currentLevel.player.height
-            respawnX = nivel_actual.jugador_posicion_inicial[1]
+        if not cols[i].isPlayer then
+            if cols[i].x + cols[i].width <= WORLD_WIDTH - game.currentLevel.player.width then
+                respawnX = cols[i].x + cols[i].width
+            else
+                respawnY = cols[i].y - game.currentLevel.player.height
+                respawnX = nivel_actual.jugador_posicion_inicial[1]
+            end
         end
     end
     return respawnX, respawnY
