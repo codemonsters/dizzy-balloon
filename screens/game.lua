@@ -230,7 +230,7 @@ game.states = {
             love.graphics.pop()
         end,
         update = function(self, dt)
-            desplazamiento = desplazamiento + dt * 10000
+            desplazamiento = desplazamiento + dt * 1000
 
             if desplazamiento >= WORLD_HEIGHT then
                 posX = game.currentLevel.player.x

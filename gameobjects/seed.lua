@@ -267,7 +267,7 @@ function SeedClass:draw()
         self.width / self.state.quads[self.currentFrame].width,
         self.height / self.state.quads[self.currentFrame].height
     )
-    love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+    --love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end
 
 function SeedClass:change_state(new_state)
