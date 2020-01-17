@@ -23,7 +23,7 @@ function menu.load()
     animLoader:applyAnim(enemigo1, animacionTestEnemigo)
     -- asociar el animador al jugador y cargar una animación en el
     animLoader:applyAnim(jugador, animacionTestJugador)
-    local music = love.audio.newSource("assets/sound/PP_Fight_or_Flight_FULL_Loop.wav", "stream")
+    local music = love.audio.newSource("assets/music/PP_Fight_or_Flight_FULL_Loop.wav", "stream")
     music:setLooping(true)
     music:play()
 end
