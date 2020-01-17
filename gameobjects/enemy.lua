@@ -6,8 +6,9 @@ local Enemy = {
     riders = nil,
     width = 40,
     height = 40,
-    velocidad_x = 2,
-    velocidad_y = 2,
+    moduloVelocidad = math.sqrt(12), -- velocidad inicial (2 unidades en el eje x y 2 en el y a 45º)
+    velocidad_x = 0,
+    velocidad_y = 0,
     isEnemy = true,
     image = love.graphics.newImage("assets/enemy.png"),
     enemyFilter = function(item, other)
@@ -25,10 +26,9 @@ local Enemy = {
     end,
     states = {
         moving = {
-            moduloVelocidad = math.sqrt(8), -- 2 unidades en el eje x y 2 en el y a 45º
             load = function(self)
-                self.velocidad_x = math.cos(self.direction) * self.state.moduloVelocidad
-                self.velocidad_y = math.sin(self.direction) * self.state.moduloVelocidad
+                self.velocidad_x = math.cos(self.direction) * self.moduloVelocidad
+                self.velocidad_y = math.sin(self.direction) * self.moduloVelocidad
             end,
             update = function(self, dt)
                 self.x, self.y, cols, len = self.world:move(self, self.movSigx, self.movSigy, self.enemyFilter)
@@ -42,10 +42,10 @@ local Enemy = {
                         moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
                         vectorUnitario = {x = vecBounce.x / moduloBounce, y = vecBounce.y / moduloBounce}
             
-                        self.velocidad_x = vectorUnitario.x * self.state.moduloVelocidad
-                        self.velocidad_y = vectorUnitario.y * self.state.moduloVelocidad
+                        self.velocidad_x = vectorUnitario.x * self.moduloVelocidad
+                        self.velocidad_y = vectorUnitario.y * self.moduloVelocidad
                         
-                        seno = self.velocidad_y/self.state.moduloVelocidad -- calculo del ángulo con relación a la vertical tras el choque
+                        seno = self.velocidad_y/self.moduloVelocidad -- calculo del ángulo con relación a la vertical tras el choque
                         anguloEnGradosConVertical = math.asin(seno) * 360/(2*math.pi)
 
                         if math.abs(anguloEnGradosConVertical) <= 15 then
