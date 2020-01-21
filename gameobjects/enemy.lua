@@ -6,8 +6,9 @@ local Enemy = {
     riders = nil,
     width = 40,
     height = 40,
-    velocidad_x = 2,
-    velocidad_y = 2,
+    moduloVelocidad = math.sqrt(12), -- velocidad inicial (2 unidades en el eje x y 2 en el y a 45º)
+    velocidad_x = 0,
+    velocidad_y = 0,
     isEnemy = true,
     image = love.graphics.newImage("assets/enemy.png"),
     enemyFilter = function(item, other)
@@ -25,12 +26,12 @@ local Enemy = {
     end,
     states = {
         moving = {
-            moduloVelocidad = math.sqrt(8), -- 2 unidades en el eje x y 2 en el y a 45º
             load = function(self)
-                self.velocidad_x = math.cos(self.direction) * self.state.moduloVelocidad
-                self.velocidad_y = math.sin(self.direction) * self.state.moduloVelocidad
+                self.velocidad_x = math.cos(self.direction) * self.moduloVelocidad
+                self.velocidad_y = math.sin(self.direction) * self.moduloVelocidad
             end,
             update = function(self, dt)
+
                 self.x, self.y, cols, len = self.world:move(self, self.movSigx, self.movSigy, self.enemyFilter)
 
                 if len > 0 then
@@ -42,10 +43,10 @@ local Enemy = {
                         moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
                         vectorUnitario = {x = vecBounce.x / moduloBounce, y = vecBounce.y / moduloBounce}
             
-                        self.velocidad_x = vectorUnitario.x * self.state.moduloVelocidad
-                        self.velocidad_y = vectorUnitario.y * self.state.moduloVelocidad
+                        self.velocidad_x = vectorUnitario.x * self.moduloVelocidad
+                        self.velocidad_y = vectorUnitario.y * self.moduloVelocidad
                         
-                        seno = self.velocidad_y/self.state.moduloVelocidad -- calculo del ángulo con relación a la vertical tras el choque
+                        seno = self.velocidad_y/self.moduloVelocidad -- calculo del ángulo con relación a la vertical tras el choque
                         anguloEnGradosConVertical = math.asin(seno) * 360/(2*math.pi)
 
                         if math.abs(anguloEnGradosConVertical) <= 15 then
@@ -62,7 +63,7 @@ local Enemy = {
         swiping = {
             
             load = function(self)
-                self.initalVel = 8
+                self.initalVel = self.moduloVelocidad
                 self.horizontal = true
                 self.lastXvelocity = self.initalVel
                 self.yAfterDiving = 0
@@ -76,7 +77,7 @@ local Enemy = {
 
                 if len > 0 then
                     local col = cols[1]
-                    if not col.other.isBomb then --col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then
+                    if not col.other.isBomb and not col.other.isPlayer then --col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then
                         if self.horizontal then -- colisión yendo hacia arriba
                             self.horizontal = false
                             self.yAfterDiving = self.y
@@ -133,7 +134,7 @@ function Enemy.new(name, x, y, world, game, direction)
     enemy.direction = direction
     enemy.x = x
     enemy.y = y
-    world:add(enemy, enemy.x, enemy.y, Enemy.width, Enemy.height)
+    enemy.world:add(enemy, enemy.x, enemy.y, Enemy.width, Enemy.height)
     setmetatable(enemy, Enemy)
     enemy:change_state(enemy.states.moving)
     return enemy
@@ -153,9 +154,6 @@ function Enemy:update(dt)
         local col = cols[1]
         if col.isPlayer then
             col:empujar({x = self.velocidad_x*2, y = 0}, self);
-        end
-        if wipe and col.isBlock then
-
         end
     end
 

@@ -141,12 +141,12 @@ function Player:update(dt)
     end
 
     local feetHeight = 5
-    local items, lenColFeet = world:queryRect(self.x, self.y + self.height + 1, self.width, feetHeight) --detector de los pies del jugador
+    local items, lenColFeet = self.world:queryRect(self.x, self.y + self.height + 1, self.width, feetHeight) --detector de los pies del jugador
 
     --colisiones con los pies del jugador SOLO al bajar
     if self.velocidad_y < 0 then
         for i = 1, lenColFeet do
-            if (items[i].isEnemy or items[i].isBalloon) and not self.montado and items[i].state == BalloonClass.states.flying_alone then
+            if  not self.montado and ((items[i].isBalloon and items[i].state == BalloonClass.states.flying_alone) or items[i].isEnemy) then
                 self.montado = true
                 self.montura = items[i]
                 self.y = self.montura.y - self.height
@@ -166,14 +166,14 @@ function Player:update(dt)
     end
 
     local headHeight = 10
-    local items, len = world:queryRect(self.x, self.y - headHeight, self.width, headHeight) --detector de la cabeza del jugador
+    local items, len = self.world:queryRect(self.x, self.y - headHeight, self.width, headHeight) --detector de la cabeza del jugador
 
     --colisiones con la cabeza del jugador
     for i = 1, len do
         if self.velocidad_y > 0 and not items[i].isLimit then
             self:cabezazo()
         end
-        if items[i].isGoal then -- comprobamos si hemos tocado la meta
+        if items[i].isGoal and self.game then -- comprobamos si hemos tocado la meta
             self.game.cambioDeNivel()
         end
     end
@@ -304,7 +304,7 @@ function Player:desmontar()
 end
 
 function Player:die()
-    if self.invencible == false then
+    if self.invencible == false and self.game then
         self.game.vidaperdida()
     end
 end

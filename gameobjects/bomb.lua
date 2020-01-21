@@ -31,7 +31,7 @@ local Bomb = {
             },
             load = function(self)
 
-                local items, len = world:queryRect(self.x, self.y + self.height, self.width, self.height)
+                local items, len = self.world:queryRect(self.x, self.y + self.height, self.width, self.height)
                 for i = 1, len do
                     if items[i].isEnemy then
                         self.montado = true
@@ -280,7 +280,9 @@ local Bomb = {
                             if not cols[i].other.isSeed or (cols[i].other.isSeed and cols[i].other.state ~= cols[i].other.states.sky) then
                                 log.debug("La explosión ha alcanzado a: " .. cols[i].other.name)
                                 self.game.kill_object(cols[i].other)
-                                self.lastExplosionHits = self.lastExplosionHits + 1
+                                if not cols[i].other.isMushroom then
+                                    self.lastExplosionHits = self.lastExplosionHits + 1
+                                end
                             elseif cols[i].other.isSeed and cols[i].other.state == cols[i].other.states.sky then
                                 self.lastExplosionHits = self.lastExplosionHits + 1
                             end
@@ -324,7 +326,7 @@ local Bomb = {
 }
 Bomb.__index = Bomb
 
-function Bomb.new(name, game)
+function Bomb.new(name, world, game)
     local bomb = {}
     bomb.game = game
     bomb.name = name

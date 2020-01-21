@@ -1,76 +1,130 @@
 local animLoader = {}
-
+-- No se puede poner nombres a los frames
 animacionTestJugador = {
-    frame1  = {
-        setParams = function(jugador)
-            jugador.right = true
-        end,
-        time = 1
-    },
-    frame2  = {
-        setParams = function(jugador) 
-            jugador.right = false
-        end,
-        time = 1
-    },
-    jump = {
-        setParams = function(jugador) 
-            jugador.left = true
-            jugador:jump()
-        end,
-        time = 0.5
-    },
-    pararse = {
-        setParams = function(jugador) 
-            jugador.left = false
+    keyFrames = {
+        {
+            setParams = function(jugador)
+                jugador.right = true
+            end,
+            time = 2
+        },
+        {
+            setParams = function(jugador) 
+                jugador.right = false
+                jugador.left = true
+            end,
+            time = 1.75
+        },
+        {
+            setParams = function(jugador)
+                jugador.right = false 
+                jugador.left = false
+            end,
+            time = 1.5
+        },
+        {
+            setParams = function(jugador) 
+                jugador.left = false
+                jugador.right = true
+            end,
+            time = 0.15
+        },
 
-        end,
-        time = 0.5
-    }
+        {
+            setParams = function(jugador) 
+                jugador.right = false
+                jugador:jump()
+            end,
+            time = 0.5
+        },
+
+    },
+
+    currFrame = nil, -- el keyframe que se está ejecutando
+    frameIndex = 1,
+    
+    target = nil -- el objeto animado
 }
 
-local ordered_keys = {}
+animacionTestEnemigo = {
+    keyFrames = {
+        {
+            setParams = function(enemigo)
+                enemigo.velocidad_x = math.sqrt(8)
+                enemigo.velocidad_y = -math.sqrt(8)
+            end,
+            time = 3.5
+        },
+
+        {
+            setParams = function(enemigo)
+                enemigo.velocidad_x = -math.sqrt(8)
+            end,
+            time = 2.5
+        },
+        {
+            setParams = function(enemigo)
+                enemigo.velocidad_y = -math.sqrt(8)
+            end,
+            time = 1.2
+        },
+    },
+
+    currFrame = nil, -- el keyframe que se está ejecutando
+    frameIndex = 1,
+    
+    target = nil -- el objeto animado
+}
+
+
+local animList = {}
 
 function animLoader:applyAnim(target, anim)
-    self.target = target
-    self.anim = anim
+    anim.target = target
 
-    -- Se necesita ordenar la tabla de animacion para iterar en orden por ella
-    for k in pairs(self.anim) do
-        table.insert(ordered_keys, k)
-    end
-    
-    table.sort(ordered_keys)
+    table.insert(animList, anim)
+    anim.number = table.getn(animList)
 
-    self.counter = 0
-    self.currFrame = 1
-    self:loadKeyFrame(self.anim, self.currFrame)
-    self.currFrame = self.currFrame + 1
+    anim.counter = 0
+    anim.frameIndex = 1
+    anim.currFrame = nil
+    self:loadKeyFrame(anim, anim.frameIndex)
 end
 
 function animLoader:update(dt)
-    if self.anim then
-        self.counter = self.counter + dt
-        if self.counter >= self.keyFrame.time then
-            self:loadKeyFrame(self.anim, self.currFrame)
-
-            self.counter = 0
-            self.currFrame = self.currFrame + 1
+    for numAnim, anim in pairs(animList) do
+        if anim then
+            anim.counter = anim.counter + dt
+            if not anim.currFrame then
+                anim = nil
+            
+            elseif anim.counter >= anim.currFrame.time then
+                self:loadKeyFrame(anim, anim.frameIndex + 1)
+    
+                anim.counter = 0
+            end
         end
     end
 end
 
 function animLoader:loadKeyFrame(anim, index)
-    local k, v = ordered_keys[index], anim[ordered_keys[index]]
-    self.keyFrame = anim[k]
+    anim.frameIndex = index
 
-    if not self.keyFrame then
-        print("Se acabo la animación")
-        self.anim = nil
-        return
+    anim.currFrame = anim.keyFrames[index]
+
+    if not anim.currFrame then
+        table.remove(animList, findIndexInTable(animList, anim))
+    else
+        anim.currFrame.setParams(anim.target)
+end
+end
+
+function findIndexInTable(tabla,valor)
+    for index, value in pairs(tabla) do
+        if value == valor then
+            return index
+        end
     end
-
-    self.keyFrame.setParams(self.target)
 end
 
 return animLoader

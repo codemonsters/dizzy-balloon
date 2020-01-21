@@ -37,11 +37,11 @@ function SkyClass:deleteSeed(seed)
     for i, semilla in ipairs(self.semillas) do
         if semilla.name == seed.name then
             table.remove(self.semillas, i)
-            world:remove(seed)
+            self.world:remove(seed)
             return
         end
     end
-    log.error("ERROR: Se ha intentado eliminar una semilla que no existe")    
+    log.error("ERROR: Se ha intentado eliminar una semilla que no existe")
 end
 
 return SkyClass

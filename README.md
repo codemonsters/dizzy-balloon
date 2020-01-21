@@ -81,3 +81,11 @@ Requisitos:
 * [awesome-love2d](https://github.com/love2d-community/awesome-love2d): A curated list of amazingly awesome LÖVE libraries, resources and shiny things
 * [git - the simple guide](http://rogerdudler.github.io/git-guide/)
 * [Mastering Markdown](https://guides.github.com/features/mastering-markdown/): Útil para editar este y otros ficheros
+
+## Otros
+
+* Paleta de Colores: [http://paletton.com/#uid=75a0u0kw0u7kiBppJw+z8nUERiF](http://paletton.com/#uid=75a0u0kw0u7kiBppJw+z8nUERiF)
+* Creación de sfx:
+http://drpetter.se/project_sfxr.html (el original),  https://www.bfxr.net/ (el mejorado)
+* Iconos:
+https://fontawesome.com/icons?d=gallery

@@ -1,24 +1,38 @@
 local PlayerClass = require("gameobjects/player")
+local EnemyClass = require("gameobjects/enemy")
 local bump = require "libraries/bump/bump"
 local BlockClass = require("gameobjects/block")
 local animLoader = require("animationLoader")
+local music = love.audio.newSource("assets/music/PP_Fight_or_Flight_FULL_Loop.wav", "stream")
 
-local menu = {name = "Menú principal"}
+local menu = {
+    name = "Menú principal"
+}
+
+
 local negro = {1, 1, 1, 1}
 
 function menu.load()
     suit.theme.cornerRadius = 29
     world = bump.newWorld(50)
     jugador = PlayerClass.new(world, nil)
+    enemigo1 = EnemyClass.new(enemigo, SCREEN_WIDTH * 0.05, PlayerClass.height * 3, world, nil, 0)
     local borderWidth = 50
     BlockClass.new("Suelo", 0, WORLD_HEIGHT, SCREEN_WIDTH, borderWidth, world)
-
+    BlockClass.new("ParedIzquierda", 0, 0, 1, SCREEN_HEIGHT, world)
+    BlockClass.new("ParedDerecha", SCREEN_WIDTH, 0, 1, SCREEN_HEIGHT, world)
+    BlockClass.new("Techo", 0, 0, SCREEN_WIDTH, 1, world)
+    animLoader:applyAnim(enemigo1, animacionTestEnemigo)
     -- asociar el animador al jugador y cargar una animación en el
     animLoader:applyAnim(jugador, animacionTestJugador)
+    
+    music:setLooping(true)
+    music:play()
 end
 
 function menu.update(dt)
     jugador:update(dt)
+    enemigo1:update(dt)
     animLoader:update(dt)
 
     widgetsUpdate()
@@ -27,12 +41,23 @@ end
 function menu.draw()
 
     love.graphics.clear(1, 0, 1)
+
     love.graphics.push()
     love.graphics.translate(desplazamientoX, desplazamientoY)
     love.graphics.scale(factorEscala, factorEscala)
     love.graphics.setColor(255, 0, 0, 255)
-    
+
     jugador:draw()
+    enemigo1:draw()
+
+    --[[love.graphics.printf(
+        "DIZZY BALLOON\n\n=PRESS FIRE TO START=",
+        font_menu,
+        0,
+        math.floor((SCREEN_HEIGHT - font_menu:getHeight() * 2) / 2),
+        SCREEN_WIDTH,
+        "center"
+    )]]
 
     -- DEBUG: marcas en los extremos diagonales de la pantalla
     love.graphics.setColor(255, 0, 0)
@@ -44,14 +69,11 @@ function menu.draw()
     widgetsDraw()
 
     love.graphics.pop()
-
-
 end
 
 function menu.keypressed(key, scancode, isrepeat)
     if key == "space" then
-        game_screen = require("screens/game")
-        change_screen(game_screen)
+        changeScreen()
     end
 end
 
@@ -62,7 +84,6 @@ end
     game_screen = require("screens/game")
     change_screen(game_screen)
 end ]]
-
 --ESta función hace cosas :)
 function widgetsUpdate()
     love.graphics.setBlendMode("alpha")
@@ -90,14 +111,19 @@ function widgetsUpdate()
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
     if suit.Button("Salir", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+
         os.exit()
     end
-
-
 end
 
 function widgetsDraw()
     suit.draw()
+end
+
+function changeScreen()
+    game_screen = require("screens/game")
+    change_screen(game_screen)
+    music:stop()
 end
 
 return menu
