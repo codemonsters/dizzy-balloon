@@ -13,6 +13,7 @@ local menu = {
 local negro = {1, 1, 1, 1}
 
 function menu.load()
+    suit.theme.cornerRadius = 29
     world = bump.newWorld(50)
     jugador = PlayerClass.new(world, nil)
     enemigo1 = EnemyClass.new(enemigo, SCREEN_WIDTH * 0.05, PlayerClass.height * 3, world, nil, 0)
@@ -38,7 +39,9 @@ function menu.update(dt)
 end
 
 function menu.draw()
-    love.graphics.clear(255, 255, 255)
+
+    love.graphics.clear(1, 0, 1)
+
     love.graphics.push()
     love.graphics.translate(desplazamientoX, desplazamientoY)
     love.graphics.scale(factorEscala, factorEscala)
@@ -83,6 +86,8 @@ end
 end ]]
 --ESta función hace cosas :)
 function widgetsUpdate()
+    love.graphics.setBlendMode("alpha")
+
     suit.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.1)
     suit.layout:padding(0, SCREEN_WIDTH * 0.025)
     local mouseX, mouseY = love.mouse.getPosition()
@@ -90,62 +95,23 @@ function widgetsUpdate()
 
     suit.updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
 
-    suit.Label("DIZZY BALLOON", suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.20))
 
-    if
-        suit.Button(
-            "Jugar",
-            {
-                color = {
-                    normal = {bg = {0, 0, 0, 0.1}, fg = {0, 0, 0}},
-                    active = {bg = {0, 0, 0, 0.1}, fg = {255, 255, 255}}
-                }
-            },
-            suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)
-        ).hit
-     then
-        changeScreen()
+    suit.Label("Dizzy Balloon", {color = {normal =  {fg = {0.77, 0, 0.43}}}}, suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.20))
+
+
+    
+    if suit.Button("Jugar", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+        game_screen = require("screens/game")
+        change_screen(game_screen)
     end
-    if
-        suit.Button(
-            "Preferencias",
-            {
-                color = {
-                    normal = {bg = {0, 0, 0, 0.1}, fg = {0, 0, 0}},
-                    active = {bg = {0, 0, 0, 0.1}, fg = {255, 255, 255}}
-                }
-            },
-            suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)
-        ).hit
-     then
+    if suit.Button("Preferencias", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
-    if
-        suit.Button(
-            "Instrucciones",
-            {
-                color = {
-                    normal = {bg = {0, 0, 0, 0.1}, fg = {0, 0, 0}},
-                    active = {bg = {0, 0, 0, 0.1}, fg = {255, 255, 255}}
-                }
-            },
-            suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)
-        ).hit
-     then
+    if suit.Button("Instrucciones", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
-    if
-        suit.Button(
-            "Salir",
-            {
-                color = {
-                    normal = {bg = {0, 0, 0, 0.1}, fg = {0, 0, 0}},
-                    active = {bg = {0, 0, 0, 0.1}, fg = {255, 255, 255}}
-                }
-            },
-            suit.layout:row(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT * 0.12)
-        ).hit
-     then
+    if suit.Button("Salir", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+
         os.exit()
     end
 end
