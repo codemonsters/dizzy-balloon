@@ -1,4 +1,5 @@
 local SeedClass = require("gameobjects/seed")
+local PowerUps = require("powerups")
 
 local SkyClass = {}
 
@@ -13,7 +14,18 @@ function SkyClass.new(world, game)
     sky.game = game
 
     for i = 0, WORLD_WIDTH / SeedClass.width + 1 do
-        local semilla = SeedClass.new("seed" .. (i + 1), sky, world, i * SeedClass.width, 0, sky.game)
+        local num = math.random(1, 100)
+        if num <= 20 then -- semilla normal 90%
+            boost = nil
+        else              -- semilla con boost 10%
+            local keyset = {}
+            for k in pairs(PowerUps) do
+                table.insert(keyset, k)
+            end
+            boost = PowerUps[keyset[math.random(#keyset)]]
+        end
+
+        local semilla = SeedClass.new("seed" .. (i + 1), sky, world, i * SeedClass.width, 0, sky.game, boost)
         table.insert(sky.semillas, semilla)
     end
 
