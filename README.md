@@ -81,6 +81,7 @@ Requisitos:
 * [awesome-love2d](https://github.com/love2d-community/awesome-love2d): A curated list of amazingly awesome LÖVE libraries, resources and shiny things
 * [git - the simple guide](http://rogerdudler.github.io/git-guide/)
 * [Mastering Markdown](https://guides.github.com/features/mastering-markdown/): Útil para editar este y otros ficheros
+* [SUIT](https://suit.readthedocs.io/en/latest/): Documentación para la librería de widgets
 
 ## Otros
 
