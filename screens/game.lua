@@ -14,6 +14,8 @@ local GoalClass = require("gameobjects/goal")
 local LimitClass = require("gameobjects/limit")
 local LevelClass = require("level")
 local LevelDefinitions = require("levelDefinitions")
+local SoundsClass = require("sounds")
+local sounds = SoundsClass.new()
 
 if mobile then
     leftFinger = PointerClass.new(game, "Izquierdo")
