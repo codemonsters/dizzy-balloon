@@ -30,8 +30,6 @@ local jugadorquieremoverse = false
 --local jugadorquieredisparar = false
 local BlockClass = require("gameobjects/block")
 local gameFilter
-local vidas
-local bombasAereas
 --local enemigos = {}
 --local setas = {}
 --local balloons = {}
@@ -127,7 +125,7 @@ game.states = {
                                 game.currentLevel.player:vy()
                             )
                         end
-                    elseif bombasAereas > 0 then
+                    elseif game.bombasAereas > 0 then
                         game.currentLevel.bomb:launch(
                             x,
                             y,
@@ -135,7 +133,7 @@ game.states = {
                             game.currentLevel.player:vx(),
                             game.currentLevel.player:vy()
                         )
-                        bombasAereas = bombasAereas - 1
+                        game.bombasAereas = game.bombasAereas - 1
                     end
                 end
             end
@@ -353,11 +351,11 @@ function game.loadlevel(level)
     return level
 end
 
-function game.load()
+function game.load() 
     hudCanvas = love.graphics.newCanvas(hud_width, hud_height)
     gamepadCanvas = love.graphics.newCanvas(hud_width, hud_height)
-    vidas = 3
-    bombasAereas = 9
+    game.vidas = 3
+    game.bombasAereas = 9
     game.currentLevel = LevelClass.new(LevelDefinitions[1], game)
 
     game.loadlevel(game.currentLevel)
@@ -386,8 +384,8 @@ function game.draw()
         love.graphics.rectangle("fill", 0, 0, hud_width, SCREEN_HEIGHT)
         love.graphics.setColor(255, 255, 255)
         love.graphics.printf("LVL - " .. game.currentLevel.id, font_hud, 0, 100, hud_width, "center")
-        love.graphics.printf("x " .. vidas, font_hud, 140, 160, hud_width, "left")
-        love.graphics.printf("x " .. bombasAereas, font_hud, 140, 220, hud_width, "left")
+        love.graphics.printf("x " .. game.vidas, font_hud, 140, 160, hud_width, "left")
+        love.graphics.printf("x " .. game.bombasAereas, font_hud, 140, 220, hud_width, "left")
 
         ------------
         love.graphics.draw(atlas, PlayerClass.states.standing.quads[1].quad, 95, 154, 0, 2, 2) -- dibujamos el jugador en el hud
@@ -444,11 +442,11 @@ function game.keypressed(key, scancode, isrepeat)
     elseif key == "space" then
         game.currentLevel.player:jump()
     elseif key == "v" then
-        vidas = vidas - 1
-        log.debug("vidas: " .. vidas)
+        game.vidas = game.vidas - 1
+        log.debug("game.vidas: " .. game.vidas)
     elseif key == "b" then
-        vidas = vidas + 1
-        log.debug("vidas: " .. vidas)
+        game.vidas = game.vidas + 1
+        log.debug("game.vidas: " .. game.vidas)
     elseif key == "l" then
         game.change_state(game.states.cambiandoDeNivel)
     elseif key == "z" then
@@ -579,8 +577,8 @@ function game.pointermoved(pointer)
 end
 
 function game.vidaperdida()
-    vidas = vidas - 1
-    if vidas <= 0 then
+    game.vidas = game.vidas - 1
+    if game.vidas <= 0 then
         temporizador_respawn_enemigo = 0
         returnToMenu()
     else

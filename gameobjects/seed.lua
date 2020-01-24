@@ -17,6 +17,7 @@ local SeedClass = {
     height = 20,
     name = "Seed",
     isSeed = true,
+    boost = nil,
     player_over_timer = 0,
     states = {
         sky = {
@@ -102,7 +103,11 @@ local SeedClass = {
                 self.currentframe = 1
             end,
             update = function(self, dt)
-                self.change_state(self, self.states.onthefloor)
+                if self.boost ~= nil then
+                    self.change_state(self, self.states.explode)
+                else
+                    self.change_state(self, self.states.onthefloor)
+                end
             end
         },
         onthefloor = {
@@ -222,13 +227,41 @@ local SeedClass = {
                     self:die()
                 end
             end
+        },
+        explode = {
+            name = "explode",
+            size = 200,
+            quads = {
+                {
+                    quad = love.graphics.newQuad(130, 61, 14, 16, atlas:getDimensions()),
+                    width = 14,
+                    height = 16
+                }
+            },
+            load = function(self)
+                initialTime = 0
+                canApply = true
+            end,
+            update = function(self, dt)
+                local items, lenColExplosion = self.world:queryRect(self.x - self.state.size / 2, self.y - self.state.size / 2, self.state.size, self.state.size)
+                for i = 1, lenColExplosion do
+                    if items[i].isPlayer and canApply then
+                        self.boost:apply(items[i])
+                        canApply = false
+                    end
+                end
+                initialTime = initialTime + dt
+                if initialTime >= 0.3 then
+                    self:die()
+                end
+            end
         }
     }
 }
 
 SeedClass.__index = SeedClass
 
-function SeedClass.new(name, sky, world, x, y, game)
+function SeedClass.new(name, sky, world, x, y, game, boost)
     local seed = {}
     seed.game = game
     seed.name = name
@@ -236,6 +269,7 @@ function SeedClass.new(name, sky, world, x, y, game)
     seed.world = world
     seed.x = x
     seed.y = y
+    seed.boost = boost
     seed.world:add(seed, seed.x, seed.y, SeedClass.width, SeedClass.height)
     setmetatable(seed, SeedClass)
     --seed.state = SeedClass.states.sky
@@ -258,6 +292,9 @@ function SeedClass:draw()
         self.width / self.image:getWidth(),
         self.height/ self.image:getHeight())
     --]]
+    if self.boost ~= nil then
+        love.graphics.setColor(self.boost.color)
+    end
     love.graphics.draw(
         atlas,
         self.state.quads[self.currentFrame].quad,
@@ -267,6 +304,10 @@ function SeedClass:draw()
         self.width / self.state.quads[self.currentFrame].width,
         self.height / self.state.quads[self.currentFrame].height
     )
+    if self.state == self.states.explode then
+        love.graphics.rectangle("fill", self.x - self.state.size / 2, self.y - self.state.size / 2, self.state.size, self.state.size)
+    end
+    love.graphics.setColor(255, 255, 255)
     --love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end
 

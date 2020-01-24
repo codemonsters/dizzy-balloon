@@ -2,6 +2,8 @@ local BalloonClass = require("gameobjects/balloon")
 
 local Player = {
     name = "Player",
+    vmultiplier = 1,
+    ymultiplier = 1,
     width = 40,
     height = 40,
     velyini = -0.5,
@@ -17,10 +19,10 @@ local Player = {
             vx_factor = 1
         end
 
-        return vx_factor * 180
+        return vx_factor * 180 * self.vmultiplier
     end,
     vy = function(self)
-        return -self.velocidad_y * 80 -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
+        return -self.velocidad_y * 80 * self.ymultiplier -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
     end,
     collisions_filter = function(item, other)
         if other.isBalloon and other.state == BalloonClass.states.growing then
