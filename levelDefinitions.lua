@@ -7,8 +7,14 @@ local LevelDefinitions = {
         blocks = {},
         max_enemies = 2,
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
-        music = "Stage1.wav"
+        music = "Stage1.wav",
         --music = "PP_Fight_or_Flight_FULL_Loop.wav"
+        powerups = {
+            speedBoost = 3,
+            extraLife = 2,
+            jumpBoost = 3,
+            extraBomb = 5
+        }
     },
     {
         id = 2,
@@ -20,7 +26,13 @@ local LevelDefinitions = {
         max_enemies = 3,
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
         --music = "PP_Silly_Goose_FULL_Loop.wav"
-        music = "Stage2.wav"
+        music = "Stage2.wav",
+        powerups = {
+            speedBoost = 2,
+            extraLife = 2,
+            jumpBoost = 2,
+            extraBomb = 4
+        }
     },
     {
         id = 3,
@@ -36,7 +48,13 @@ local LevelDefinitions = {
         max_enemies = 4,
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
         --music = "PP_Destiny_FULL_Loop.wav"
-        music = "Stage3.wav"
+        music = "Stage3.wav",
+        powerups = {
+            speedBoost = 2,
+            extraLife = 2,
+            jumpBoost = 2,
+            extraBomb = 3
+        }
     },
     {
         id = 4,
@@ -47,7 +65,13 @@ local LevelDefinitions = {
         },
         max_enemies = 3,
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
-        music = "Stage4.wav"
+        music = "Stage4.wav",
+        powerups = {
+            speedBoost = 1,
+            extraLife = 1,
+            jumpBoost = 1,
+            extraBomb = 3
+        }
     },
     {
         id = 5,
@@ -61,7 +85,13 @@ local LevelDefinitions = {
         max_enemies = 6,
         player_initial_respawn_position = {330, WORLD_HEIGHT - PlayerClass.height},
         --music = "PP_Fight_or_Flight_FULL_Loop.wav"
-        music = "Stage5.wav"
+        music = "Stage5.wav",
+        powerups = {
+            speedBoost = 1,
+            extraLife = 1,
+            jumpBoost = 1,
+            extraBomb = 2
+        }
     },
     {
         id = 6,
@@ -80,6 +110,12 @@ local LevelDefinitions = {
         max_enemies = 0,
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
         --music = "PP_Fight_or_Flight_FULL_Loop.wav"
+        powerups = {
+            speedBoost = 1,
+            extraLife = 1,
+            jumpBoost = 1,
+            extraBomb = 1
+        }
     }
 }
 

@@ -241,6 +241,7 @@ local SeedClass = {
             load = function(self)
                 initialTime = 0
                 canApply = true
+                self.world:remove(self)
             end,
             update = function(self, dt)
                 local items, lenColExplosion = self.world:queryRect(self.x - self.state.size / 2, self.y - self.state.size / 2, self.state.size, self.state.size)
@@ -261,7 +262,7 @@ local SeedClass = {
 
 SeedClass.__index = SeedClass
 
-function SeedClass.new(name, sky, world, x, y, game, boost)
+function SeedClass.new(name, sky, world, x, y, game)
     local seed = {}
     seed.game = game
     seed.name = name
@@ -269,7 +270,6 @@ function SeedClass.new(name, sky, world, x, y, game, boost)
     seed.world = world
     seed.x = x
     seed.y = y
-    seed.boost = boost
     seed.world:add(seed, seed.x, seed.y, SeedClass.width, SeedClass.height)
     setmetatable(seed, SeedClass)
     --seed.state = SeedClass.states.sky

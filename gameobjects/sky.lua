@@ -1,11 +1,12 @@
 local SeedClass = require("gameobjects/seed")
 local PowerUps = require("powerups")
+local levelDefinitions = require("levelDefinitions")
 
 local SkyClass = {}
 
 SkyClass.__index = SkyClass
 
-function SkyClass.new(world, game)
+function SkyClass.new(world, game, level)
     local sky = {
         name = "sky",
         semillas = {}
@@ -13,20 +14,25 @@ function SkyClass.new(world, game)
     sky.world = world
     sky.game = game
 
-    for i = 0, WORLD_WIDTH / SeedClass.width + 1 do
-        local num = math.random(1, 100)
-        if num <= 20 then -- semilla normal 90%
-            boost = nil
-        else              -- semilla con boost 10%
-            local keyset = {}
-            for k in pairs(PowerUps) do
-                table.insert(keyset, k)
-            end
-            boost = PowerUps[keyset[math.random(#keyset)]]
-        end
+    local seedNumber = WORLD_WIDTH / SeedClass.width + 1
 
-        local semilla = SeedClass.new("seed" .. (i + 1), sky, world, i * SeedClass.width, 0, sky.game, boost)
+    for i = 0, seedNumber do
+        local semilla = SeedClass.new("seed" .. (i + 1), sky, world, i * SeedClass.width, 0, sky.game)
         table.insert(sky.semillas, semilla)
+    end
+
+    local puCounter = 0
+
+    for k, v in pairs(level.levelDefinition.powerups) do
+        local totalPU = v
+        while totalPU > 0 and puCounter < seedNumber do
+            local num = math.random(1, seedNumber)
+            if sky.semillas[num].boost == nil then
+                sky.semillas[num].boost = PowerUps[k]
+                totalPU = totalPU - 1
+                puCounter = puCounter + 1
+            end
+        end
     end
 
     setmetatable(sky, SkyClass)
@@ -49,7 +55,9 @@ function SkyClass:deleteSeed(seed)
     for i, semilla in ipairs(self.semillas) do
         if semilla.name == seed.name then
             table.remove(self.semillas, i)
-            self.world:remove(seed)
+            if self.world:hasItem(seed) then
+                self.world:remove(seed)
+            end
             return
         end
     end
