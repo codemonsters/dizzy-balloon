@@ -3,11 +3,8 @@ local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
 local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
--- local sky = SkyClass.new(world, game)
 local PointerClass = require("pointer")
--- local bomb = BombClass.new()
 local BombClass = require("gameobjects/bomb")
--- local balloon = BalloonClass.new()
 local BalloonClass = require("gameobjects/balloon")
 local MushroomClass = require("gameobjects/mushroom")
 local GoalClass = require("gameobjects/goal")
@@ -16,26 +13,12 @@ local LevelClass = require("level")
 local LevelDefinitions = require("levelDefinitions")
 local SoundsClass = require("sounds")
 local sounds = SoundsClass.new()
-
-if mobile then
-    leftFinger = PointerClass.new(game, "Izquierdo")
-    rightFinger = PointerClass.new(game, "Derecho")
-else
-    mousepointer = PointerClass.new(game, "Puntero")
-end
-
--- local world = bump.newWorld(50)
 local worldCanvas = nil
 local hudCanvas = nil
 local jugadorpuedesaltar = true
 local jugadorquieremoverse = false
---local jugadorquieredisparar = false
 local BlockClass = require("gameobjects/block")
 local gameFilter
---local enemigos = {}
---local setas = {}
---local balloons = {}
---local plataformas = {}
 local temporizador_respawn_enemigo = 0
 local TIEMPO_RESPAWN_ENEMIGO = 1
 local inicioCambioNivel = 0
@@ -47,8 +30,12 @@ local circle = love.graphics.newImage("assets/circle.png")
 local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
 local hud_height = SCREEN_HEIGHT
 
-local music = love.audio.newSource("assets/music/PP_Fight_or_Flight_Heavy_Loop.wav", "stream")
-
+if mobile then
+    leftFinger = PointerClass.new(game, "Izquierdo")
+    rightFinger = PointerClass.new(game, "Derecho")
+else
+    mousepointer = PointerClass.new(game, "Puntero")
+end
 
 game.states = {
     jugando = {
@@ -196,14 +183,17 @@ game.states = {
     },
     cambiandoDeNivel = {
         load = function(self) -- cargamos el siguiente nivel y dibujamos su primer frame
+            if game.currentLevel.music ~= nil then
+                game.currentLevel.music:stop()
+            end
             if LevelDefinitions[(game.currentLevel.id + 1)] == nil then
                 game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[1], game))
             else
                 game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[(game.currentLevel.id + 1)], game))
             end
             desplazamiento = 0
-            
-            love.graphics.setCanvas(game.nextLevel.worldCanvas) 
+
+            love.graphics.setCanvas(game.nextLevel.worldCanvas)
             do
                 love.graphics.setColor(192, 0, 109)
                 love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
@@ -221,7 +211,6 @@ game.states = {
             end
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
             love.graphics.push()
-            
             love.graphics.draw(
                 game.currentLevel.worldCanvas,
                 (SCREEN_WIDTH - WORLD_WIDTH) / 2,
@@ -239,6 +228,9 @@ game.states = {
                 posX = game.currentLevel.player.x
                 game.currentLevel = game.nextLevel
                 game.loadlife(posX)
+                if game.currentLevel.music ~= nil then
+                    game.currentLevel.music:play()
+                end
                 game.change_state(game.states.jugando)
             end
         end,
@@ -314,7 +306,12 @@ end
 function game.loadlevel(level)
     level.player = PlayerClass.new(level.world, game)
     level.bomb = BombClass.new("Bomb", level.world, game)
-
+    print(level.music)
+    if level.music ~= nil then
+        level.music = love.audio.newSource("assets/music/" .. level.music, "stream")
+        level.music:setLooping(true)
+    end
+    
     local borderWidth = 50
     table.insert(
         level.blocks,
@@ -353,19 +350,17 @@ function game.loadlevel(level)
     return level
 end
 
-function game.load() 
+function game.load()
     hudCanvas = love.graphics.newCanvas(hud_width, hud_height)
     gamepadCanvas = love.graphics.newCanvas(hud_width, hud_height)
     game.vidas = 3
     game.bombasAereas = 9
     game.currentLevel = LevelClass.new(LevelDefinitions[1], game)
-
     game.loadlevel(game.currentLevel)
     game.change_state(game.states.jugando)
-
-    music:setLooping(true)
-    music:play()
-
+    if game.currentLevel.music ~= nil then
+        game.currentLevel.music:play()
+    end
     --game.state = game.states.cambiandoDeNivel
     --game.change_state(game.state)
 end
@@ -444,12 +439,15 @@ function game.keypressed(key, scancode, isrepeat)
     elseif key == "space" then
         game.currentLevel.player:jump()
     elseif key == "v" then
+        -- TODO: Eliminar esto en la versión pública
         game.vidas = game.vidas - 1
         log.debug("game.vidas: " .. game.vidas)
     elseif key == "b" then
+        -- TODO: Eliminar esto en la versión pública
         game.vidas = game.vidas + 1
         log.debug("game.vidas: " .. game.vidas)
     elseif key == "l" then
+        -- TODO: Eliminar esto en la versión pública
         game.change_state(game.states.cambiandoDeNivel)
     elseif key == "z" then
         print("Posición del jugador (x, y) = " .. game.currentLevel.player.x .. ", " .. game.currentLevel.player.y)
@@ -655,6 +653,10 @@ function game.change_state(new_state)
     end
 end
 
-function returnToMenu() change_screen(require("screens/menu")) music:stop() end
+function returnToMenu() change_screen(require("screens/menu"))
+    if game.currentLevel.music ~= nil then
+        game.currentLevel.music:stop()
+    end
+end
 
 return game

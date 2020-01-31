@@ -3,7 +3,8 @@ local EnemyClass = require("gameobjects/enemy")
 local bump = require "libraries/bump/bump"
 local BlockClass = require("gameobjects/block")
 local animLoader = require("animationLoader")
-local music = love.audio.newSource("assets/music/PP_Fight_or_Flight_FULL_Loop.wav", "stream")
+--local music = love.audio.newSource("assets/music/PP_Silly_Goose_FULL_Loop.wav", "stream")
+local music = love.audio.newSource("assets/music/Menu.wav", "stream")
 
 local menu = {
     name = "Menú principal"

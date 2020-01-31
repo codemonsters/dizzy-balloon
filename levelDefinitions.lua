@@ -6,7 +6,9 @@ local LevelDefinitions = {
         name = "Nivel 1",
         blocks = {},
         max_enemies = 2,
-        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height}
+        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
+        music = "Stage1.wav"
+        --music = "PP_Fight_or_Flight_FULL_Loop.wav"
     },
     {
         id = 2,
@@ -16,7 +18,9 @@ local LevelDefinitions = {
             { name = "Bloque 2", x = 200, y = 220, width = 300, height = 10 }
         },
         max_enemies = 3,
-        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height}
+        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
+        --music = "PP_Silly_Goose_FULL_Loop.wav"
+        music = "Stage2.wav"
     },
     {
         id = 3,
@@ -30,7 +34,9 @@ local LevelDefinitions = {
             { name = "Bloque 6", x = 300, y = 695, width = 100, height = 25}
         },
         max_enemies = 4,
-        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height}
+        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
+        --music = "PP_Destiny_FULL_Loop.wav"
+        music = "Stage3.wav"
     },
     {
         id = 4,
@@ -40,7 +46,8 @@ local LevelDefinitions = {
             { name = "Bloque 2", x = 335, y = 20, width = 30, height = 435}
         },
         max_enemies = 3,
-        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height}
+        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
+        music = "Stage4.wav"
     },
     {
         id = 5,
@@ -52,7 +59,9 @@ local LevelDefinitions = {
             { name = "Bloque 4", x = 525, y = 485, width = 15, height = 235}
         },
         max_enemies = 6,
-        player_initial_respawn_position = {330, WORLD_HEIGHT - PlayerClass.height}
+        player_initial_respawn_position = {330, WORLD_HEIGHT - PlayerClass.height},
+        --music = "PP_Fight_or_Flight_FULL_Loop.wav"
+        music = "Stage5.wav"
     },
     {
         id = 6,
@@ -60,17 +69,17 @@ local LevelDefinitions = {
         blocks = {
             { name = "Bloque 1", x = 250, y = 675, width = 125, height = 15},
             { name = "Bloque 2", x = 425, y = 600, width = 125, height = 15},
-            { name = "Bloque 3", x = 600, y = 525, width = 125, height = 15},            
+            { name = "Bloque 3", x = 600, y = 525, width = 125, height = 15},
             { name = "Bloque 4", x = 375, y = 475, width = 125, height = 15},
             { name = "Bloque 4.5", x = 175, y = 425, width = 125, height = 15},
             { name = "Bloque 5", x = 0, y = 375, width = 100, height = 15},
             { name = "Bloque 6", x = 250, y = 300, width = 125, height = 15},
             { name = "Bloque 7", x = 450, y = 225, width = 125, height = 15},
             { name = "Bloque 8", x = 650, y = 150, width = 125, height = 15},
-
         },
         max_enemies = 0,
-        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height}
+        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
+        --music = "PP_Fight_or_Flight_FULL_Loop.wav"
     }
 }
 
