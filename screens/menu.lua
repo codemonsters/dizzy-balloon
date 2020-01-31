@@ -66,7 +66,7 @@ end
 
 function menu.keypressed(key, scancode, isrepeat)
     if key == "space" then
-        change_screen(require("screens/game"))
+        changeScreen()
     end
 end
 
@@ -93,7 +93,7 @@ function widgetsUpdate()
 
     
     if menuWidgets:Button("Jugar",  menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        change_screen(require("screens/game"))
+        changeScreen()
     end
     if menuWidgets:Button("Preferencias", menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
@@ -105,6 +105,11 @@ function widgetsUpdate()
 
         os.exit()
     end
+end
+
+function changeScreen()
+    change_screen(require("screens/game"))
+    music:stop()
 end
 
 function widgetsDraw()
