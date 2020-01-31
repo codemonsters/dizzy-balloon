@@ -1,9 +1,12 @@
 -- configuración Lua Debugger Extension
+-- TODO: Debugee comentado, ralentiza enormemente el juego
+--[[
 local json = require 'libraries/dkjson/dkjson'
 local debuggee = require 'libraries/vscode-debuggee/vscode-debuggee'
 print(debugee)
 local startResult, breakerType = debuggee.start(json)
 print('debuggee start ->', startResult, breakerType)
+--]]
 -- fin configuración Lua Debugger Extension
 
 log = require "libraries/log/log" -- https://github.com/rxi/log.lua
