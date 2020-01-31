@@ -1,24 +1,48 @@
---[[
-menuWidgets.theme.color = {
-    normal   = {bg = {188,188,188}, fg = { 66, 66, 66}},
-    hovered  = {bg = {255,255,255}, fg = { 50,153,187}},
-    active   = {bg = {255,255,255}, fg = {225,153,  0}}
-}
-
---]]
 local ourTheme = {}
-ourTheme.theme = setmetatable({}, {__index = suit.theme})
+ourTheme = setmetatable({}, {__index = suit.theme})
 
 -- NOTE: you have to replace the whole color table. E.g., replacing only
 --       dress.theme.color.normal will also change suit.theme.color.normal!
-ourTheme.theme.color = {
-    normal   = {bg = {188,188,188}, fg = { 66, 66, 66}},
-    hovered  = {bg = {255,255,255}, fg = { 50,153,187}},
-    active   = {bg = {255,255,255}, fg = {225,153,  0}}
+local labelColor = {normal =  {fg = {0, 0, 0}}}
+
+
+local buttonParameters = {
+    cornerRadius = 29,
+    color = {normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}},
+     hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}},
+      active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}}
+    }
 }
 
-function ourTheme.theme.Label(text, opt, x,y,w,h)
-    -- draw the label in a fancier way
+-- HELPER
+function ourTheme.getColorForState(opt, widget)
+    local s = opt.state or "normal"
+    print(s)
+    if widget == "button" then
+        print(buttonParameters.color[s])
+        return (buttonParameters.color[s])
+    end
+end
+
+
+function ourTheme.Label(text, opt, x,y,w,h)
+	y = y + ourTheme.getVerticalOffsetForAlign(opt.valign, opt.font, h)
+
+	love.graphics.setColor(labelColor.normal.fg)
+	love.graphics.setFont(opt.font)
+	love.graphics.printf(text, x+2, y, w-4, opt.align or "center")
+end
+
+function ourTheme.Button(text, opt, x,y,w,h)
+    local c = ourTheme.getColorForState(opt, "button")
+    
+
+	ourTheme.drawBox(x,y,w,h, c, buttonParameters.cornerRadius)
+	love.graphics.setColor(c.fg)
+	love.graphics.setFont(opt.font)
+
+	y = y + ourTheme.getVerticalOffsetForAlign(opt.valign, opt.font, h)
+	love.graphics.printf(text, x+2, y, w-4, opt.align or "center")
 end
 
 return ourTheme
