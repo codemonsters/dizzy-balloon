@@ -50,7 +50,6 @@ function menu.draw()
     jugador:draw()
     enemigo1:draw()
 
-
     -- DEBUG: marcas en los extremos diagonales de la pantalla
     love.graphics.setColor(255, 0, 0)
     love.graphics.line(0, 0, 10, 0)
