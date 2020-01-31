@@ -50,15 +50,6 @@ function menu.draw()
     jugador:draw()
     enemigo1:draw()
 
-    --[[love.graphics.printf(
-        "DIZZY BALLOON\n\n=PRESS FIRE TO START=",
-        font_menu,
-        0,
-        math.floor((SCREEN_HEIGHT - font_menu:getHeight() * 2) / 2),
-        SCREEN_WIDTH,
-        "center"
-    )]]
-
     -- DEBUG: marcas en los extremos diagonales de la pantalla
     love.graphics.setColor(255, 0, 0)
     love.graphics.line(0, 0, 10, 0)
@@ -89,28 +80,31 @@ function widgetsUpdate()
     love.graphics.setBlendMode("alpha")
 
     suit.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.1)
-    suit.layout:padding(0, SCREEN_WIDTH * 0.025)
+    suit.layout:padding(0, SCREEN_WIDTH * 0.02)
     local mouseX, mouseY = love.mouse.getPosition()
-    love.graphics.setFont(font_buttons)
+    love.graphics.setFont(font_menu)
 
     suit.updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
 
 
-    suit.Label("Dizzy Balloon", {color = {normal =  {fg = {0.77, 0, 0.43}}}}, suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.20))
+    suit.Label("Dizzy Balloon", {color = {normal =  {fg = {0, 0, 0}}}}, suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.20))
+
+    love.graphics.setFont(font_buttons)
+
 
 
     
-    if suit.Button("Jugar", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+    if suit.Button("Jugar", {color = {normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         game_screen = require("screens/game")
         change_screen(game_screen)
     end
-    if suit.Button("Preferencias", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+    if suit.Button("Preferencias", {color = {normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
-    if suit.Button("Instrucciones", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+    if suit.Button("Instrucciones", {color = {normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
-    if suit.Button("Salir", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+    if suit.Button("Salir", {color = {normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
 
         os.exit()
     end
