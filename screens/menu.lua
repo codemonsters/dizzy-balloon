@@ -65,8 +65,8 @@ function menu.draw()
 end
 
 function menu.keypressed(key, scancode, isrepeat)
-    if key == "space" or key == "return" then
-        changeScreen()
+    if key == "space" then
+        change_screen(require("screens/game"))
     end
 end
 
@@ -93,7 +93,7 @@ function widgetsUpdate()
 
     
     if menuWidgets:Button("Jugar",  menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        changeScreen()
+        change_screen(require("screens/game"))
     end
     if menuWidgets:Button("Preferencias", menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
@@ -109,12 +109,6 @@ end
 
 function widgetsDraw()
     menuWidgets:draw()
-end
-
-function changeScreen()
-    game_screen = require("screens/game")
-    change_screen(game_screen)
-    music:stop()
 end
 
 return menu
