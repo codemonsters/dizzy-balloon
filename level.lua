@@ -25,7 +25,7 @@ function LevelClass.new(levelDefinition, game)
     level.enemies = {}
     level.mushrooms = {}
     level.balloons = {}
-    level.sky = SkyClass.new(level.world, level.game)
+    level.sky = SkyClass.new(level.world, level.game, level)
     level.goal = GoalClass.new("Salida", 0, -1, WORLD_WIDTH, 1, level.world)
     level.limit = LimitClass.new("Techo", 0, 0, WORLD_WIDTH, 20, level.world) -- El limite es necesario para bloquear el escape de enemigos y otros objetos excepto las semillas y el jugador
     level.player_initial_respawn_position = level.levelDefinition.player_initial_respawn_position

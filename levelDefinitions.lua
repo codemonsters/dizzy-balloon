@@ -6,7 +6,13 @@ local LevelDefinitions = {
         name = "Nivel 1",
         blocks = {},
         max_enemies = 2,
-        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height}
+        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
+        powerups = {
+            speedBoost = 3,
+            extraLife = 2,
+            jumpBoost = 3,
+            extraBomb = 5
+        }
     },
     {
         id = 2,
@@ -16,7 +22,13 @@ local LevelDefinitions = {
             { name = "Bloque 2", x = 200, y = 220, width = 300, height = 10 }
         },
         max_enemies = 3,
-        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height}
+        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
+        powerups = {
+            speedBoost = 2,
+            extraLife = 2,
+            jumpBoost = 2,
+            extraBomb = 4
+        }
     },
     {
         id = 3,
@@ -30,7 +42,13 @@ local LevelDefinitions = {
             { name = "Bloque 6", x = 300, y = 695, width = 100, height = 25}
         },
         max_enemies = 4,
-        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height}
+        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
+        powerups = {
+            speedBoost = 2,
+            extraLife = 2,
+            jumpBoost = 2,
+            extraBomb = 3
+        }
     },
     {
         id = 4,
@@ -40,7 +58,13 @@ local LevelDefinitions = {
             { name = "Bloque 2", x = 335, y = 20, width = 30, height = 435}
         },
         max_enemies = 3,
-        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height}
+        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
+        powerups = {
+            speedBoost = 1,
+            extraLife = 1,
+            jumpBoost = 1,
+            extraBomb = 3
+        }
     },
     {
         id = 5,
@@ -52,7 +76,13 @@ local LevelDefinitions = {
             { name = "Bloque 4", x = 525, y = 485, width = 15, height = 235}
         },
         max_enemies = 6,
-        player_initial_respawn_position = {330, WORLD_HEIGHT - PlayerClass.height}
+        player_initial_respawn_position = {330, WORLD_HEIGHT - PlayerClass.height},
+        powerups = {
+            speedBoost = 1,
+            extraLife = 1,
+            jumpBoost = 1,
+            extraBomb = 2
+        }
     },
     {
         id = 6,
@@ -70,7 +100,13 @@ local LevelDefinitions = {
 
         },
         max_enemies = 0,
-        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height}
+        player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
+        powerups = {
+            speedBoost = 1,
+            extraLife = 1,
+            jumpBoost = 1,
+            extraBomb = 1
+        }
     }
 }
 
