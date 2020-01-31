@@ -66,7 +66,7 @@ function menu.draw()
 end
 
 function menu.keypressed(key, scancode, isrepeat)
-    if key == "space" then
+    if key == "space" or key == "return" then
         changeScreen()
     end
 end
@@ -74,11 +74,7 @@ end
 function menu.keyreleased(key, scancode, isrepeat)
 end
 
---[[ function love.mousepressed(id, x, y, dx, dy, pressure)
-    game_screen = require("screens/game")
-    change_screen(game_screen)
-end ]]
---ESta función hace cosas :)
+--Esta función actualiza los widgets
 function widgetsUpdate()
     love.graphics.setBlendMode("alpha")
 
@@ -98,8 +94,7 @@ function widgetsUpdate()
 
     
     if menuWidgets:Button("Jugar",  menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        game_screen = require("screens/game")
-        change_screen(game_screen)
+        changeScreen()
     end
     if menuWidgets:Button("Preferencias", menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
