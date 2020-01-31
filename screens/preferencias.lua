@@ -5,13 +5,13 @@ local BlockClass = require("gameobjects/block")
 local animLoader = require("animationLoader")
 local music = love.audio.newSource("assets/music/PP_Fight_or_Flight_FULL_Loop.wav", "stream")
 
-local menu = {
-    name = "Menú principal"
+local pantallaPreferencias = {
+    name = "Preferencias"
 }
 
 local negro = {1, 1, 1, 1}
 
-function menu.load()
+function pantallaPreferencias.load()
     suit.theme.cornerRadius = 29
     world = bump.newWorld(50)
     jugador = PlayerClass.new(world, nil)
@@ -21,23 +21,23 @@ function menu.load()
     BlockClass.new("ParedIzquierda", 0, 0, 1, SCREEN_HEIGHT, world)
     BlockClass.new("ParedDerecha", SCREEN_WIDTH, 0, 1, SCREEN_HEIGHT, world)
     BlockClass.new("Techo", 0, 0, SCREEN_WIDTH, 1, world)
+    animLoader:applyAnim(enemigo1, animacionTestEnemigo)
     -- asociar el animador al jugador y cargar una animación en el
     animLoader:applyAnim(jugador, animacionTestJugador)
-    animLoader:applyAnim(enemigo1, animacionTestEnemigo)
 
-    
     music:setLooping(true)
     music:play()
 end
 
-function menu.update(dt)
+function pantallaPreferencias.update(dt)
     jugador:update(dt)
     enemigo1:update(dt)
     animLoader:update(dt)
+
     widgetsUpdate()
 end
 
-function menu.draw()
+function pantallaPreferencias.draw()
     love.graphics.clear(1, 0, 1)
 
     love.graphics.push()
@@ -60,13 +60,13 @@ function menu.draw()
     love.graphics.pop()
 end
 
-function menu.keypressed(key, scancode, isrepeat)
+function pantallaPreferencias.keypressed(key, scancode, isrepeat)
     if key == "space" then
-        change_screen(require("screens/game"))
+        change_screen(require("screens/menu"))
     end
 end
 
-function menu.keyreleased(key, scancode, isrepeat)
+function pantallaPreferencias.keyreleased(key, scancode, isrepeat)
 end
 
 --[[ function love.mousepressed(id, x, y, dx, dy, pressure)
@@ -84,23 +84,73 @@ function widgetsUpdate()
 
     suit.updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
 
-
-    suit.Label("Dizzy Balloon", {color = {normal =  {fg = {0, 0, 0}}}}, suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.20))
+    suit.Label(
+        "Dizzy Balloon",
+        {color = {normal = {fg = {0, 0, 0}}}},
+        suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.20)
+    )
 
     love.graphics.setFont(font_buttons)
 
-    if suit.Button("Jugar", {color = {normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        change_screen(require("screens/game"))
-    end
-    if suit.Button("Preferencias", {color = {normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        change_screen(require("screens/preferencias"))
-    end
-    if suit.Button("Instrucciones", {color = {normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+    if
+        suit.Button(
+            "Sonido",
+            {
+                color = {
+                    normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}},
+                    hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}},
+                    active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}}
+                }
+            },
+            suit.layout:row(SCREEN_WIDTH * .3, SCREEN_HEIGHT * 0.12)
+        ).hit
+     then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
-    if suit.Button("Salir", {color = {normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-
-        os.exit()
+    if
+        suit.Button(
+            "Musica",
+            {
+                color = {
+                    normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}},
+                    hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}},
+                    active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}}
+                }
+            },
+            suit.layout:row(SCREEN_WIDTH * .3, SCREEN_HEIGHT * 0.12)
+        ).hit
+     then
+        print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
+    end
+    if
+        suit.Button(
+            "Idioma",
+            {
+                color = {
+                    normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}},
+                    hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}},
+                    active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}}
+                }
+            },
+            suit.layout:row(SCREEN_WIDTH * .3, SCREEN_HEIGHT * 0.12)
+        ).hit
+     then
+        print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
+    end
+    if
+        suit.Button(
+            "Volver",
+            {
+                color = {
+                    normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}},
+                    hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}},
+                    active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}}
+                }
+            },
+            suit.layout:row(SCREEN_WIDTH * .3, SCREEN_HEIGHT * 0.12)
+        ).hit
+     then
+        change_screen(require("screens/menu"))
     end
 end
 
@@ -108,4 +158,4 @@ function widgetsDraw()
     suit.draw()
 end
 
-return menu
+return pantallaPreferencias
