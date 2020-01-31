@@ -270,6 +270,86 @@ game.states = {
 
             love.graphics.pop()
         end
+    },
+    muriendo = {
+        load = function(self)
+            love.graphics.setCanvas(game.currentLevel.worldCanvas) -- a partir de ahora dibujamos en el canvas
+            do
+                love.graphics.setBlendMode("alpha")
+
+                -- El fondo del mundo
+                love.graphics.setColor(192, 0, 109)
+                love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
+                love.graphics.setColor(255, 255, 255)
+
+                -- objetos del juego
+
+                for i, enemy in ipairs(game.currentLevel.enemies) do
+                    enemy:draw()
+                end
+
+                for i, balloon in ipairs(game.currentLevel.balloons) do
+                    balloon:draw()
+                end
+                if game.currentLevel.sky ~= nil then
+                    game.currentLevel.sky:draw()
+                end
+
+                for i, block in ipairs(game.currentLevel.blocks) do
+                    block:draw()
+                end
+
+                game.currentLevel.bomb:draw()
+
+                for i, mushroom in ipairs(game.currentLevel.mushrooms) do
+                    mushroom:draw()
+                end
+            end
+            love.graphics.setCanvas()
+            
+            playerX, playerY = game.currentLevel.player.x, game.currentLevel.player.y
+            velocidadY = -5
+        end,
+        update = function(self, dt)
+            playerY = playerY + velocidadY
+            velocidadY = velocidadY + dt * 10
+            if playerY >= WORLD_HEIGHT + 100 then
+                if game.vidas <= 0 then
+                    temporizador_respawn_enemigo = 0
+                    returnToMenu()
+                else
+                    game.currentLevel.player:revive()
+                    game.loadlife()
+                end
+            end
+        end,
+        draw = function(self)
+            love.graphics.translate(desplazamientoX, desplazamientoY)
+            love.graphics.scale(factorEscala, factorEscala)
+            love.graphics.setBlendMode("alpha", "premultiplied")
+
+            love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
+
+            love.graphics.push()
+            love.graphics.draw( -- el ultimo frame antes de morir es dibujado
+                game.currentLevel.worldCanvas,
+                (SCREEN_WIDTH - WORLD_WIDTH) / 2,
+                (SCREEN_HEIGHT - WORLD_HEIGHT) / 2,
+                0,
+                1,
+                1
+            )
+            love.graphics.draw(
+                atlas,
+                PlayerClass.states.standing.quads[1].quad,
+                playerX + WORLD_WIDTH / 2 - PlayerClass.width * 2,
+                playerY,
+                0,
+                PlayerClass.width / PlayerClass.states.standing.quads[1].width,
+                PlayerClass.height / PlayerClass.states.standing.quads[1].height
+            )
+            love.graphics.pop()
+        end
     }
 }
 
@@ -309,6 +389,7 @@ function game.loadlife(posX)
         game.currentLevel.player.width,
         game.currentLevel.player.height
     )
+    game.change_state(game.states.jugando)
 end
 
 function game.loadlevel(level)
@@ -580,13 +661,7 @@ end
 
 function game.vidaperdida()
     game.vidas = game.vidas - 1
-    if game.vidas <= 0 then
-        temporizador_respawn_enemigo = 0
-        returnToMenu()
-    else
-        game.currentLevel.player:revive()
-        game.loadlife()
-    end
+    game.change_state(game.states.muriendo)
 end
 
 function game.remove_enemy(enemy)
