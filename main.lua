@@ -38,7 +38,6 @@ function love.load()
     font_menu = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 80) -- Orange Juice 2.0 by Brittney Murphy Design https://brittneymurphydesign.com
     font_buttons = love.graphics.newFont("assets/fonts/GROBOLD.ttf", 50) -- Orange Juice 2.0 by Brittney Murphy Design https://brittneymurphydesign.com
 
-
     font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
     love.graphics.setFont(font_menu)
 
@@ -65,14 +64,16 @@ function love.load()
     math.randomseed(os.time()) -- NOTE: Quizá redundante, parece que Love ya inicializa la semilla random automáticamente
 
     -- atlas: la textura que contiene todas las imágenes
-    atlas = love.graphics.newImage("assets/atlas/arcade_platformerV2.png") -- Créditos: Grafixkid (https://opengameart.org/content/arcade-platformer-assets)
+    atlas = love.graphics.newImage("assets/images/atlas.png") -- Créditos: Grafixkid (https://opengameart.org/content/arcade-platformer-assets)
 
     change_screen(require("screens/menu"))
     log.info("Juego cargado")
 end
 
 function love.update(dt)
-    if debuggee then debuggee.poll() end
+    if debuggee then
+        debuggee.poll()
+    end
     screen.update(dt)
 end
 
@@ -83,7 +84,6 @@ end
 function love.resize(w, h)
     actualizaVariablesEscalado(w, h)
 end
-
 
 function love.keypressed(key, scancode, isrepeat)
     if key == "escape" then
@@ -120,6 +120,6 @@ function actualizaVariablesEscalado(window_width, window_height)
 end
 
 function round(num, n)
-    local mult = 10^(n or 0)
+    local mult = 10 ^ (n or 0)
     return math.floor(num * mult + 0.5) / mult
 end

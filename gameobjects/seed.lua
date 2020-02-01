@@ -24,7 +24,8 @@ local SeedClass = {
             name = "sky",
             quads = {
                 {
-                    quad = love.graphics.newQuad(130, 61, 14, 16, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(130, 61, 14, 16, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
                     height = 16
                 }
@@ -244,7 +245,13 @@ local SeedClass = {
                 self.world:remove(self)
             end,
             update = function(self, dt)
-                local items, lenColExplosion = self.world:queryRect(self.x - self.state.size / 2, self.y - self.state.size / 2, self.state.size, self.state.size)
+                local items, lenColExplosion =
+                    self.world:queryRect(
+                    self.x - self.state.size / 2,
+                    self.y - self.state.size / 2,
+                    self.state.size,
+                    self.state.size
+                )
                 for i = 1, lenColExplosion do
                     if items[i].isPlayer and canApply then
                         self.boost:apply(items[i])
@@ -301,11 +308,19 @@ function SeedClass:draw()
         self.x,
         self.y,
         0,
-        self.width / self.state.quads[self.currentFrame].width,
-        self.height / self.state.quads[self.currentFrame].height
+        self.state.size,
+        self.state.size
+        --self.width / self.state.quads[self.currentFrame].width,
+        --self.height / self.state.quads[self.currentFrame].height
     )
     if self.state == self.states.explode then
-        love.graphics.rectangle("fill", self.x - self.state.size / 2, self.y - self.state.size / 2, self.state.size, self.state.size)
+        love.graphics.rectangle(
+            "fill",
+            self.x - self.state.size / 2,
+            self.y - self.state.size / 2,
+            self.state.size,
+            self.state.size
+        )
     end
     love.graphics.setColor(255, 255, 255)
     --love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
