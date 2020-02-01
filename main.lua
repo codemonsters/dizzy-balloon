@@ -118,3 +118,8 @@ function actualizaVariablesEscalado(window_width, window_height)
     desplazamientoX = (window_width - factorEscala * SCREEN_WIDTH) / 2
     desplazamientoY = (window_height - factorEscala * SCREEN_HEIGHT) / 2
 end
+
+function round(num, n)
+    local mult = 10^(n or 0)
+    return math.floor(num * mult + 0.5) / mult
+end

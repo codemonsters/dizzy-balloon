@@ -45,6 +45,7 @@ game.states = {
         end,
         update = function(self, dt)
             -- comprobamos si debemos crear un enemigo nuevo
+            game.currentLevel.time = game.currentLevel.time - dt
             if game.currentLevel.max_enemies > #game.currentLevel.enemies then
                 temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
                 if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
@@ -381,6 +382,7 @@ function game.loadlife(posX)
         game.currentLevel.player.width,
         game.currentLevel.player.height
     )
+    game.currentLevel.time = game.currentLevel.levelDefinition.time
     game.change_state(game.states.jugando)
 end
 
@@ -485,6 +487,7 @@ function game.draw()
         love.graphics.rectangle("fill", 0, 0, hud_width, SCREEN_HEIGHT)
         love.graphics.setColor(255, 255, 255)
         love.graphics.draw(gamepad, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
+        love.graphics.printf("Time " .. round(game.currentLevel.time, 1), font_hud, 0, 0, hud_width, "center")
     end
 
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal

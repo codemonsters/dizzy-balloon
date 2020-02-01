@@ -14,7 +14,8 @@ local LevelDefinitions = {
             extraLife = 2,
             jumpBoost = 3,
             extraBomb = 5
-        }
+        },
+        time = 300
     },
     {
         id = 2,
@@ -32,7 +33,8 @@ local LevelDefinitions = {
             extraLife = 2,
             jumpBoost = 2,
             extraBomb = 4
-        }
+        },
+        time = 240,
     },
     {
         id = 3,
@@ -54,7 +56,8 @@ local LevelDefinitions = {
             extraLife = 2,
             jumpBoost = 2,
             extraBomb = 3
-        }
+        },
+        time = 180
     },
     {
         id = 4,
@@ -71,7 +74,8 @@ local LevelDefinitions = {
             extraLife = 1,
             jumpBoost = 1,
             extraBomb = 3
-        }
+        },
+        time = 180
     },
     {
         id = 5,
@@ -91,7 +95,8 @@ local LevelDefinitions = {
             extraLife = 1,
             jumpBoost = 1,
             extraBomb = 2
-        }
+        },
+        time = 150
     },
     {
         id = 6,
@@ -115,7 +120,8 @@ local LevelDefinitions = {
             extraLife = 1,
             jumpBoost = 1,
             extraBomb = 1
-        }
+        },
+        time = 600
     }
 }
 

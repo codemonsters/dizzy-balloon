@@ -19,6 +19,7 @@ function LevelClass.new(levelDefinition, game)
     level.levelDefinition = levelDefinition
     level.max_enemies = level.levelDefinition.max_enemies
     level.music = level.levelDefinition.music
+    level.time = level.levelDefinition.time
     level.blocks = {}
     for _, block in ipairs(level.levelDefinition.blocks) do
         table.insert(level.blocks, BlockClass.new(block.name, block.x, block.y, block.width, block.height, level.world))
