@@ -46,6 +46,9 @@ game.states = {
         update = function(self, dt)
             -- comprobamos si debemos crear un enemigo nuevo
             game.currentLevel.time = game.currentLevel.time - dt
+            if game.currentLevel.time <= 0 then
+                game.vidaperdida()
+            end
             if game.currentLevel.max_enemies > #game.currentLevel.enemies then
                 temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
                 if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
