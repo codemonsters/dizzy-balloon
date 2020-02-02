@@ -360,7 +360,7 @@ function game.getNewRespawnPos()
                 respawnX = cols[i].x + cols[i].width
             else
                 respawnY = cols[i].y - game.currentLevel.player.height
-                respawnX = nivel_actual.jugador_posicion_inicial[1]
+                respawnX = game.currentLevel.player_initial_respawn_position[1]
             end
         end
     end
@@ -487,7 +487,7 @@ function game.draw()
         love.graphics.rectangle("fill", 0, 0, hud_width, SCREEN_HEIGHT)
         love.graphics.setColor(255, 255, 255)
         love.graphics.draw(gamepad, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
-        love.graphics.printf("Time " .. round(game.currentLevel.time, 1), font_hud, 0, 0, hud_width, "center")
+        love.graphics.printf("Time " .. round(game.currentLevel.time, 1), font_hud, 0, 50, hud_width, "center")
     end
 
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
