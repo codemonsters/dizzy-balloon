@@ -162,7 +162,6 @@ game.states = {
                 for i, mushroom in ipairs(game.currentLevel.mushrooms) do
                     mushroom:draw()
                 end
-
             end
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
 
@@ -208,7 +207,6 @@ game.states = {
                 for i, block in ipairs(game.nextLevel.blocks) do
                     block:draw()
                 end
-
             end
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
             love.graphics.push()
@@ -236,14 +234,13 @@ game.states = {
             end
         end,
         draw = function(self)
-
             love.graphics.translate(desplazamientoX, desplazamientoY)
             love.graphics.scale(factorEscala, factorEscala)
             love.graphics.setBlendMode("alpha", "premultiplied")
 
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
             love.graphics.push()
-            
+
             love.graphics.draw( -- el primer frame del anterior nivel es dibujado ya que sigue en memoria
                 game.currentLevel.worldCanvas,
                 (SCREEN_WIDTH - WORLD_WIDTH) / 2,
@@ -299,7 +296,7 @@ game.states = {
                 end
             end
             love.graphics.setCanvas()
-            
+
             playerX, playerY = game.currentLevel.player.x, game.currentLevel.player.y
             velocidadY = -5
         end,
@@ -348,7 +345,8 @@ game.states = {
 
 function game.getNewRespawnPos()
     local respawnX, respawnY = game.currentLevel.player.x, game.currentLevel.player.y
-    local cols, len = game.currentLevel.player.world:queryRect(
+    local cols, len =
+        game.currentLevel.player.world:queryRect(
         game.currentLevel.player.x,
         game.currentLevel.player.y,
         game.currentLevel.player.width,
@@ -394,18 +392,11 @@ function game.loadlevel(level)
         level.music = love.audio.newSource("assets/music/" .. level.music, "stream")
         level.music:setLooping(true)
     end
-    
+
     local borderWidth = 50
     table.insert(
         level.blocks,
-        BlockClass.new(
-            "Suelo",
-            -borderWidth,
-            WORLD_HEIGHT,
-            WORLD_WIDTH + 2 * borderWidth,
-            borderWidth,
-            level.world
-        )
+        BlockClass.new("Suelo", -borderWidth, WORLD_HEIGHT, WORLD_WIDTH + 2 * borderWidth, borderWidth, level.world)
     )
     table.insert(
         level.blocks,
@@ -475,7 +466,6 @@ function game.draw()
         love.graphics.setColor(255, 0, 0)
         love.graphics.draw(circle, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
         love.graphics.setColor(255, 255, 255)
-        
     end
 
     love.graphics.setCanvas(gamepadCanvas) -- canvas del gamepad
@@ -487,7 +477,7 @@ function game.draw()
         love.graphics.rectangle("fill", 0, 0, hud_width, SCREEN_HEIGHT)
         love.graphics.setColor(255, 255, 255)
         love.graphics.draw(gamepad, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
-        love.graphics.printf("Time " .. round(game.currentLevel.time, 1), font_hud, 0, 50, hud_width, "center")
+        love.graphics.printf("Time " .. math.ceil(game.currentLevel.time), font_hud, 0, 0, hud_width, "center")
     end
 
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
@@ -731,7 +721,8 @@ function game.change_state(new_state)
     end
 end
 
-function returnToMenu() change_screen(require("screens/menu"))
+function returnToMenu()
+    change_screen(require("screens/menu"))
     if game.currentLevel.music ~= nil then
         game.currentLevel.music:stop()
     end
