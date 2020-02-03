@@ -78,10 +78,11 @@ Requisitos:
 * [Metatables](https://www.lua.org/pil/13.html) y [Programación Orientada a Objetos con Lua](https://www.tutorialspoint.com/lua/lua_object_oriented.htm)
 * [Love2D Wiki](https://love2d.org/wiki/Main_Page)
 * [Love2D API](https://love2d-community.github.io/love-api/)
+* [SUIT](https://suit.readthedocs.io/en/latest/): Documentación para la librería de widgets
 * [awesome-love2d](https://github.com/love2d-community/awesome-love2d): A curated list of amazingly awesome LÖVE libraries, resources and shiny things
 * [git - the simple guide](http://rogerdudler.github.io/git-guide/)
 * [Mastering Markdown](https://guides.github.com/features/mastering-markdown/): Útil para editar este y otros ficheros
-* [SUIT](https://suit.readthedocs.io/en/latest/): Documentación para la librería de widgets
+* [How to write a Git commit message properly with examples](https://www.theserverside.com/video/Follow-these-git-commit-message-guidelines)
 
 ## Otros
 
