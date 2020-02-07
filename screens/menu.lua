@@ -23,7 +23,7 @@ function menu.load()
     animLoader:applyAnim(jugador, animacionTestJugador)
     music:setLooping(true)
     music:play()
-    changeMenu(require("screens/menus/mainMenu"))
+    changeMenu(require("menus/mainMenu"))
 end
 
 function menu.update(dt)

@@ -40,7 +40,7 @@ function menu.update(dt)
             menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)
         ).hit
      then
-        changeMenu(require("screens/menus/mainMenu"))
+        changeMenu(require("menus/mainMenu"))
     end
 end
 
