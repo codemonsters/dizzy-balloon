@@ -27,8 +27,8 @@ function SkyClass.new(world, game, level)
         local totalPU = v
         while totalPU > 0 and puCounter < seedNumber do
             local num = math.random(1, seedNumber)
-            if sky.semillas[num].boost == nil then
-                sky.semillas[num].boost = PowerUps[k]
+            if sky.semillas[num].powerUp == nil then
+                sky.semillas[num].powerUp = PowerUps[k]
                 totalPU = totalPU - 1
                 puCounter = puCounter + 1
             end

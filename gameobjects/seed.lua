@@ -17,7 +17,7 @@ local SeedClass = {
     height = 20,
     name = "Seed",
     isSeed = true,
-    boost = nil,
+    powerUp = nil,
     player_over_timer = 0,
     states = {
         sky = {
@@ -47,14 +47,16 @@ local SeedClass = {
             name = "falling",
             quads = {
                 {
-                    quad = love.graphics.newQuad(98, 56, 14, 21, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(98, 56, 14, 21, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 21
+                    height = 16
                 },
                 {
-                    quad = love.graphics.newQuad(114, 57, 14, 19, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(114, 57, 14, 19, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 19
+                    height = 16
                 }
             },
             load = function(self)
@@ -95,16 +97,17 @@ local SeedClass = {
             name = "touchdown",
             quads = {
                 {
-                    quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 14
+                    height = 16
                 }
             },
             load = function(self)
                 self.currentframe = 1
             end,
             update = function(self, dt)
-                if self.boost ~= nil then
+                if self.powerUp ~= nil then
                     self.change_state(self, self.states.explode)
                 else
                     self.change_state(self, self.states.onthefloor)
@@ -115,9 +118,10 @@ local SeedClass = {
             name = "onthefloor",
             quads = {
                 {
-                    quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 14
+                    height = 16
                 }
             },
             load = function(self)
@@ -160,9 +164,10 @@ local SeedClass = {
             name = "evolving",
             quads = {
                 {
-                    quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 14
+                    height = 16
                 }
             },
             load = function(self)
@@ -254,7 +259,7 @@ local SeedClass = {
                 )
                 for i = 1, lenColExplosion do
                     if items[i].isPlayer and canApply then
-                        self.boost:apply(items[i])
+                        self.powerUp:apply(items[i])
                         canApply = false
                     end
                 end
@@ -299,8 +304,8 @@ function SeedClass:draw()
         self.width / self.image:getWidth(),
         self.height/ self.image:getHeight())
     --]]
-    if self.boost ~= nil then
-        love.graphics.setColor(self.boost.color)
+    if self.powerUp ~= nil then
+        love.graphics.setColor(self.powerUp.color)
     end
     love.graphics.draw(
         atlas,
