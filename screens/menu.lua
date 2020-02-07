@@ -63,7 +63,7 @@ function menu.keypressed(key, scancode, isrepeat)
 end
 
 function menu.keyreleased(key, scancode, isrepeat)
-    currenMenu.keyreleased(key, scancode, isrepeat)
+    currentMenu.keyreleased(key, scancode, isrepeat)
 end
 
 --Esta función actualiza los widgets
