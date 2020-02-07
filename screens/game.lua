@@ -725,7 +725,7 @@ function game.change_state(new_state)
 end
 
 function returnToMenu()
-    change_screen(require("screens/menu"))
+    changeScreen(require("screens/menu"))
     if game.currentLevel.music ~= nil then
         game.currentLevel.music:stop()
     end

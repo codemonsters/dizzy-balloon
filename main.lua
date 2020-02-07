@@ -23,9 +23,9 @@ WORLD_WIDTH, WORLD_HEIGHT = 720, 720 -- La zona de juego es parte de la pantalla
 
 local screen = nil
 
-function change_screen(new_screen)
+function changeScreen(new_screen)
+    log.info("cargando pantalla: " .. new_screen.name)
     screen = new_screen
-    log.info("cargando pantalla: " .. screen.name)
     screen.load()
 end
 
@@ -66,7 +66,7 @@ function love.load()
     -- atlas: la textura que contiene todas las imágenes
     atlas = love.graphics.newImage("assets/images/atlas.png") -- Créditos: Grafixkid (https://opengameart.org/content/arcade-platformer-assets)
 
-    change_screen(require("screens/menu"))
+    changeScreen(require("screens/menu"))
     log.info("Juego cargado")
 end
 
