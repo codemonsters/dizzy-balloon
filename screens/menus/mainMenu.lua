@@ -22,6 +22,7 @@ function menu.update(dt)
     love.graphics.setFont(font_buttons)
 
     if widgets:Button("Jugar",  widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+        music:stop()
         changeScreen(require("screens/game"))
     end
     if widgets:Button("Preferencias", widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
@@ -45,6 +46,7 @@ end
 
 function menu.keypressed(key, scancode, isrepeat)
     if key == "space" then
+        music:stop()
         changeScreen(require('screens/game'))
     end
 end
