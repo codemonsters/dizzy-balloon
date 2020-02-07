@@ -17,9 +17,7 @@ local buttonParameters = {
 -- HELPER
 function ourTheme.getColorForState(opt, widget)
     local s = opt.state or "normal"
-    print(s)
     if widget == "button" then
-        print(buttonParameters.color[s])
         return (buttonParameters.color[s])
     end
 end

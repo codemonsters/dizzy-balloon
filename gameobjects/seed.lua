@@ -17,7 +17,7 @@ local SeedClass = {
     height = 20,
     name = "Seed",
     isSeed = true,
-    boost = nil,
+    powerUp = nil,
     player_over_timer = 0,
     states = {
         sky = {
@@ -104,7 +104,7 @@ local SeedClass = {
                 self.currentframe = 1
             end,
             update = function(self, dt)
-                if self.boost ~= nil then
+                if self.powerUp ~= nil then
                     self.change_state(self, self.states.explode)
                 else
                     self.change_state(self, self.states.onthefloor)
@@ -254,7 +254,7 @@ local SeedClass = {
                 )
                 for i = 1, lenColExplosion do
                     if items[i].isPlayer and canApply then
-                        self.boost:apply(items[i])
+                        self.powerUp:apply(items[i])
                         canApply = false
                     end
                 end
@@ -299,8 +299,8 @@ function SeedClass:draw()
         self.width / self.image:getWidth(),
         self.height/ self.image:getHeight())
     --]]
-    if self.boost ~= nil then
-        love.graphics.setColor(self.boost.color)
+    if self.powerUp ~= nil then
+        love.graphics.setColor(self.powerUp.color)
     end
     love.graphics.draw(
         atlas,
