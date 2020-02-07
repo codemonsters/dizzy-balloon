@@ -433,7 +433,6 @@ function game.load()
     game.loadlevel(game.currentLevel)
     game.change_state(game.states.jugando)
     if game.currentLevel.music ~= nil then
-        game.currentLevel.music:setVolume(0.1) --For testing
         game.currentLevel.music:play()
     end
     --game.state = game.states.cambiandoDeNivel
@@ -723,7 +722,7 @@ function game.change_state(new_state)
 end
 
 function returnToMenu()
-    changeScreen(require("screens/menu"))
+    change_screen(require("screens/menu"))
     if game.currentLevel.music ~= nil then
         game.currentLevel.music:stop()
     end
