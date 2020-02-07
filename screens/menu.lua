@@ -3,7 +3,6 @@ local EnemyClass = require("gameobjects/enemy")
 local bump = require "libraries/bump/bump"
 local BlockClass = require("gameobjects/block")
 local animLoader = require("animationLoader")
---local music = love.audio.newSource("assets/music/PP_Silly_Goose_FULL_Loop.wav", "stream")
 music = love.audio.newSource("assets/music/Menu.wav", "stream")
 local ourTheme = require("ourTheme")
 local menu = {
@@ -77,25 +76,34 @@ function widgetsUpdate()
 
     menuWidgets:updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
 
-
     menuWidgets:Label("Dizzy Balloon", menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12))
 
     love.graphics.setFont(font_buttons)
 
-
-
-    
-    if menuWidgets:Button("Jugar",  menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+    if menuWidgets:Button("Jugar", menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+        -- TODO: a changeScreen() le falta el argumento (el screen al que queremos cambiar)
         changeScreen()
     end
     if menuWidgets:Button("Preferencias", menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+        -- TODO: Eliminar este print o sobra todo el if?
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
     if menuWidgets:Button("Instrucciones", menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
-    if menuWidgets:Button("Salir", {color = {normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}} }},  menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-
+    if
+        menuWidgets:Button(
+            "Salir",
+            {
+                color = {
+                    normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}},
+                    hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}},
+                    active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}}
+                }
+            },
+            menuWidgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)
+        ).hit
+     then
         os.exit()
     end
 end
