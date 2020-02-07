@@ -7,16 +7,10 @@ local animLoader = require("animationLoader")
 local music = love.audio.newSource("assets/music/Menu.wav", "stream")
 local ourTheme = require("ourTheme")
 local menu = {
-    name = "Menú principal"
+    name = "Pantalla menú principal"
 }
 
-
-local negro = {1, 1, 1, 1}
-
 function menu.load()
-
-    menuWidgets = suit.new(ourTheme)
-
     world = bump.newWorld(50)
     jugador = PlayerClass.new(world, nil)
     enemigo1 = EnemyClass.new(enemigo, SCREEN_WIDTH * 0.05, PlayerClass.height * 3, world, nil, 0)
@@ -30,6 +24,7 @@ function menu.load()
     animLoader:applyAnim(jugador, animacionTestJugador)
     music:setLooping(true)
     music:play()
+    changeMenu(require("screens/menus/mainMenu"))
 end
 
 function menu.update(dt)
@@ -37,11 +32,10 @@ function menu.update(dt)
     enemigo1:update(dt)
     animLoader:update(dt)
 
-    widgetsUpdate()
+    currentMenu.update(dt)
 end
 
 function menu.draw()
-
     love.graphics.clear(1, 0, 1)
 
     love.graphics.push()
@@ -59,18 +53,17 @@ function menu.draw()
     love.graphics.line(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, SCREEN_WIDTH - 11, SCREEN_HEIGHT - 1)
     love.graphics.line(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 11)
 
-    widgetsDraw()
+    currentMenu.draw()
 
     love.graphics.pop()
 end
 
 function menu.keypressed(key, scancode, isrepeat)
-    if key == "space" then
-        changeScreen()
-    end
+    currentMenu.keypressed(key, scancode, isrepeat)
 end
 
 function menu.keyreleased(key, scancode, isrepeat)
+    currentMenu.keyreleased(key, scancode, isrepeat)
 end
 
 --Esta función actualiza los widgets
@@ -107,13 +100,10 @@ function widgetsUpdate()
     end
 end
 
-function changeScreen()
-    change_screen(require("screens/game"))
-    music:stop()
-end
-
-function widgetsDraw()
-    menuWidgets:draw()
+function changeMenu(newMenu)
+    log.info("cargando menú: " .. newMenu.name)
+    currentMenu = newMenu
+    currentMenu.load()
 end
 
 return menu
