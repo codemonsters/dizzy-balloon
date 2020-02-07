@@ -7,7 +7,13 @@ SoundsClass.__index = SoundsClass
 function SoundsClass.new()
     local sounds = {}
     sounds.explosion = love.audio.newSource("assets/sounds/explosion.wav", "static")
+    sounds.explosion:setLooping(false)
     sounds.whoosh = love.audio.newSource("assets/sounds/whoosh.wav", "static")
+    sounds.whoosh:setLooping(false)
+    sounds.jump = love.audio.newSource("assets/sounds/jump.wav", "static")
+    sounds.jump:setLooping(false)
+    sounds.lostlife = love.audio.newSource("assets/sounds/lostlife.wav", "static")
+    sounds.lostlife:setLooping(false)
     --sounds.name = name
     setmetatable(sounds, SoundsClass)
     return sounds

@@ -11,8 +11,6 @@ local GoalClass = require("gameobjects/goal")
 local LimitClass = require("gameobjects/limit")
 local LevelClass = require("level")
 local LevelDefinitions = require("levelDefinitions")
-local SoundsClass = require("sounds")
-local sounds = SoundsClass.new()
 local worldCanvas = nil
 local hudCanvas = nil
 local jugadorpuedesaltar = true
@@ -390,7 +388,6 @@ end
 function game.loadlevel(level)
     level.player = PlayerClass.new(level.world, game)
     level.bomb = BombClass.new("Bomb", level.world, game)
-    print(level.music)
     if level.music ~= nil then
         level.music = love.audio.newSource("assets/music/" .. level.music, "stream")
         level.music:setLooping(true)
@@ -436,6 +433,7 @@ function game.load()
     game.loadlevel(game.currentLevel)
     game.change_state(game.states.jugando)
     if game.currentLevel.music ~= nil then
+        game.currentLevel.music:setVolume(0.1) --For testing
         game.currentLevel.music:play()
     end
     --game.state = game.states.cambiandoDeNivel

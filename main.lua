@@ -9,8 +9,10 @@ print('debuggee start ->', startResult, breakerType)
 --]]
 -- fin configuración Lua Debugger Extension
 
-log = require "libraries/log/log" -- https://github.com/rxi/log.lua
-suit = require "libraries/suit"
+log = require("libraries/log/log") -- https://github.com/rxi/log.lua
+suit = require("libraries/suit")
+local SoundClass = require("sounds")
+sounds = SoundClass.new()
 
 mobile = false
 
