@@ -47,14 +47,16 @@ local SeedClass = {
             name = "falling",
             quads = {
                 {
-                    quad = love.graphics.newQuad(98, 56, 14, 21, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(98, 56, 14, 21, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 21
+                    height = 16
                 },
                 {
-                    quad = love.graphics.newQuad(114, 57, 14, 19, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(114, 57, 14, 19, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 19
+                    height = 16
                 }
             },
             load = function(self)
@@ -95,9 +97,10 @@ local SeedClass = {
             name = "touchdown",
             quads = {
                 {
-                    quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 14
+                    height = 16
                 }
             },
             load = function(self)
@@ -115,9 +118,10 @@ local SeedClass = {
             name = "onthefloor",
             quads = {
                 {
-                    quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 14
+                    height = 16
                 }
             },
             load = function(self)
@@ -160,9 +164,10 @@ local SeedClass = {
             name = "evolving",
             quads = {
                 {
-                    quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 14
+                    height = 16
                 }
             },
             load = function(self)
