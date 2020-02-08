@@ -3,7 +3,8 @@ local menu = {
     widgets = suit.new(ourTheme)
 }
 
-function menu.load()
+function menu.load(screen)
+    menu.screen = screen -- screen que contiene este menú
     canvas = love.graphics.newCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 end
 
@@ -26,7 +27,7 @@ function menu.update(dt)
         changeScreen(require("screens/game"))
     end
     if menu.widgets:Button("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        changeMenu(require("menus/preferencias"))
+        menu.screen.loadMenu(require("menus/preferencias"))
     end
     if menu.widgets:Button("Instrucciones", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
