@@ -1,5 +1,5 @@
 local menu = {
-    name = "Menú principal",
+    name = "main",
     widgets = suit.new(ourTheme)
 }
 
@@ -27,7 +27,7 @@ function menu.update(dt)
         changeScreen(require("screens/game"))
     end
     if menu.widgets:Button("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        menu.screen.loadMenu(require("menus/preferencias"))
+        menu.screen.changeMenu(menu.screen.loadMenu(require("menus/preferences")))
     end
     if menu.widgets:Button("Instrucciones", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
@@ -50,7 +50,7 @@ function menu.update(dt)
 end
 
 function menu.draw()
-    love.graphics.setCanvas(menu.canvas) -- canvas del HUD
+    love.graphics.setCanvas(menu.canvas)
     do
         love.graphics.setBlendMode("alpha")
         menu.widgets:draw()

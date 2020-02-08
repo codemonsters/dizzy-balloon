@@ -1,5 +1,5 @@
 local menu = {
-    name = "Menú preferencias",
+    name = "preferences",
     widgets = suit.new(ourTheme)
 }
 
@@ -41,12 +41,12 @@ function menu.update(dt)
             menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)
         ).hit
      then
-        menu.screen.loadMenu(require("menus/main"))
+        menu.screen.changeMenu(menu.screen.loadMenu(require("menus/main")))
     end
 end
 
 function menu.draw()
-    love.graphics.setCanvas(menu.canvas) -- canvas del HUD
+    love.graphics.setCanvas(menu.canvas)
     do
         love.graphics.setBlendMode("alpha")
         menu.widgets:draw()
