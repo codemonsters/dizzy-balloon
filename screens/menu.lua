@@ -3,7 +3,7 @@ local EnemyClass = require("gameobjects/enemy")
 local bump = require "libraries/bump/bump"
 local BlockClass = require("gameobjects/block")
 local animLoader = require("animationLoader")
-local ourTheme = require("ourTheme")
+local ourTheme = require("menus/ourTheme")
 
 --[[
     A grandes rasgos:

@@ -22,8 +22,8 @@ local TIEMPO_RESPAWN_ENEMIGO = 1
 local inicioCambioNivel = 0
 local finalCambioNivel = 5
 local state
-local gamepad = love.graphics.newImage("assets/gamepad.png")
-local circle = love.graphics.newImage("assets/circle.png")
+local gamepad = love.graphics.newImage("assets/images/old/gamepad.png")
+local circle = love.graphics.newImage("assets/images/old/circle.png")
 
 local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
 local hud_height = SCREEN_HEIGHT
