@@ -1,8 +1,8 @@
 local PlayerClass = require("gameobjects/player")
 local EnemyClass = require("gameobjects/enemy")
-local bump = require "libraries/bump/bump"
+local bump = require("libraries/bump/bump")
 local BlockClass = require("gameobjects/block")
-local animLoader = require("animationLoader")
+local animLoader = require("misc/animationLoader")
 local ourTheme = require("menus/ourTheme")
 
 --[[

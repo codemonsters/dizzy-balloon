@@ -1,5 +1,5 @@
 local SeedClass = require("gameobjects/seed")
-local PowerUps = require("powerups")
+local PowerUps = require("misc/powerups")
 local levelDefinitions = require("levels/levelDefinitions")
 
 local SkyClass = {}

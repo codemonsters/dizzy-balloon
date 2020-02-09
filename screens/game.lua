@@ -3,7 +3,7 @@ local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
 local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
-local PointerClass = require("pointer")
+local PointerClass = require("misc/pointer")
 local BombClass = require("gameobjects/bomb")
 local BalloonClass = require("gameobjects/balloon")
 local MushroomClass = require("gameobjects/mushroom")
