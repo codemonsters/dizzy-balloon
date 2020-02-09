@@ -24,76 +24,24 @@ menu.screenStates = {
             if menu.currentMenu == nil then
                 -- entrando por primera vez en esta pantalla (o volviendo desde otro screen)
                 -- desplazamiento del nuevo menú desde arriba
-                menu.screenStates.changingMenu.effect = "moveDown"
-                menu.screenStates.changingMenu.currentMenuShiftX = 0
-                menu.screenStates.changingMenu.currentMenuShiftY = 0
-                menu.screenStates.changingMenu.nextMenuShiftX = 0
-                menu.screenStates.changingMenu.nextMenuShiftY = -SCREEN_HEIGHT
-                menu.screenStates.changingMenu.velY = 1500
+                menu.screenStates.changingMenu.effect = menu.screenStates.changingMenu.effects.moveDown
             elseif menu.currentMenu.name == "main" and menu.nextMenu.name == "preferences" then
-                print("EFECTO: MOVER HACIA LA IZQUIERDA")
                 -- desplazamiento del nuevo menú hacia la izquierda
-                menu.screenStates.changingMenu.effect = "moveLeft"
-                menu.screenStates.changingMenu.currentMenuShiftX = 0
-                menu.screenStates.changingMenu.nextMenuShiftX = SCREEN_WIDTH
-                menu.screenStates.changingMenu.velX = -2500
+                menu.screenStates.changingMenu.effect = menu.screenStates.changingMenu.effects.moveLeft
             elseif menu.currentMenu.name == "preferences" and menu.nextMenu.name == "main" then
-                print("EFECTO: MOVER HACIA LA DERECHA")
                 -- desplazamiento del nuevo menú hacia la derecha
-                menu.screenStates.changingMenu.effect = "moveRight"
-                menu.screenStates.changingMenu.currentMenuShiftX = 0
-                menu.screenStates.changingMenu.nextMenuShiftX = -SCREEN_WIDTH
-                menu.screenStates.changingMenu.velX = 2500
+                menu.screenStates.changingMenu.effect = menu.screenStates.changingMenu.effects.moveRight
             else
-                print("EFECTO: NINGUNO")
                 -- el nuevo menú sustituye al actual inmediatamente, sin animaciones
                 menu.screenStates.changingMenu.effect = nil
                 menu.currentMenu = menu.nextMenu
                 menu.nextMenu = nil
                 menu.changeScreenState(menu.screenStates.showingMenu)
             end
+            menu.screenStates.changingMenu.effect.load()
         end,
         update = function(dt)
-            if menu.screenStates.changingMenu.effect == "moveDown" then
-                menu.screenStates.changingMenu.nextMenuShiftY =
-                    menu.screenStates.changingMenu.nextMenuShiftY + dt * menu.screenStates.changingMenu.velY
-                if menu.screenStates.changingMenu.nextMenuShiftY > 0 then
-                    menu.currentMenu = menu.nextMenu
-                    menu.nextMenu = nil
-                    menu.changeScreenState(menu.screenStates.showingMenu)
-                    menu.currentMenu.update(dt)
-                else
-                    menu.nextMenu.update(dt)
-                end
-            elseif menu.screenStates.changingMenu.effect == "moveLeft" then
-                menu.screenStates.changingMenu.currentMenuShiftX =
-                    menu.screenStates.changingMenu.currentMenuShiftX + dt * menu.screenStates.changingMenu.velX
-                menu.screenStates.changingMenu.nextMenuShiftX =
-                    menu.screenStates.changingMenu.nextMenuShiftX + dt * menu.screenStates.changingMenu.velX
-                if menu.screenStates.changingMenu.currentMenuShiftX <= -SCREEN_WIDTH then
-                    menu.currentMenu = menu.nextMenu
-                    menu.nextMenu = nil
-                    menu.changeScreenState(menu.screenStates.showingMenu)
-                    menu.currentMenu.update(dt)
-                else
-                    menu.currentMenu.update(dt)
-                    menu.nextMenu.update(dt)
-                end
-            elseif menu.screenStates.changingMenu.effect == "moveRight" then
-                menu.screenStates.changingMenu.currentMenuShiftX =
-                    menu.screenStates.changingMenu.currentMenuShiftX + dt * menu.screenStates.changingMenu.velX
-                menu.screenStates.changingMenu.nextMenuShiftX =
-                    menu.screenStates.changingMenu.nextMenuShiftX + dt * menu.screenStates.changingMenu.velX
-                if menu.screenStates.changingMenu.currentMenuShiftX >= SCREEN_WIDTH then
-                    menu.currentMenu = menu.nextMenu
-                    menu.nextMenu = nil
-                    menu.changeScreenState(menu.screenStates.showingMenu)
-                    menu.currentMenu.update(dt)
-                else
-                    menu.currentMenu.update(dt)
-                    menu.nextMenu.update(dt)
-                end
-            end
+            menu.screenStates.changingMenu.effect.update(dt)
         end,
         draw = function()
             if menu.currentMenu then
@@ -113,7 +61,74 @@ menu.screenStates = {
             )
             menu.nextMenu.draw()
             love.graphics.pop()
-        end
+        end,
+        effects = {
+            moveDown = {
+                load = function()
+                    menu.screenStates.changingMenu.currentMenuShiftX = 0
+                    menu.screenStates.changingMenu.currentMenuShiftY = 0
+                    menu.screenStates.changingMenu.nextMenuShiftX = 0
+                    menu.screenStates.changingMenu.nextMenuShiftY = -SCREEN_HEIGHT
+                    menu.screenStates.changingMenu.velY = 1500
+                end,
+                update = function(dt)
+                    menu.screenStates.changingMenu.nextMenuShiftY =
+                        menu.screenStates.changingMenu.nextMenuShiftY + dt * menu.screenStates.changingMenu.velY
+                    if menu.screenStates.changingMenu.nextMenuShiftY > 0 then
+                        menu.currentMenu = menu.nextMenu
+                        menu.nextMenu = nil
+                        menu.changeScreenState(menu.screenStates.showingMenu)
+                        menu.currentMenu.update(dt)
+                    else
+                        menu.nextMenu.update(dt)
+                    end
+                end
+            },
+            moveLeft = {
+                load = function()
+                    menu.screenStates.changingMenu.currentMenuShiftX = 0
+                    menu.screenStates.changingMenu.nextMenuShiftX = SCREEN_WIDTH
+                    menu.screenStates.changingMenu.velX = -2500
+                end,
+                update = function(dt)
+                    menu.screenStates.changingMenu.currentMenuShiftX =
+                        menu.screenStates.changingMenu.currentMenuShiftX + dt * menu.screenStates.changingMenu.velX
+                    menu.screenStates.changingMenu.nextMenuShiftX =
+                        menu.screenStates.changingMenu.nextMenuShiftX + dt * menu.screenStates.changingMenu.velX
+                    if menu.screenStates.changingMenu.currentMenuShiftX <= -SCREEN_WIDTH then
+                        menu.currentMenu = menu.nextMenu
+                        menu.nextMenu = nil
+                        menu.changeScreenState(menu.screenStates.showingMenu)
+                        menu.currentMenu.update(dt)
+                    else
+                        menu.currentMenu.update(dt)
+                        menu.nextMenu.update(dt)
+                    end
+                end
+            },
+            moveRight = {
+                load = function()
+                    menu.screenStates.changingMenu.currentMenuShiftX = 0
+                    menu.screenStates.changingMenu.nextMenuShiftX = -SCREEN_WIDTH
+                    menu.screenStates.changingMenu.velX = 2500
+                end,
+                update = function(dt)
+                    menu.screenStates.changingMenu.currentMenuShiftX =
+                        menu.screenStates.changingMenu.currentMenuShiftX + dt * menu.screenStates.changingMenu.velX
+                    menu.screenStates.changingMenu.nextMenuShiftX =
+                        menu.screenStates.changingMenu.nextMenuShiftX + dt * menu.screenStates.changingMenu.velX
+                    if menu.screenStates.changingMenu.currentMenuShiftX >= SCREEN_WIDTH then
+                        menu.currentMenu = menu.nextMenu
+                        menu.nextMenu = nil
+                        menu.changeScreenState(menu.screenStates.showingMenu)
+                        menu.currentMenu.update(dt)
+                    else
+                        menu.currentMenu.update(dt)
+                        menu.nextMenu.update(dt)
+                    end
+                end
+            }
+        }
     },
     showingMenu = {
         -- mostrando un menú
@@ -131,13 +146,8 @@ menu.screenStates = {
 
 function menu.changeMenu(nextMenu)
     menu.nextMenu = nextMenu
-    --if menu.currentMenu == nil then
-    -- dado que no hay currentMenu asumimos que estamos cargando en este screen un menú por primera vez
-    --    menu.changeScreenState(menu.screenStates.enteringScreen)
-    --else
     -- transición de un menú a otro
     menu.changeScreenState(menu.screenStates.changingMenu)
-    --end
 end
 
 -- carga un menú y ejecuta su método load antes de devolverlo
