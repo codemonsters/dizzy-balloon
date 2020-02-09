@@ -6,53 +6,31 @@ local animLoader = require("misc/animationLoader")
 local ourTheme = require("menus/ourTheme")
 
 --[[
-    A grandes rasgos:
-        * Esta pantalla (menu) tiene distintos estados, por ejemplo para cargar menús y hacer transiciones entre ellos y mostrarlos
-        * El estado actual se guarda en menu.screenState, pero debe cambiarse llamando a menu.changeScreenState(screenState) para que así se llame a la función load() del estado al que cambiamos
-        * La variable menu.currentMenu apunta hacia el menú actual
-        * En menu.nextMenu se guarda el menú hacia el que nos estamos moviendo (el cual una vez finalizada la transición se convertirá en menu.currentMenu)
+    Esta pantalla (menu) tiene distintos estados, por ejemplo para cargar menús y hacer transiciones entre ellos y mostrarlos.
+    El estado actual se guarda en menu.screenState, pero debe cambiarse llamando a menu.changeScreenState(screenState) para que así se llame a la función load() del estado al que cambiamos.
+    La variable menu.currentMenu apunta hacia el menú actual.
+    En menu.nextMenu se guarda el menú hacia el que nos estamos moviendo (el cual una vez finalizada la transición se convertirá en menu.currentMenu).
 ]]
 local menu = {
     name = "Pantalla menú principal"
 }
 
 menu.screenStates = {
-    -- TODO: ¿Añadir un estado exitingScreen" para utilizar mientras abandonamos esta pantalla?
-    enteringScreen = {
-        -- entrando por primera vez en esta pantalla (o volviendo desde otro screen)
-        name = "enteringScreen",
-        load = function()
-            menu.currentMenu = nil
-            if menu.nextMenu == nil then
-                error(
-                    "El estado menu.screenStates necesita un menú en menu.nextMenu (y ahora mismo menu.nextMenu vale nil)"
-                )
-            end
-            menu.screenStates.enteringScreen.shiftY = SCREEN_HEIGHT -- desplazamiento vertical del menú (aparece en la pantalla desde la parte superior)
-        end,
-        update = function(dt)
-            menu.screenStates.enteringScreen.shiftY = menu.screenStates.enteringScreen.shiftY - dt * 2500
-            if menu.screenStates.enteringScreen.shiftY <= 0 then
-                menu.currentMenu = menu.nextMenu
-                menu.nextMenu = nil
-                menu.changeScreenState(menu.screenStates.showingMenu)
-                menu.currentMenu.update(dt)
-            else
-                menu.nextMenu.update(dt)
-            end
-        end,
-        draw = function()
-            love.graphics.push()
-            love.graphics.translate(0, -menu.screenStates.enteringScreen.shiftY)
-            menu.nextMenu.draw()
-            love.graphics.pop()
-        end
-    },
+    -- TODO: ¿Añadir efecto para utilizar mientras abandonamos esta pantalla?
     changingMenu = {
         -- transición de un menú a otro
         name = "chagingMenu",
         load = function()
-            if menu.currentMenu.name == "main" and menu.nextMenu.name == "preferences" then
+            if menu.currentMenu == nil then
+                -- entrando por primera vez en esta pantalla (o volviendo desde otro screen)
+                -- desplazamiento del nuevo menú desde arriba
+                menu.screenStates.changingMenu.effect = "moveDown"
+                menu.screenStates.changingMenu.currentMenuShiftX = 0
+                menu.screenStates.changingMenu.currentMenuShiftY = 0
+                menu.screenStates.changingMenu.nextMenuShiftX = 0
+                menu.screenStates.changingMenu.nextMenuShiftY = -SCREEN_HEIGHT
+                menu.screenStates.changingMenu.velY = 1500
+            elseif menu.currentMenu.name == "main" and menu.nextMenu.name == "preferences" then
                 print("EFECTO: MOVER HACIA LA IZQUIERDA")
                 -- desplazamiento del nuevo menú hacia la izquierda
                 menu.screenStates.changingMenu.effect = "moveLeft"
@@ -76,7 +54,18 @@ menu.screenStates = {
             end
         end,
         update = function(dt)
-            if menu.screenStates.changingMenu.effect == "moveLeft" then
+            if menu.screenStates.changingMenu.effect == "moveDown" then
+                menu.screenStates.changingMenu.nextMenuShiftY =
+                    menu.screenStates.changingMenu.nextMenuShiftY + dt * menu.screenStates.changingMenu.velY
+                if menu.screenStates.changingMenu.nextMenuShiftY > 0 then
+                    menu.currentMenu = menu.nextMenu
+                    menu.nextMenu = nil
+                    menu.changeScreenState(menu.screenStates.showingMenu)
+                    menu.currentMenu.update(dt)
+                else
+                    menu.nextMenu.update(dt)
+                end
+            elseif menu.screenStates.changingMenu.effect == "moveLeft" then
                 menu.screenStates.changingMenu.currentMenuShiftX =
                     menu.screenStates.changingMenu.currentMenuShiftX + dt * menu.screenStates.changingMenu.velX
                 menu.screenStates.changingMenu.nextMenuShiftX =
@@ -107,13 +96,21 @@ menu.screenStates = {
             end
         end,
         draw = function()
-            love.graphics.push()
-            love.graphics.translate(menu.screenStates.changingMenu.currentMenuShiftX, 0)
-            menu.currentMenu.draw()
-            love.graphics.pop()
+            if menu.currentMenu then
+                love.graphics.push()
+                love.graphics.translate(
+                    menu.screenStates.changingMenu.currentMenuShiftX,
+                    menu.screenStates.changingMenu.currentMenuShiftY
+                )
+                menu.currentMenu.draw()
+                love.graphics.pop()
+            end
 
             love.graphics.push()
-            love.graphics.translate(menu.screenStates.changingMenu.nextMenuShiftX, 0)
+            love.graphics.translate(
+                menu.screenStates.changingMenu.nextMenuShiftX,
+                menu.screenStates.changingMenu.nextMenuShiftY
+            )
             menu.nextMenu.draw()
             love.graphics.pop()
         end
@@ -134,13 +131,13 @@ menu.screenStates = {
 
 function menu.changeMenu(nextMenu)
     menu.nextMenu = nextMenu
-    if menu.currentMenu == nil then
-        -- dado que no hay currentMenu asumimos que estamos cargando en este screen un menú por primera vez
-        menu.changeScreenState(menu.screenStates.enteringScreen)
-    else
-        -- transición de un menú a otro
-        menu.changeScreenState(menu.screenStates.changingMenu)
-    end
+    --if menu.currentMenu == nil then
+    -- dado que no hay currentMenu asumimos que estamos cargando en este screen un menú por primera vez
+    --    menu.changeScreenState(menu.screenStates.enteringScreen)
+    --else
+    -- transición de un menú a otro
+    menu.changeScreenState(menu.screenStates.changingMenu)
+    --end
 end
 
 -- carga un menú y ejecuta su método load antes de devolverlo
