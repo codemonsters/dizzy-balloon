@@ -238,7 +238,7 @@ function Player:draw()
     if self.left then
         self.bitmap_direction = -1
         self.offset = self.width
-    end
+    end 
 
     love.graphics.draw(
         atlas,
