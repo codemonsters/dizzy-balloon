@@ -1,7 +1,7 @@
 local bump = require "libraries/bump/bump"
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
-local EnemyClass = require("gameobjects/enemy")
+local EnemyClass = require("gameobjects/airfly")
 local SkyClass = require("gameobjects/sky")
 -- local sky = SkyClass.new(world, game)
 local PointerClass = require("pointer")
