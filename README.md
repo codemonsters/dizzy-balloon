@@ -46,25 +46,25 @@ Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
 * Hacemos tantos commit y push dentro la rama como sea necesario
 * Cuando consideremos el trabajo acabado mezclamos/publicamos los cambios en la rama principal (master): ```git checkout master; git merge nombre_rama```
 
-### Problemas con el usuario 
+### Problemas con el usuario
 
 * Para actualizar el url de origin con un nuevo nombre de usuario
    Entrar en el archivo ```.gitconfig``` y eliminas user.
-   
+
    ### En Windows:
    ```Step 1: Open Control panel. ```
-   
+
    ```Step 2: Click on Credential Manager.```
-   
+
    ```Step 3: Click on Windows Credentials under Manage your credentials page.```
-   
+
    ```Step 4: Under Generic Credentials click on github.```
-   
+
    ```Step 5: Click on Remove and then confirm by clicking Yes button.```
-   
+
    ### En Linux:
    ```git config --global --unset-all```
-   
+
 
 ### Android: Creación de un APK
 
@@ -78,14 +78,16 @@ Requisitos:
 * [Metatables](https://www.lua.org/pil/13.html) y [Programación Orientada a Objetos con Lua](https://www.tutorialspoint.com/lua/lua_object_oriented.htm)
 * [Love2D Wiki](https://love2d.org/wiki/Main_Page)
 * [Love2D API](https://love2d-community.github.io/love-api/)
+* [SUIT](https://suit.readthedocs.io/en/latest/): Documentación para la librería de widgets
 * [awesome-love2d](https://github.com/love2d-community/awesome-love2d): A curated list of amazingly awesome LÖVE libraries, resources and shiny things
 * [git - the simple guide](http://rogerdudler.github.io/git-guide/)
 * [Mastering Markdown](https://guides.github.com/features/mastering-markdown/): Útil para editar este y otros ficheros
-* [SUIT](https://suit.readthedocs.io/en/latest/): Documentación para la librería de widgets
+* [How to write a Git commit message properly with examples](https://www.theserverside.com/video/Follow-these-git-commit-message-guidelines)
 
 ## Otros
 
 * Paleta de Colores: [http://paletton.com/#uid=75a0u0kw0u7kiBppJw+z8nUERiF](http://paletton.com/#uid=75a0u0kw0u7kiBppJw+z8nUERiF)
+* Compresión de un archivo wav a mp3 192kbps (ejemplo para música): '''ffmpeg -i Stage5.wav -acodec mp3 -ab 192k stage5.mp3'''
 * Creación de sfx:
 http://drpetter.se/project_sfxr.html (el original),  https://www.bfxr.net/ (el mejorado)
 * Iconos:

@@ -1,19 +1,58 @@
 local PlayerClass = require("gameobjects/player")
 local EnemyClass = require("gameobjects/enemy")
-local bump = require "libraries/bump/bump"
+local bump = require("libraries/bump/bump")
 local BlockClass = require("gameobjects/block")
-local animLoader = require("animationLoader")
-local music = love.audio.newSource("assets/music/PP_Fight_or_Flight_FULL_Loop.wav", "stream")
+local animLoader = require("misc/animationLoader")
+local MenuManagerClass = require("menus/menuManager")
+local menuManager =
+    MenuManagerClass.new(
+    {
+        {
+            name = "main",
+            menu = require("menus/main")
+        },
+        {
+            name = "preferences",
+            menu = require("menus/preferences")
+        }
+    },
+    {
+        {
+            from = nil,
+            to = "main",
+            effect = MenuManagerClass.effects.moveDown
+        },
+        {
+            from = "main",
+            to = "preferences",
+            effect = MenuManagerClass.effects.moveLeft
+        },
+        {
+            from = "preferences",
+            to = "main",
+            effect = MenuManagerClass.effects.moveRight
+        }
+    }
+)
 
+--[[
+    Esta pantalla (menu) tiene distintos estados, por ejemplo para cargar menús y hacer transiciones entre ellos y mostrarlos.
+    El estado actual se guarda en menu.screenState, pero debe cambiarse llamando a menu.changeScreenState(screenState) para que así se llame a la función load() del estado al que cambiamos.
+    La variable menu.currentMenu apunta hacia el menú actual.
+    En menu.nextMenu se guarda el menú hacia el que nos estamos moviendo (el cual una vez finalizada la transición se convertirá en menu.currentMenu).
+]]
 local menu = {
-    name = "Menú principal"
+    name = "Pantalla menú"
 }
 
-
-local negro = {1, 1, 1, 1}
-
+-- carga este screen
 function menu.load()
-    suit.theme.cornerRadius = 29
+    -- música
+    music = love.audio.newSource("assets/music/menu.mp3", "stream")
+    music:setLooping(true)
+    music:play()
+
+    -- animaciones
     world = bump.newWorld(50)
     jugador = PlayerClass.new(world, nil)
     enemigo1 = EnemyClass.new(enemigo, SCREEN_WIDTH * 0.05, PlayerClass.height * 3, world, nil, 0)
@@ -23,23 +62,17 @@ function menu.load()
     BlockClass.new("ParedDerecha", SCREEN_WIDTH, 0, 1, SCREEN_HEIGHT, world)
     BlockClass.new("Techo", 0, 0, SCREEN_WIDTH, 1, world)
     animLoader:applyAnim(enemigo1, animacionTestEnemigo)
-    -- asociar el animador al jugador y cargar una animación en el
-    animLoader:applyAnim(jugador, animacionTestJugador)
-    
-    music:setLooping(true)
-    music:play()
+    animLoader:applyAnim(jugador, animacionTestJugador) -- asocia el animador al jugador y cargar una animación en él
 end
 
 function menu.update(dt)
     jugador:update(dt)
     enemigo1:update(dt)
     animLoader:update(dt)
-
-    widgetsUpdate()
+    menuManager:update(dt)
 end
 
 function menu.draw()
-
     love.graphics.clear(1, 0, 1)
 
     love.graphics.push()
@@ -50,15 +83,6 @@ function menu.draw()
     jugador:draw()
     enemigo1:draw()
 
-    --[[love.graphics.printf(
-        "DIZZY BALLOON\n\n=PRESS FIRE TO START=",
-        font_menu,
-        0,
-        math.floor((SCREEN_HEIGHT - font_menu:getHeight() * 2) / 2),
-        SCREEN_WIDTH,
-        "center"
-    )]]
-
     -- DEBUG: marcas en los extremos diagonales de la pantalla
     love.graphics.setColor(255, 0, 0)
     love.graphics.line(0, 0, 10, 0)
@@ -66,64 +90,21 @@ function menu.draw()
     love.graphics.line(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, SCREEN_WIDTH - 11, SCREEN_HEIGHT - 1)
     love.graphics.line(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 11)
 
-    widgetsDraw()
-
+    menuManager:draw()
     love.graphics.pop()
+    
 end
 
 function menu.keypressed(key, scancode, isrepeat)
-    if key == "space" then
-        changeScreen()
+    if menu.currentMenu then
+        menu.currentMenu.keypressed(key, scancode, isrepeat)
     end
 end
 
 function menu.keyreleased(key, scancode, isrepeat)
-end
-
---[[ function love.mousepressed(id, x, y, dx, dy, pressure)
-    game_screen = require("screens/game")
-    change_screen(game_screen)
-end ]]
---ESta función hace cosas :)
-function widgetsUpdate()
-    love.graphics.setBlendMode("alpha")
-
-    suit.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.1)
-    suit.layout:padding(0, SCREEN_WIDTH * 0.025)
-    local mouseX, mouseY = love.mouse.getPosition()
-    love.graphics.setFont(font_buttons)
-
-    suit.updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
-
-
-    suit.Label("Dizzy Balloon", {color = {normal =  {fg = {0.77, 0, 0.43}}}}, suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.20))
-
-
-    
-    if suit.Button("Jugar", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        game_screen = require("screens/game")
-        change_screen(game_screen)
+    if menu.currentMenu then
+        menu.currentMenu.keyreleased(key, scancode, isrepeat)
     end
-    if suit.Button("Preferencias", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
-    end
-    if suit.Button("Instrucciones", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
-    end
-    if suit.Button("Salir", {color = {normal = {bg = {0.9, 0, 0.9}, fg = {1, 1, 1}}, hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}}, active = {bg = {192, 57, 43}, fg = {255, 255, 255}} }},  suit.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-
-        os.exit()
-    end
-end
-
-function widgetsDraw()
-    suit.draw()
-end
-
-function changeScreen()
-    game_screen = require("screens/game")
-    change_screen(game_screen)
-    music:stop()
 end
 
 return menu

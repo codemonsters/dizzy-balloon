@@ -3,17 +3,30 @@ local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
 local EnemyClass = require("gameobjects/airfly")
 local SkyClass = require("gameobjects/sky")
--- local sky = SkyClass.new(world, game)
-local PointerClass = require("pointer")
--- local bomb = BombClass.new()
+local PointerClass = require("misc/pointer")
 local BombClass = require("gameobjects/bomb")
--- local balloon = BalloonClass.new()
 local BalloonClass = require("gameobjects/balloon")
 local MushroomClass = require("gameobjects/mushroom")
 local GoalClass = require("gameobjects/goal")
 local LimitClass = require("gameobjects/limit")
-local LevelClass = require("level")
-local LevelDefinitions = require("levelDefinitions")
+local LevelClass = require("levels/level")
+local LevelDefinitions = require("levels/levelDefinitions")
+local worldCanvas = nil
+local hudCanvas = nil
+local jugadorpuedesaltar = true
+local jugadorquieremoverse = false
+local BlockClass = require("gameobjects/block")
+local gameFilter
+local temporizador_respawn_enemigo = 0
+local TIEMPO_RESPAWN_ENEMIGO = 1
+local inicioCambioNivel = 0
+local finalCambioNivel = 5
+local state
+local gamepad = love.graphics.newImage("assets/images/old/gamepad.png")
+local circle = love.graphics.newImage("assets/images/old/circle.png")
+
+local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
+local hud_height = SCREEN_HEIGHT
 
 if mobile then
     leftFinger = PointerClass.new(game, "Izquierdo")
@@ -21,32 +34,6 @@ if mobile then
 else
     mousepointer = PointerClass.new(game, "Puntero")
 end
-
--- local world = bump.newWorld(50)
-local worldCanvas = nil
-local hudCanvas = nil
-local jugadorpuedesaltar = true
-local jugadorquieremoverse = false
---local jugadorquieredisparar = false
-local BlockClass = require("gameobjects/block")
-local gameFilter
---local enemigos = {}
---local setas = {}
---local balloons = {}
---local plataformas = {}
-local temporizador_respawn_enemigo = 0
-local TIEMPO_RESPAWN_ENEMIGO = 1
-local inicioCambioNivel = 0
-local finalCambioNivel = 5
-local state
-local gamepad = love.graphics.newImage("assets/gamepad.png")
-local circle = love.graphics.newImage("assets/circle.png")
-
-local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
-local hud_height = SCREEN_HEIGHT
-
-local music = love.audio.newSource("assets/music/PP_Fight_or_Flight_Heavy_Loop.wav", "stream")
-
 
 game.states = {
     jugando = {
@@ -56,6 +43,10 @@ game.states = {
         end,
         update = function(self, dt)
             -- comprobamos si debemos crear un enemigo nuevo
+            game.currentLevel.time = game.currentLevel.time - dt
+            if game.currentLevel.time <= 0 then
+                game.vidaperdida()
+            end
             if game.currentLevel.max_enemies > #game.currentLevel.enemies then
                 temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
                 if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
@@ -172,7 +163,6 @@ game.states = {
                 for i, mushroom in ipairs(game.currentLevel.mushrooms) do
                     mushroom:draw()
                 end
-
             end
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
 
@@ -194,14 +184,17 @@ game.states = {
     },
     cambiandoDeNivel = {
         load = function(self) -- cargamos el siguiente nivel y dibujamos su primer frame
+            if game.currentLevel.music ~= nil then
+                game.currentLevel.music:stop()
+            end
             if LevelDefinitions[(game.currentLevel.id + 1)] == nil then
                 game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[1], game))
             else
                 game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[(game.currentLevel.id + 1)], game))
             end
             desplazamiento = 0
-            
-            love.graphics.setCanvas(game.nextLevel.worldCanvas) 
+
+            love.graphics.setCanvas(game.nextLevel.worldCanvas)
             do
                 love.graphics.setColor(192, 0, 109)
                 love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
@@ -215,11 +208,9 @@ game.states = {
                 for i, block in ipairs(game.nextLevel.blocks) do
                     block:draw()
                 end
-
             end
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
             love.graphics.push()
-            
             love.graphics.draw(
                 game.currentLevel.worldCanvas,
                 (SCREEN_WIDTH - WORLD_WIDTH) / 2,
@@ -237,18 +228,20 @@ game.states = {
                 posX = game.currentLevel.player.x
                 game.currentLevel = game.nextLevel
                 game.loadlife(posX)
+                if game.currentLevel.music ~= nil then
+                    game.currentLevel.music:play()
+                end
                 game.change_state(game.states.jugando)
             end
         end,
         draw = function(self)
-
             love.graphics.translate(desplazamientoX, desplazamientoY)
             love.graphics.scale(factorEscala, factorEscala)
             love.graphics.setBlendMode("alpha", "premultiplied")
 
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
             love.graphics.push()
-            
+
             love.graphics.draw( -- el primer frame del anterior nivel es dibujado ya que sigue en memoria
                 game.currentLevel.worldCanvas,
                 (SCREEN_WIDTH - WORLD_WIDTH) / 2,
@@ -268,12 +261,93 @@ game.states = {
 
             love.graphics.pop()
         end
+    },
+    muriendo = {
+        load = function(self)
+            love.graphics.setCanvas(game.currentLevel.worldCanvas) -- a partir de ahora dibujamos en el canvas
+            do
+                love.graphics.setBlendMode("alpha")
+
+                -- El fondo del mundo
+                love.graphics.setColor(192, 0, 109)
+                love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
+                love.graphics.setColor(255, 255, 255)
+
+                -- objetos del juego
+
+                for i, enemy in ipairs(game.currentLevel.enemies) do
+                    enemy:draw()
+                end
+
+                for i, balloon in ipairs(game.currentLevel.balloons) do
+                    balloon:draw()
+                end
+                if game.currentLevel.sky ~= nil then
+                    game.currentLevel.sky:draw()
+                end
+
+                for i, block in ipairs(game.currentLevel.blocks) do
+                    block:draw()
+                end
+
+                game.currentLevel.bomb:draw()
+
+                for i, mushroom in ipairs(game.currentLevel.mushrooms) do
+                    mushroom:draw()
+                end
+            end
+            love.graphics.setCanvas()
+
+            playerX, playerY = game.currentLevel.player.x, game.currentLevel.player.y
+            velocidadY = -5
+        end,
+        update = function(self, dt)
+            playerY = playerY + velocidadY
+            velocidadY = velocidadY + dt * 10
+            if playerY >= WORLD_HEIGHT + 100 then
+                if game.vidas <= 0 then
+                    temporizador_respawn_enemigo = 0
+                    returnToMenu()
+                else
+                    game.currentLevel.player:revive()
+                    game.loadlife()
+                end
+            end
+        end,
+        draw = function(self)
+            love.graphics.translate(desplazamientoX, desplazamientoY)
+            love.graphics.scale(factorEscala, factorEscala)
+            love.graphics.setBlendMode("alpha", "premultiplied")
+
+            love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
+
+            love.graphics.push()
+            love.graphics.draw( -- el ultimo frame antes de morir es dibujado
+                game.currentLevel.worldCanvas,
+                (SCREEN_WIDTH - WORLD_WIDTH) / 2,
+                (SCREEN_HEIGHT - WORLD_HEIGHT) / 2,
+                0,
+                1,
+                1
+            )
+            love.graphics.draw(
+                atlas,
+                PlayerClass.states.standing.quads[1].quad,
+                playerX + WORLD_WIDTH / 2 - PlayerClass.width * 2,
+                playerY,
+                0,
+                PlayerClass.width / PlayerClass.states.standing.quads[1].width,
+                PlayerClass.height / PlayerClass.states.standing.quads[1].height
+            )
+            love.graphics.pop()
+        end
     }
 }
 
 function game.getNewRespawnPos()
     local respawnX, respawnY = game.currentLevel.player.x, game.currentLevel.player.y
-    local cols, len = game.currentLevel.player.world:queryRect(
+    local cols, len =
+        game.currentLevel.player.world:queryRect(
         game.currentLevel.player.x,
         game.currentLevel.player.y,
         game.currentLevel.player.width,
@@ -285,7 +359,7 @@ function game.getNewRespawnPos()
                 respawnX = cols[i].x + cols[i].width
             else
                 respawnY = cols[i].y - game.currentLevel.player.height
-                respawnX = nivel_actual.jugador_posicion_inicial[1]
+                respawnX = game.currentLevel.player_initial_respawn_position[1]
             end
         end
     end
@@ -307,23 +381,22 @@ function game.loadlife(posX)
         game.currentLevel.player.width,
         game.currentLevel.player.height
     )
+    game.currentLevel.time = game.currentLevel.levelDefinition.time
+    game.change_state(game.states.jugando)
 end
 
 function game.loadlevel(level)
     level.player = PlayerClass.new(level.world, game)
     level.bomb = BombClass.new("Bomb", level.world, game)
+    if level.music ~= nil then
+        level.music = love.audio.newSource("assets/music/" .. level.music, "stream")
+        level.music:setLooping(true)
+    end
 
     local borderWidth = 50
     table.insert(
         level.blocks,
-        BlockClass.new(
-            "Suelo",
-            -borderWidth,
-            WORLD_HEIGHT,
-            WORLD_WIDTH + 2 * borderWidth,
-            borderWidth,
-            level.world
-        )
+        BlockClass.new("Suelo", -borderWidth, WORLD_HEIGHT, WORLD_WIDTH + 2 * borderWidth, borderWidth, level.world)
     )
     table.insert(
         level.blocks,
@@ -351,19 +424,17 @@ function game.loadlevel(level)
     return level
 end
 
-function game.load() 
+function game.load()
     hudCanvas = love.graphics.newCanvas(hud_width, hud_height)
     gamepadCanvas = love.graphics.newCanvas(hud_width, hud_height)
     game.vidas = 3
     game.bombasAereas = 9
     game.currentLevel = LevelClass.new(LevelDefinitions[1], game)
-
     game.loadlevel(game.currentLevel)
     game.change_state(game.states.jugando)
-
-    music:setLooping(true)
-    music:play()
-
+    if game.currentLevel.music ~= nil then
+        game.currentLevel.music:play()
+    end
     --game.state = game.states.cambiandoDeNivel
     --game.change_state(game.state)
 end
@@ -395,7 +466,6 @@ function game.draw()
         love.graphics.setColor(255, 0, 0)
         love.graphics.draw(circle, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
         love.graphics.setColor(255, 255, 255)
-        
     end
 
     love.graphics.setCanvas(gamepadCanvas) -- canvas del gamepad
@@ -407,6 +477,7 @@ function game.draw()
         love.graphics.rectangle("fill", 0, 0, hud_width, SCREEN_HEIGHT)
         love.graphics.setColor(255, 255, 255)
         love.graphics.draw(gamepad, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
+        love.graphics.printf("Time " .. math.ceil(game.currentLevel.time), font_hud, 0, 100, hud_width, "center")
     end
 
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
@@ -442,12 +513,15 @@ function game.keypressed(key, scancode, isrepeat)
     elseif key == "space" then
         game.currentLevel.player:jump()
     elseif key == "v" then
+        -- TODO: Eliminar esto en la versión pública
         game.vidas = game.vidas - 1
         log.debug("game.vidas: " .. game.vidas)
     elseif key == "b" then
+        -- TODO: Eliminar esto en la versión pública
         game.vidas = game.vidas + 1
         log.debug("game.vidas: " .. game.vidas)
     elseif key == "l" then
+        -- TODO: Eliminar esto en la versión pública
         game.change_state(game.states.cambiandoDeNivel)
     elseif key == "z" then
         print("Posición del jugador (x, y) = " .. game.currentLevel.player.x .. ", " .. game.currentLevel.player.y)
@@ -578,13 +652,7 @@ end
 
 function game.vidaperdida()
     game.vidas = game.vidas - 1
-    if game.vidas <= 0 then
-        temporizador_respawn_enemigo = 0
-        returnToMenu()
-    else
-        game.currentLevel.player:revive()
-        game.loadlife()
-    end
+    game.change_state(game.states.muriendo)
 end
 
 function game.remove_enemy(enemy)
@@ -653,6 +721,11 @@ function game.change_state(new_state)
     end
 end
 
-function returnToMenu() change_screen(require("screens/menu")) music:stop() end
+function returnToMenu()
+    changeScreen(require("screens/menu"))
+    if game.currentLevel.music ~= nil then
+        game.currentLevel.music:stop()
+    end
+end
 
 return game

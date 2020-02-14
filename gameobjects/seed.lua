@@ -17,14 +17,15 @@ local SeedClass = {
     height = 20,
     name = "Seed",
     isSeed = true,
-    boost = nil,
+    powerUp = nil,
     player_over_timer = 0,
     states = {
         sky = {
             name = "sky",
             quads = {
                 {
-                    quad = love.graphics.newQuad(130, 61, 14, 16, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(130, 61, 14, 16, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
                     height = 16
                 }
@@ -46,14 +47,16 @@ local SeedClass = {
             name = "falling",
             quads = {
                 {
-                    quad = love.graphics.newQuad(98, 56, 14, 21, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(98, 56, 14, 21, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 21
+                    height = 16
                 },
                 {
-                    quad = love.graphics.newQuad(114, 57, 14, 19, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(114, 57, 14, 19, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 19
+                    height = 16
                 }
             },
             load = function(self)
@@ -94,16 +97,17 @@ local SeedClass = {
             name = "touchdown",
             quads = {
                 {
-                    quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 14
+                    height = 16
                 }
             },
             load = function(self)
                 self.currentframe = 1
             end,
             update = function(self, dt)
-                if self.boost ~= nil then
+                if self.powerUp ~= nil then
                     self.change_state(self, self.states.explode)
                 else
                     self.change_state(self, self.states.onthefloor)
@@ -114,9 +118,10 @@ local SeedClass = {
             name = "onthefloor",
             quads = {
                 {
-                    quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 14
+                    height = 16
                 }
             },
             load = function(self)
@@ -159,9 +164,10 @@ local SeedClass = {
             name = "evolving",
             quads = {
                 {
-                    quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
-                    height = 14
+                    height = 16
                 }
             },
             load = function(self)
@@ -241,12 +247,19 @@ local SeedClass = {
             load = function(self)
                 initialTime = 0
                 canApply = true
+                self.world:remove(self)
             end,
             update = function(self, dt)
-                local items, lenColExplosion = self.world:queryRect(self.x - self.state.size / 2, self.y - self.state.size / 2, self.state.size, self.state.size)
+                local items, lenColExplosion =
+                    self.world:queryRect(
+                    self.x - self.state.size / 2,
+                    self.y - self.state.size / 2,
+                    self.state.size,
+                    self.state.size
+                )
                 for i = 1, lenColExplosion do
                     if items[i].isPlayer and canApply then
-                        self.boost:apply(items[i])
+                        self.powerUp:apply(items[i])
                         canApply = false
                     end
                 end
@@ -261,7 +274,7 @@ local SeedClass = {
 
 SeedClass.__index = SeedClass
 
-function SeedClass.new(name, sky, world, x, y, game, boost)
+function SeedClass.new(name, sky, world, x, y, game)
     local seed = {}
     seed.game = game
     seed.name = name
@@ -269,7 +282,6 @@ function SeedClass.new(name, sky, world, x, y, game, boost)
     seed.world = world
     seed.x = x
     seed.y = y
-    seed.boost = boost
     seed.world:add(seed, seed.x, seed.y, SeedClass.width, SeedClass.height)
     setmetatable(seed, SeedClass)
     --seed.state = SeedClass.states.sky
@@ -292,8 +304,8 @@ function SeedClass:draw()
         self.width / self.image:getWidth(),
         self.height/ self.image:getHeight())
     --]]
-    if self.boost ~= nil then
-        love.graphics.setColor(self.boost.color)
+    if self.powerUp ~= nil then
+        love.graphics.setColor(self.powerUp.color)
     end
     love.graphics.draw(
         atlas,
@@ -301,11 +313,19 @@ function SeedClass:draw()
         self.x,
         self.y,
         0,
-        self.width / self.state.quads[self.currentFrame].width,
-        self.height / self.state.quads[self.currentFrame].height
+        self.state.size,
+        self.state.size
+        --self.width / self.state.quads[self.currentFrame].width,
+        --self.height / self.state.quads[self.currentFrame].height
     )
     if self.state == self.states.explode then
-        love.graphics.rectangle("fill", self.x - self.state.size / 2, self.y - self.state.size / 2, self.state.size, self.state.size)
+        love.graphics.rectangle(
+            "fill",
+            self.x - self.state.size / 2,
+            self.y - self.state.size / 2,
+            self.state.size,
+            self.state.size
+        )
     end
     love.graphics.setColor(255, 255, 255)
     --love.graphics.rectangle("line", self.x, self.y, self.width, self.height)

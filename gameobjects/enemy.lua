@@ -10,7 +10,7 @@ local Enemy = {
     velocidad_x = 0,
     velocidad_y = 0,
     isEnemy = true,
-    image = love.graphics.newImage("assets/enemy.png"),
+    image = love.graphics.newImage("assets/images/old/enemy.png"),
     enemyFilter = function(item, other)
         if other.isPlayer then
             return "slide"
@@ -31,29 +31,28 @@ local Enemy = {
                 self.velocidad_y = math.sin(self.direction) * self.moduloVelocidad
             end,
             update = function(self, dt)
-
                 self.x, self.y, cols, len = self.world:move(self, self.movSigx, self.movSigy, self.enemyFilter)
 
                 if len > 0 then
                     local col = cols[1]
-                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then -- si se pone "if not other.col.isBomb" then da un error cuando el enemigo choca con algo, puede ser problema de la bomba no teniendo un collision_filter o algo por el estilo 
+                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then -- si se pone "if not other.col.isBomb" then da un error cuando el enemigo choca con algo, puede ser problema de la bomba no teniendo un collision_filter o algo por el estilo
                         -- TODO: calculo de velocidad tras el choque
                         vecBounce = {x = col.bounce.x - col.touch.x, y = col.bounce.y - col.touch.y}
-                        
+
                         moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
                         vectorUnitario = {x = vecBounce.x / moduloBounce, y = vecBounce.y / moduloBounce}
-            
+
                         self.velocidad_x = vectorUnitario.x * self.moduloVelocidad
                         self.velocidad_y = vectorUnitario.y * self.moduloVelocidad
-                        
-                        seno = self.velocidad_y/self.moduloVelocidad -- calculo del ángulo con relación a la vertical tras el choque
-                        anguloEnGradosConVertical = math.asin(seno) * 360/(2*math.pi)
+
+                        seno = self.velocidad_y / self.moduloVelocidad -- calculo del ángulo con relación a la vertical tras el choque
+                        anguloEnGradosConVertical = math.asin(seno) * 360 / (2 * math.pi)
 
                         if math.abs(anguloEnGradosConVertical) <= 15 then
                             self:change_state(self.states.swiping)
                         end
                     elseif col.other.isPlayer then
-                        col.other:empujar({x = self.velocidad_x*2, y = self.velocidad_y*2}, self);
+                        col.other:empujar({x = self.velocidad_x * 2, y = self.velocidad_y * 2}, self)
                     end
                 end
             end,
@@ -61,14 +60,13 @@ local Enemy = {
             end
         },
         swiping = {
-            
             load = function(self)
                 self.initalVel = self.moduloVelocidad
                 self.horizontal = true
                 self.lastXvelocity = self.initalVel
                 self.yAfterDiving = 0
                 self.upBounceCounter = 0
-                 -- cuenta los choques cuando el enemigo no puede seguir bajando
+                -- cuenta los choques cuando el enemigo no puede seguir bajando
                 self.velocidad_x = self.initalVel
                 self.velocidad_y = 0
             end,
@@ -91,7 +89,7 @@ local Enemy = {
                             self.velocidad_y = 0
                         end
                     elseif col.other.isPlayer then
-                        col.other:empujar({x = self.velocidad_x*2, y = self.velocidad_y*2}, self);
+                        col.other:empujar({x = self.velocidad_x * 2, y = self.velocidad_y * 2}, self)
                     end
                 end
 
@@ -153,7 +151,7 @@ function Enemy:update(dt)
     if len > 0 then
         local col = cols[1]
         if col.isPlayer then
-            col:empujar({x = self.velocidad_x*2, y = 0}, self);
+            col:empujar({x = self.velocidad_x * 2, y = 0}, self)
         end
     end
 
@@ -162,7 +160,7 @@ function Enemy:update(dt)
     if len > 0 then
         local col = cols[1]
         if col.isPlayer then
-            col:empujar({x = 0, y = self.velocidad_y*2}, self);
+            col:empujar({x = 0, y = self.velocidad_y * 2}, self)
         end
     end
 
@@ -176,12 +174,11 @@ function Enemy:update(dt)
             end
         end
     end
-    
+
     self.state.update(self, dt)
 end
 
 function Enemy:draw()
-
     if self.dead then
         return
     end
