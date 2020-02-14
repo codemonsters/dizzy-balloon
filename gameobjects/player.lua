@@ -102,6 +102,7 @@ local Player = {
             },
             load = function(self)
                 self.current_frame = 1
+                sounds.player_jump:play()
             end,
             update = function(self, dt)
             end

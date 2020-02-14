@@ -48,10 +48,8 @@ local menu = {
 -- carga este screen
 function menu.load()
     -- música
-    music = love.audio.newSource("assets/music/menu.mp3", "stream")
-    music:setLooping(true)
-    music:play()
-
+    loadAndStartMusic({ file = "menu.mp3", volume = 1 })
+    
     -- animaciones
     world = bump.newWorld(50)
     jugador = PlayerClass.new(world, nil)

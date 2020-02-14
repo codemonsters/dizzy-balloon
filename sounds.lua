@@ -6,12 +6,13 @@ SoundsClass.__index = SoundsClass
 
 function SoundsClass.new()
     local sounds = {}
-    sounds.explosion = love.audio.newSource("assets/sounds/explosion.wav", "static")
-    sounds.explosion:setLooping(false)
-    sounds.whoosh = love.audio.newSource("assets/sounds/whoosh.wav", "static")
-    sounds.whoosh:setLooping(false)
-    sounds.jump = love.audio.newSource("assets/sounds/jump.wav", "static")
-    sounds.jump:setLooping(false)
+    sounds.bomb_explosion = love.audio.newSource("assets/sounds/bomb_explosion.wav", "static")
+    sounds.bomb_explosion:setLooping(false)
+    sounds.bomb_launch = love.audio.newSource("assets/sounds/bomb_launch.wav", "static")
+    sounds.bomb_launch:setLooping(false)
+    sounds.player_jump = love.audio.newSource("assets/sounds/player_jump.wav", "static")
+    sounds.player_jump:setLooping(false)
+    sounds.player_jump:setVolume(0.5)
     sounds.lostlife = love.audio.newSource("assets/sounds/lostlife.wav", "static")
     sounds.lostlife:setLooping(false)
     --sounds.name = name
@@ -37,8 +38,8 @@ return SoundsClass
 --[[
 local soundTable = {
     {
-        name = "explosion"
-        --src = "assets/sounds/explosion.wav"
+        name = "bomb_explosion"
+        --src = "assets/sounds/bomb_explosion.wav"
         looping = false
         volume = 1
         type = "static"

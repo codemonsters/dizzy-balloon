@@ -23,7 +23,7 @@ function menu.update(dt)
     love.graphics.setFont(font_buttons)
 
     if menu.widgets:Button("Jugar", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        music:stop()
+        --music:stop()
         changeScreen(require("screens/game"))
     end
     if menu.widgets:Button("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
