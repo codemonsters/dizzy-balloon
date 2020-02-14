@@ -11,23 +11,49 @@ end
 function menu.update(dt)
     love.graphics.setBlendMode("alpha")
 
-    menu.widgets.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.1)
-    menu.widgets.layout:padding(0, SCREEN_WIDTH * 0.015)
+    menu.widgets.layout:reset(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.1)
+    menu.widgets.layout:padding(SCREEN_HEIGHT * 0.015, SCREEN_WIDTH * 0.015)
     local mouseX, mouseY = love.mouse.getPosition()
     love.graphics.setFont(font_menu)
 
     menu.widgets:updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
 
-    menu.widgets:Label("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12))
+    menu.widgets:Label("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.11))
 
     love.graphics.setFont(font_buttons)
 
-    if menu.widgets:Button("Sonido", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+    if menu.widgets:Button("Sonido", menu.widgets.layout:row(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
+        
     end
-    if menu.widgets:Button("Música", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+
+    if menu.widgets:Button("X", {id=1}, menu.widgets.layout:col(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
+        
     end
-    if menu.widgets:Button("Idioma", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
+
+    if menu.widgets:Button("X", {id=2}, menu.widgets.layout:down(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
+        
     end
+
+    if menu.widgets:Button("Música", menu.widgets.layout:left(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
+        
+    end
+
+    if menu.widgets:Button("Español", menu.widgets.layout:row(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
+        
+    end
+
+    if menu.widgets:Button("X", {id=3}, menu.widgets.layout:col(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
+        
+    end
+
+    if menu.widgets:Button("X", {id=4}, menu.widgets.layout:down(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
+        
+    end
+
+    if menu.widgets:Button("English", menu.widgets.layout:left(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
+        
+    end
+
     if
         menu.widgets:Button(
             "Volver",
@@ -38,7 +64,7 @@ function menu.update(dt)
                     active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}}
                 }
             },
-            menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)
+            menu.widgets.layout:down(SCREEN_WIDTH * .8, SCREEN_HEIGHT * 0.11)
         ).hit
      then
         menu.menuManager:changeMenuTo(menu.menuManager:getMenu("main"))
