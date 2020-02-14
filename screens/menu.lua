@@ -25,12 +25,12 @@ local menuManager =
         {
             from = "main",
             to = "preferences",
-            effect = MenuManagerClass.effects.moveRight
+            effect = MenuManagerClass.effects.moveLeft
         },
         {
             from = "preferences",
             to = "main",
-            effect = MenuManagerClass.effects.moveLeft
+            effect = MenuManagerClass.effects.moveRight
         }
     }
 )
