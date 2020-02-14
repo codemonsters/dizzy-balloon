@@ -3,9 +3,9 @@ local menu = {
     widgets = suit.new(ourTheme)
 }
 
-function menu.load(screen)
-    menu.screen = screen -- screen que contiene este menú
-    canvas = love.graphics.newCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
+function menu.load(menuManager)
+    menu.menuManager = menuManager
+    --menu.canvas = love.graphics.newCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 end
 
 function menu.update(dt)
@@ -27,7 +27,7 @@ function menu.update(dt)
         changeScreen(require("screens/game"))
     end
     if menu.widgets:Button("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        menu.screen.changeMenu(menu.screen.loadMenu(require("menus/preferences")))
+        menu.menuManager:changeMenuTo(menu.menuManager:getMenu("preferences"))
     end
     if menu.widgets:Button("Instrucciones", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
@@ -50,11 +50,12 @@ function menu.update(dt)
 end
 
 function menu.draw()
-    love.graphics.setCanvas(menu.canvas)
-    do
+    --love.graphics.setCanvas(menu.canvas)
+    --do
         love.graphics.setBlendMode("alpha")
         menu.widgets:draw()
-    end
+    --end
+    --love.graphics.setCanvas()
 end
 
 function menu.keypressed(key, scancode, isrepeat)

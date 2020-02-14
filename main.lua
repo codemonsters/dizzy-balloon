@@ -1,23 +1,12 @@
--- configuración Lua Debugger Extension
--- TODO: Debugee comentado, ralentiza enormemente el juego
---[[
-local json = require 'libraries/dkjson/dkjson'
-local debuggee = require 'libraries/vscode-debuggee/vscode-debuggee'
-print(debugee)
-local startResult, breakerType = debuggee.start(json)
-print('debuggee start ->', startResult, breakerType)
---]]
--- fin configuración Lua Debugger Extension
-
 log = require("libraries/log/log") -- https://github.com/rxi/log.lua
 suit = require("libraries/suit")
 local SoundClass = require("sounds")
 sounds = SoundClass.new()
 
-mobile = false
-
 if love.system.getOS() == "iOS" or love.system.getOS() == "Android" then
     mobile = true
+else
+    mobile = false
 end
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 720 -- El juego se crea por completo dentro de una pantalla de este tamaño (y posteriormente se escala según sea necesario)
@@ -32,6 +21,13 @@ function changeScreen(new_screen)
 end
 
 function love.load()
+    if arg[#arg] == "-debug" then
+      -- if your game is invoked with "-debug" (zerobrane does this by default)
+      -- invoke the debugger
+      require("mobdebug").start()
+      -- disable buffer to read print messages instantly
+      io.stdout:setvbuf("no")
+    end
     log.level = "trace" -- trace / debug / info / warn / error / fatal
     log.info("Iniciado programa")
 

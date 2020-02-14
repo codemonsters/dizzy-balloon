@@ -3,9 +3,9 @@ local menu = {
     widgets = suit.new(ourTheme)
 }
 
-function menu.load(screen)
-    menu.screen = screen -- screen que contiene este menú
-    canvas = love.graphics.newCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
+function menu.load(menuManager)
+    menu.menuManager = menuManager
+    --menu.canvas = love.graphics.newCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 end
 
 function menu.update(dt)
@@ -41,16 +41,17 @@ function menu.update(dt)
             menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)
         ).hit
      then
-        menu.screen.changeMenu(menu.screen.loadMenu(require("menus/main")))
+        menu.menuManager:changeMenuTo(menu.menuManager:getMenu("main"))
     end
 end
 
 function menu.draw()
-    love.graphics.setCanvas(menu.canvas)
-    do
+    --love.graphics.setCanvas(menu.canvas)
+    --do
         love.graphics.setBlendMode("alpha")
         menu.widgets:draw()
-    end
+    --end
+    --love.graphics.setCanvas()
 end
 
 function menu.keypressed(key, scancode, isrepeat)
