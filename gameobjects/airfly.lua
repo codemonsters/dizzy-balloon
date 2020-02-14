@@ -1,13 +1,40 @@
 local Enemy = require("gameobjects/enemy")
 
-Enemy.states.moving = {
+local AirFlyClass = {}
+AirFlyClass.__index = Enemy
+
+function AirFlyClass.new(name, x, y, world, game, direction)
+    local newObject = Enemy.new(name, x, y, world, game, direction)
+    
+    --setmetatable(enemy, Enemy)
+    
+    return newObject
+end
+
+AirFlyClass.flyFilter = function(item, other)
+    return "slide"
+end
+
+function AirFlyClass:dist(self, orig, dest)
+    return {x = dest.x - orig.x, y = dest.y - orig.y}
+end
+
+function AirFlyClass:mod(self, vec)
+    return math.sqrt(math.pow(vec.x,2)+math.pow(vec.y,2))
+end
+
+AirFlyClass.states.moving = {
+    
     load = function(self)
+        self.objetivo = {x = WORLD_WIDTH/2, y = math.random(0, self.height * 10)}
+        dist = self:dist({x = self.x, y = self.y}, self.objetivo)
+        self.direction = math.asin(dist.y/self:mod(dist))
         self.velocidad_x = math.cos(self.direction) * self.moduloVelocidad
         self.velocidad_y = math.sin(self.direction) * self.moduloVelocidad
     end,
     update = function(self, dt)
 
-        self.x, self.y, cols, len = self.world:move(self, self.movSigx, self.movSigy, self.enemyFilter)
+        self.x, self.y, cols, len = self.world:move(self, self.movSigx, self.movSigy, self.flyFilter)
 
         if len > 0 then
             local col = cols[1]
@@ -36,4 +63,4 @@ Enemy.states.moving = {
     end
 }
 
-return Enemy
+return AirFlyClass
