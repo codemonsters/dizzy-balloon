@@ -184,7 +184,7 @@ game.states = {
     },
     cambiandoDeNivel = {
         load = function(self) -- cargamos el siguiente nivel y dibujamos su primer frame
-            game.music:stop()
+            music:stop()
             if LevelDefinitions[(game.currentLevel.id + 1)] == nil then
                 game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[1], game))
             else
@@ -227,7 +227,7 @@ game.states = {
                 game.currentLevel = game.nextLevel
                 game.loadlife(posX)
                 if game.currentLevel.music ~= nil then
-                    game.music:play()
+                    loadAndStartMusic(game.currentLevel.music)
                 end
                 game.change_state(game.states.jugando)
             end
@@ -712,7 +712,7 @@ end
 function returnToMenu()
     changeScreen(require("screens/menu"))
     if game.currentLevel.music ~= nil then
-        game.music:stop()
+        music:stop()
     end
 end
 

@@ -12,9 +12,10 @@ function SoundsClass.new()
     sounds.bomb_launch:setLooping(false)
     sounds.player_jump = love.audio.newSource("assets/sounds/player_jump.wav", "static")
     sounds.player_jump:setLooping(false)
-    sounds.player_jump:setVolume(0.5)
+    sounds.player_jump:setVolume(0.05)
     sounds.lostlife = love.audio.newSource("assets/sounds/lostlife.wav", "static")
     sounds.lostlife:setLooping(false)
+    sounds.lostlife:setVolume(0.5)
     --sounds.name = name
     setmetatable(sounds, SoundsClass)
     return sounds
