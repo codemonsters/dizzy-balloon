@@ -130,7 +130,7 @@ local Bomb = {
                 }
             },
             load = function(self)
-                sounds.whoosh:play()
+                sounds.bomb_launch:play()
                 self.elapsed_time = 0
                 self.collisions_filter = function(item, other)
                     if other.isBlock  or other.isLimit then
@@ -251,7 +251,7 @@ local Bomb = {
                         return "cross"
                     end
                 end
-                sounds.explosion:play()
+                sounds.bomb_explosion:play()
             end,
             update = function(self, dt)
                 self.elapsed_time = self.elapsed_time + dt

@@ -114,6 +114,25 @@ function actualizaVariablesEscalado(window_width, window_height)
     desplazamientoY = (window_height - factorEscala * SCREEN_HEIGHT) / 2
 end
 
+-- Inicia la música. El argumento music es una tabal con dos claves (file y volume), tal y com se puede definir en el nivel
+function loadAndStartMusic(m)
+    if music then
+        music:stop()
+    end
+    if m then 
+        print("KENTAAAA comenzando musica " .. m.file .. "Volumen: " .. m.volume)
+        music = love.audio.newSource("assets/music/" .. m.file, "stream")
+        music:setLooping(true)
+        if m.volume then
+            music:setVolume(m.volume)
+        end
+        music:play()
+    else
+        error("loadAndStartMusic(m): m is nil")
+    end
+end
+
+
 function round(num, n)
     local mult = 10 ^ (n or 0)
     return math.floor(num * mult + 0.5) / mult

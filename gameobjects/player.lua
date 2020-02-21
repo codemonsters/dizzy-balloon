@@ -102,6 +102,7 @@ local Player = {
             },
             load = function(self)
                 self.current_frame = 1
+                sounds.player_jump:play()
             end,
             update = function(self, dt)
             end
@@ -307,6 +308,7 @@ end
 
 function Player:die()
     if self.invencible == false and self.game then
+        sounds.lostlife:play()
         self.game.vidaperdida()
     end
 end
