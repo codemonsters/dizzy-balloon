@@ -711,9 +711,6 @@ end
 
 function returnToMenu()
     changeScreen(require("screens/menu"))
-    if game.currentLevel.music ~= nil then
-        music:stop()
-    end
 end
 
 return game

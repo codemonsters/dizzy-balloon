@@ -123,12 +123,15 @@ function loadAndStartMusic(m)
         music:stop()
     end
     if m then 
+        print("KENTAAAA comenzando musica " .. m.file .. "Volumen: " .. m.volume)
         music = love.audio.newSource("assets/music/" .. m.file, "stream")
         music:setLooping(true)
         if m.volume then
             music:setVolume(m.volume)
         end
         music:play()
+    else
+        error("loadAndStartMusic(m): m is nil")
     end
 end
 

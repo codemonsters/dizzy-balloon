@@ -21,39 +21,4 @@ function SoundsClass.new()
     return sounds
 end
 
---[[
-function BlockClass:draw()
-    love.graphics.draw(
-        atlas,
-        self.quad,
-        self.x,
-        self.y,
-        0,
-        self.width,
-        self.height
-    )
-end
---]]
 return SoundsClass
-
---[[
-local soundTable = {
-    {
-        name = "bomb_explosion"
-        --src = "assets/sounds/bomb_explosion.wav"
-        looping = false
-        volume = 1
-        type = "static"
-    },
-    {
-        name = "bombLaunch"
-        --src = "assets/sounds/bombLaunch.wav"
-        looping = false
-        volume = 1
-        type = "static"
-    }
-}
-
-return soundTable
---]]
-
