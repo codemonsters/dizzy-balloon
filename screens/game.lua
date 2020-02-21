@@ -1,7 +1,7 @@
 local bump = require "libraries/bump/bump"
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
-local EnemyClass = require("gameobjects/enemy")
+local EnemyClass = require("gameobjects/gameobjectsConBump/enemy")
 local SkyClass = require("gameobjects/sky")
 local PointerClass = require("misc/pointer")
 local BombClass = require("gameobjects/bomb")
@@ -17,8 +17,8 @@ local jugadorpuedesaltar = true
 local jugadorquieremoverse = false
 local BlockClass = require("gameobjects/block")
 local gameFilter
-local temporizador_respawn_enemigo = 0
-local TIEMPO_RESPAWN_ENEMIGO = 1
+local enemyRespawnTimer = 0
+local ENEMYRESPAWNTIMER = 1
 local inicioCambioNivel = 0
 local finalCambioNivel = 5
 local state
@@ -48,14 +48,14 @@ game.states = {
                 game.vidaperdida()
             end
             if game.currentLevel.max_enemies > #game.currentLevel.enemies then
-                temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
-                if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
+                enemyRespawnTimer = enemyRespawnTimer + dt
+                if enemyRespawnTimer > ENEMYRESPAWNTIMER then
                     if math.random() > 0.5 then
                         enemigo =
                             EnemyClass.new(
                             "enemigoIzq",
-                            EnemyClass.width,
-                            EnemyClass.height,
+                            EnemyClass.width + 200,
+                            EnemyClass.height + 200,
                             game.currentLevel.world,
                             game,
                             math.random() * 360
@@ -64,15 +64,15 @@ game.states = {
                         enemigo =
                             EnemyClass.new(
                             "enemigoDer",
-                            WORLD_WIDTH - EnemyClass.width,
-                            EnemyClass.height,
+                            WORLD_WIDTH - EnemyClass.width - 200,
+                            EnemyClass.height + 200,
                             game.currentLevel.world,
                             game,
                             math.random() * 360
                         )
                     end
                     table.insert(game.currentLevel.enemies, enemigo)
-                    temporizador_respawn_enemigo = 0
+                    enemyRespawnTimer = 0
                 end
             end
 
@@ -655,7 +655,7 @@ function game.vidaperdida()
     game.change_state(game.states.muriendo)
 end
 
-function game.remove_enemy(enemy)
+function game.removeEnemy(enemy)
     for i, v in ipairs(game.currentLevel.enemies) do
         if v == enemy then
             game.currentLevel.world:remove(enemy)

@@ -6,11 +6,11 @@ local Enemy = {
     riders = {},
     width = 40,
     height = 40,
-    speed = math.sqrt(12),
+    speed = 200,
     vx = 0,
     vy = 0,
     isEnemy = true,
-    image = love.graphics.newImage("assets/image/old/enemy.png"),
+    image = love.graphics.newImage("assets/images/old/enemy.png"),
     states = {
         moving = {
             collisionFilter = function(item, other)
@@ -39,7 +39,13 @@ local Enemy = {
                 for i = 1, len do
                     local other = cols[i].other
                     if other.isPlayer then
-                        other:empujar({x = self.vx * 2, y = self.vy * 2}, self)
+                        other:empujar({x = self.vx, y = self.vy}, self)
+                    else
+                        local vecBounce = {x = cols[i].bounce.x - cols[i].touch.x, y = cols[i].bounce.y - cols[i].touch.y}
+                        local moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
+                        local vectorUnitario = {x = vecBounce.x / moduloBounce, y = vecBounce.y / moduloBounce}
+                        self.vx = vectorUnitario.x * self.speed
+                        self.vx = vectorUnitario.y * self.speed
                     end
                 end
             end,
@@ -80,7 +86,7 @@ local Enemy = {
                                     self.vy = self.speed
                                 end
                             elseif other.isPlayer then
-                                other:empujar({x = self.vx * 2, y = 0}, self)
+                                other:empujar({x = self.vx, y = 0}, self)
                             end
                         end
                     else
@@ -93,7 +99,7 @@ local Enemy = {
                                 self.vy = 0
                                 self.bounceCounter = self.bounceCounter + 1
                             elseif other.isPlayer then
-                                other:empujar({x = 0, y = self.vy * 2}, self)
+                                other:empujar({x = 0, y = self.vy}, self)
                             end
                         end
                         if self.y - self.divingStartingY >= self.height * 2 then
@@ -147,7 +153,7 @@ end
 
 function Enemy:update(dt)
     if self.dead then
-        self.game.remove_enemy(self)
+        self.game.removeEnemy(self)
         return
     end
 
@@ -158,7 +164,7 @@ function Enemy:update(dt)
             if not rider.montado then -- eliminar de la tabla riders los que se desmonten
                 table.remove(self.riders, key)
             else
-                vector = {x = self.velocidad_x, y = self.velocidad_y}
+                vector = {x = self.vx, y = self.vy}
                 rider:empujar(vector, self)
             end
         end
