@@ -5,6 +5,8 @@ ourTheme = setmetatable({}, {__index = suit.theme})
 --       dress.theme.color.normal will also change suit.theme.color.normal!
 local labelColor = {normal =  {fg = {0, 0, 0}}}
 
+ourTheme.fontDefaultButtons = love.graphics.newFont("assets/fonts/FutureNow.ttf", 50)
+ourTheme.fontDefaultLabels = love.graphics.newFont("assets/fonts/edunline.ttf", 80)
 
 local buttonParameters = {
     cornerRadius = 29,
@@ -27,17 +29,23 @@ function ourTheme.Label(text, opt, x,y,w,h)
 	y = y + ourTheme.getVerticalOffsetForAlign(opt.valign, opt.font, h)
 
 	love.graphics.setColor(labelColor.normal.fg)
-	love.graphics.setFont(opt.font)
+	love.graphics.setFont(ourTheme.fontDefaultLabels)
 	love.graphics.printf(text, x+2, y, w-4, opt.align or "center")
 end
 
 function ourTheme.Button(text, opt, x,y,w,h)
+    --if opt.font then
+    --    print("TENEMOS OPT.FONT")
+    --    love.graphics.setFont(opt.font)
+    --else
+        love.graphics.setFont(ourTheme.fontDefaultButtons)
+    --end
+
     local c = ourTheme.getColorForState(opt, "button")
     
 
 	ourTheme.drawBox(x,y,w,h, c, buttonParameters.cornerRadius)
 	love.graphics.setColor(c.fg)
-	love.graphics.setFont(opt.font)
 
 	y = y + ourTheme.getVerticalOffsetForAlign(opt.valign, opt.font, h)
 	love.graphics.printf(text, x+2, y, w-4, opt.align or "center")
