@@ -1,6 +1,6 @@
 local menu = {
     name = "main",
-    widgets = suit.new(ourTheme)
+    widgets = suit.new(require("menus/ourTheme"))
 }
 
 function menu.load(menuManager)
