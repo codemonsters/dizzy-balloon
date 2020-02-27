@@ -101,7 +101,14 @@ function createAtlasQuadsModule(data, outputQuadsModuleFilename)
                 imageData.key ..
                     " = {quad = love.graphics.newQuad(" ..
                         imageData.x ..
-                            ", " .. imageData.y .. ", " .. imageData.w .. ", " .. imageData.h .. " }, width = " .. imageData.w .. ", height = " .. imageData.h .. "},\n"
+                            ", " ..
+                                imageData.y ..
+                                    ", " ..
+                                        imageData.w ..
+                                            ", " ..
+                                                imageData.h ..
+                                                    " ), width = " ..
+                                                        imageData.w .. ", height = " .. imageData.h .. "},\n"
     end
     outputData = outputData .. "}\n\n"
     outputData = outputData .. "return quads\n"
