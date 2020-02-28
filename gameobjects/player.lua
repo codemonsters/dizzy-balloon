@@ -271,10 +271,10 @@ function Player:jump()
     end
 end
 
-function Player:empujar(vector, empujador)
+function Player:empujar(vector, empujador, dt)
     if vector.x ~= 0 then
         initialX = self.x
-        self.x, self.y, cols, len = self.world:move(self, self.x + vector.x, self.y, self.collisions_filter)
+        self.x, self.y, cols, len = self.world:move(self, self.x + vector.x * dt, self.y, self.collisions_filter)
 
         if len > 0 then --hay una colision con otra cosa al intentar moverlo, debe morir
             if math.abs(initialX - self.x) <= 0.5 then --si no puede retroceder una distancia, se considera estrujado
@@ -287,7 +287,7 @@ function Player:empujar(vector, empujador)
     end
     if vector.y ~= 0 then
         initialY = self.y
-        self.x, self.y, cols, len = self.world:move(self, self.x, self.y + vector.y, self.collisions_filter)
+        self.x, self.y, cols, len = self.world:move(self, self.x, self.y + vector.y * dt, self.collisions_filter)
 
         if len > 0 then --hay una colision con otra cosa al intentar moverlo
             if math.abs(initialY - self.y) <= 0.5 then --si no puede retroceder una distancia, se considera estrujado

@@ -54,8 +54,8 @@ game.states = {
                         enemigo =
                             EnemyClass.new(
                             "enemigoIzq",
-                            EnemyClass.width + 200,
-                            EnemyClass.height + 200,
+                            EnemyClass.width,
+                            EnemyClass.height,
                             game.currentLevel.world,
                             game,
                             math.random() * 360
@@ -64,8 +64,8 @@ game.states = {
                         enemigo =
                             EnemyClass.new(
                             "enemigoDer",
-                            WORLD_WIDTH - EnemyClass.width - 200,
-                            EnemyClass.height + 200,
+                            WORLD_WIDTH - EnemyClass.width,
+                            EnemyClass.height,
                             game.currentLevel.world,
                             game,
                             math.random() * 360

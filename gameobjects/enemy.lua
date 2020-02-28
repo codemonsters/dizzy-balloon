@@ -82,7 +82,7 @@ local Enemy = {
                             self.lastXvelocity = self.velocidad_x
                             self.velocidad_x = 0
                             self.velocidad_y = 4
-                        else -- colisión llendo hacia abajo
+                        else -- colisión yendo hacia abajo
                             self.upBounceCounter = self.upBounceCounter + 1
                             self.horizontal = true
                             self.velocidad_x = -self.lastXvelocity

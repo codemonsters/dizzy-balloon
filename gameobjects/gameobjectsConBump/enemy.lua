@@ -6,7 +6,7 @@ local Enemy = {
     riders = {},
     width = 40,
     height = 40,
-    speed = 200,
+    speed = 300,
     vx = 0,
     vy = 0,
     isEnemy = true,
@@ -25,7 +25,7 @@ local Enemy = {
                 elseif other.isLimit then
                     return "bounce"
                 elseif other.isPlayer then
-                    return "touch"
+                    return "slide"
                 end
             end,
             load = function(self)
@@ -39,13 +39,16 @@ local Enemy = {
                 for i = 1, len do
                     local other = cols[i].other
                     if other.isPlayer then
-                        other:empujar({x = self.vx, y = self.vy}, self)
+                        other:empujar({x = self.vx, y = self.vy}, self, dt)
                     else
                         local vecBounce = {x = cols[i].bounce.x - cols[i].touch.x, y = cols[i].bounce.y - cols[i].touch.y}
                         local moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
                         local vectorUnitario = {x = vecBounce.x / moduloBounce, y = vecBounce.y / moduloBounce}
                         self.vx = vectorUnitario.x * self.speed
-                        self.vx = vectorUnitario.y * self.speed
+                        self.vy = vectorUnitario.y * self.speed
+                        if math.abs(((math.asin(self.vy / self.speed) * 360) / (2 * math.pi))) <= 20 then
+                            self:changeState(self.states.swiping)
+                        end
                     end
                 end
             end,
@@ -54,8 +57,17 @@ local Enemy = {
         },
         swiping = {
             collisionFilter = function(item, other)
-                if true then
+                if other.isPlayer then
                     return "slide"
+                else
+                    return "touch"
+                end
+            end,
+            queryFilter = function(item)
+                if item.isGoal then
+                    return false
+                else
+                    return true
                 end
             end,
             load = function(self)
@@ -68,55 +80,41 @@ local Enemy = {
                 self.vy = 0
             end,
             update = function(self, dt)
-                local goalX, goalY = self.x + self.vx * dt, self.y + self.vy * dt
-                local actualX, actualY, cols, len = self.world:move(self, goalX, goalY, self.state.collisionFilter)
-                self.x, self.y = actualX, actualY
+                self.x, self.y, cols, len = self.world:move(self, self.x + self.vx * dt, self.y + self.vy * dt, self.state.collisionFilter)
 
                 if len > 0 then
-                    local other = cols[i].other
-                    if self.horizontal then
-                        for i = 1, len do
-                            if other.isBlock or other.isMushroom or other.isSeed then
-                                self.speed = self.speed * 1.25
-                                local checkX, checkY, checkCols, checkLen = self.world:queryRect(self.x, self.y, self.x + self.width, self.y + self.height * 2, self.state.collisionFilter)
-                                if checkLen == 0 then
-                                    self.horizontal = false
-                                    self.divingStartingY = self.y
-                                    self.vx = 0
-                                    self.vy = self.speed
-                                end
-                            elseif other.isPlayer then
-                                other:empujar({x = self.vx, y = 0}, self)
-                            end
-                        end
-                    else
-                        for i = 1, len do
-                            if other.isBlock or other.isMushroom or other.isSeed then
-                                self.speed = self.speed * 1.25
-                                self.horizontal = true
-                                self.divingStartingY = 0
-                                self.vx = self.speed
-                                self.vy = 0
-                                self.bounceCounter = self.bounceCounter + 1
-                            elseif other.isPlayer then
-                                other:empujar({x = 0, y = self.vy}, self)
-                            end
-                        end
-                        if self.y - self.divingStartingY >= self.height * 2 then
+                    local col = cols[1]
+                    if not col.other.isBomb and not col.other.isPlayer then
+                        if self.horizontal then
+                            self.speed = -self.speed * 1.15
+                            self.horizontal = false
+                            self.divingStartingY = self.y
+                            self.vx = 0
+                            self.vy = math.abs(self.speed)
+                        else
+                            self.bounceCounter = self.bounceCounter + 1
                             self.horizontal = true
-                            self.divingStartingY = 0
                             self.vx = self.speed
                             self.vy = 0
-                            self.bounceCounter = 0
                         end
+                    elseif col.other.isPlayer then
+                        col.other:empujar({x = self.vx, y = self.vy}, self, dt)
                     end
-                    
-                    if self.bounceCounter >= 3 then
-                        self.direction = 45
-                        self.speed = self.startingSpeed
-                        self.vx, self.vy = self.speed, self.speed
-                        self:changeState(self.states.moving)
+                end
+
+                if not self.horizontal then
+                    if self.y - self.divingStartingY >= self.height * 2 then
+                        self.bounceCounter = 0
+                        self.horizontal = true
+                        self.vx = self.speed
+                        self.vy = 0
                     end
+                end
+
+                if self.bounceCounter > 3 then
+                    self.direction = 45
+                    self.speed = self.startingSpeed
+                    self:changeState(self.states.moving)
                 end
             end,
             draw = function(self, dt)
@@ -165,7 +163,7 @@ function Enemy:update(dt)
                 table.remove(self.riders, key)
             else
                 vector = {x = self.vx, y = self.vy}
-                rider:empujar(vector, self)
+                rider:empujar(vector, self, dt)
             end
         end
     end
