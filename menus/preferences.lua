@@ -4,10 +4,10 @@ local menu = {
 }
 
 function menu.load(menuManager)
-    hayMúsica = false --música
-
     menu.menuManager = menuManager
     --menu.canvas = love.graphics.newCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
+    
+    hayMúsica = false --música
 end
 
 function menu.update(dt)
@@ -32,14 +32,12 @@ function menu.update(dt)
     if menu.widgets:Button("X", {id=2}, menu.widgets.layout:down(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
             
         if hayMúsica == false then
-            love.audio.pause(music)
+            music:pause()
             hayMúsica = true
-            
 
         else 
-            love.audio.play(music)
+            music:play()
             hayMúsica = false
-
 
         end
      
