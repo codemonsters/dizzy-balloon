@@ -68,9 +68,6 @@ function love.load()
 end
 
 function love.update(dt)
-    if debuggee then
-        debuggee.poll()
-    end
     screen.update(dt)
 end
 
@@ -83,7 +80,7 @@ function love.resize(w, h)
 end
 
 function love.keypressed(key, scancode, isrepeat)
-    if key == "escape" then
+    if key == "q" then
         log.info("Finalizado")
         love.event.quit()
     elseif key == "f" then

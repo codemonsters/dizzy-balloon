@@ -3,8 +3,9 @@ local menu = {
     widgets = suit.new(require("menus/ourTheme"))
 }
 
-function menu.load(menuManager)
+function menu.load(menuManager, screen)
     menu.menuManager = menuManager
+    menu.screen = screen
     --menu.canvas = love.graphics.newCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 end
 
@@ -33,13 +34,6 @@ function menu.update(dt)
     if
         menu.widgets:Button(
             "Salir",
-            {
-                color = {
-                    normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}},
-                    hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}},
-                    active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}}
-                }
-            },
             menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)
         ).hit
      then

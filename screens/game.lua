@@ -28,6 +28,34 @@ local circle = love.graphics.newImage("assets/images/old/circle.png")
 local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
 local hud_height = SCREEN_HEIGHT
 
+local MenuManagerClass = require("menus/menuManager")
+local menuManager =
+    MenuManagerClass.new(
+    {
+        {
+            name = "inGame",
+            menu = require("menus/inGame")
+        }
+    },
+    {
+        {
+            from = nil,
+            to = "inGame",
+            effect = MenuManagerClass.effects.moveDown
+        },
+        {
+            from = "inGame",
+            to = nil,
+            effect = MenuManagerClass.effects.moveUp
+        }
+    }, game
+)
+
+function game.continue() 
+    game.pause = false
+    music:play()
+end
+
 if mobile then
     leftFinger = PointerClass.new(game, "Izquierdo")
     rightFinger = PointerClass.new(game, "Derecho")
@@ -426,10 +454,15 @@ function game.load()
     game.loadlevel(game.currentLevel)
     game.change_state(game.states.jugando)
     loadAndStartMusic(game.currentLevel.music)
+    game.pause = false
 end
 
 function game.update(dt)
-    game.state.update(game, dt)
+    if game.pause then
+        menuManager:update(dt)
+    else
+        game.state.update(game, dt)
+    end
 end
 
 function game.draw()
@@ -482,11 +515,17 @@ function game.draw()
     love.graphics.pop()
 
     game.state.draw(game)
+
+    if game.pause then
+        menuManager:draw()
+    end
 end
 
 function game.keypressed(key, scancode, isrepeat)
-    if key == "q" then
-        returnToMenu()
+    if key == "escape" then
+        game.pause = true
+        music:pause()
+        --returnToMenu()
     elseif key == "w" or key == "up" then
         game.currentLevel.player.up = true
         fireRequested = true

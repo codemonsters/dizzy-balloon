@@ -31,10 +31,11 @@ local MenuManagerClass = {
 
 MenuManagerClass.__index = MenuManagerClass
 
-function MenuManagerClass.new(menus, transitions)
+function MenuManagerClass.new(menus, transitions, screen)
     local menuManager = {}
     menuManager.menus = menus
     menuManager.transitions = transitions
+    menuManager.screen = screen
     setmetatable(menuManager, MenuManagerClass)
     -- estado inicial de los menús
     --NIL INNECESARIO: menuManager.currentMenu = nil -- forzamos currentMenu a nil para que changeMenuTo sepa que el menú que va a cargar es el primero de esta pantalla
@@ -131,10 +132,9 @@ MenuManagerClass.screenStates = {
 }
 
 function MenuManagerClass:changeMenuTo(nextMenu)
-    print("MENU --> " .. nextMenu.name)
     -- guardamos el menú en self.nextMenu y llamamos a su método load()
     self.nextMenu = nextMenu
-    self.nextMenu.load(self) -- al menú le pasamos como argumento el objeto MenuManagerClass para que pueda acceder a él por ejemplo cuando ese menú quiere pedir que se cambie a otro distinto
+    self.nextMenu.load(self, self.screen) -- al menú le pasamos como argumento el objeto MenuManagerClass para que pueda acceder a él por ejemplo cuando ese menú quiere pedir que se cambie a otro distinto
     -- transición de un menú a otro
     self.changeScreenState(self, MenuManagerClass.screenStates.changingMenu)
 end

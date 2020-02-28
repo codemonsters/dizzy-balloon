@@ -3,8 +3,9 @@ local menu = {
     widgets = suit.new(require("menus/ourTheme"))
 }
 
-function menu.load(menuManager)
+function menu.load(menuManager, screen)
     menu.menuManager = menuManager
+    menu.screen = screen
     --menu.canvas = love.graphics.newCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
     
     hayMúsica = false --música
