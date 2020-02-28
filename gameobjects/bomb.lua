@@ -23,14 +23,16 @@ local Bomb = {
         planted = {
             name = "planted",
             quads = {
+                quads.bomb
+                --[[
                 {
                     quad = love.graphics.newQuad(194, 18, 12, 12, atlas:getDimensions()),
                     width = 12,
                     height = 12
                 }
+                --]]
             },
             load = function(self)
-
                 local items, len = self.world:queryRect(self.x, self.y + self.height, self.width, self.height)
                 for i = 1, len do
                     if items[i].isEnemy then
@@ -67,18 +69,20 @@ local Bomb = {
                     self.width / self.state.quads[1].width,
                     self.height / self.state.quads[1].height
                 )
-
             end
         },
         prelaunching = {
             -- Usamos este estado mientras la bomba no ha abandonado nuestro cuerpo
             name = "prelaunching",
             quads = {
+                quads.bomb
+                --[[
                 {
                     quad = love.graphics.newQuad(194, 18, 12, 12, atlas:getDimensions()),
                     width = 12,
                     height = 12
                 }
+                --]]
             },
             load = function(self)
                 self.world:add(self, self.x, self.y, self.width, self.height)
@@ -96,10 +100,10 @@ local Bomb = {
 
                 self.x, self.y, cols, len = self.world:move(self, target_x, target_y, self.collisions_filter)
                 local inside_player = false -- con esto indicamos si la bomba ha abandonado o no nuestro cuerpo (para que inicialmente no choque con nosotros)
-                
+
                 for i = 1, len do
                     if cols[i].other.isPlayer then
-                        inside_player = true 
+                        inside_player = true
                     else
                         self:explode()
                     end
@@ -123,22 +127,25 @@ local Bomb = {
         launching = {
             name = "launching",
             quads = {
+                quads.bomb
+                --[[
                 {
                     quad = love.graphics.newQuad(194, 18, 12, 12, atlas:getDimensions()),
                     width = 12,
                     height = 12
                 }
+                --]]
             },
             load = function(self)
                 sounds.bomb_launch:play()
                 self.elapsed_time = 0
                 self.collisions_filter = function(item, other)
-                    if other.isBlock  or other.isLimit then
+                    if other.isBlock or other.isLimit then
                         self.vx = -0.6 * self.vx
                     elseif other.isGoal then
                         return nil
                     end
-                    
+
                     return "slide"
                 end
             end,
@@ -148,7 +155,7 @@ local Bomb = {
                 self.vy = self.vy + (9.8 * dt) * 50 -- gravedad
 
                 self.x, self.y, cols, len = self.world:move(self, target_x, target_y, self.collisions_filter)
-                
+
                 -- la bomba explota si toca cualquier cosa (exceptuando un bloque)
                 for i = 1, len do
                     if not cols[i].other.isBlock then
@@ -177,6 +184,26 @@ local Bomb = {
         exploding = {
             name = "exploding",
             quads = {
+                quads.explosion_01,
+                quads.explosion_02,
+                quads.explosion_03,
+                quads.explosion_04,
+                quads.explosion_05,
+                quads.explosion_06,
+                quads.explosion_07,
+                quads.explosion_08,
+                quads.explosion_09,
+                quads.explosion_10,
+                quads.explosion_11,
+                quads.explosion_12,
+                quads.explosion_13,
+                quads.explosion_14,
+                quads.explosion_15,
+                quads.explosion_16,
+                quads.explosion_17,
+                quads.explosion_18
+
+                --[[
                 {
                     quad = love.graphics.newQuad(402, 14, 22, 30, atlas:getDimensions()),
                     width = 22,
@@ -227,6 +254,7 @@ local Bomb = {
                     width = 38,
                     height = 36
                 }
+                --]]
             },
             load = function(self)
                 self.elapsed_time = 0
@@ -279,7 +307,10 @@ local Bomb = {
                         self.world:check(self, self.current_x, self.current_y, self.collisions_filter)
                     for i = 1, len do
                         if not cols[i].other.isBlock and not cols[i].other.isGoal and not cols[i].other.isLimit then
-                            if not cols[i].other.isSeed or (cols[i].other.isSeed and cols[i].other.state ~= cols[i].other.states.sky) then
+                            if
+                                not cols[i].other.isSeed or
+                                    (cols[i].other.isSeed and cols[i].other.state ~= cols[i].other.states.sky)
+                             then
                                 log.debug("La explosión ha alcanzado a: " .. cols[i].other.name)
                                 self.game.kill_object(cols[i].other)
                                 if not cols[i].other.isMushroom then
@@ -373,14 +404,14 @@ function Bomb:launch(x, y, initialDirection, playerVx, playerVy)
                 self.vy = -500
             end
         elseif initialDirection == "down" then
-        self:change_state(Bomb.states.planted)
+            self:change_state(Bomb.states.planted)
             self.vx = 0
             self.vy = 0
         else
             log.fatal("initialDirection should be 'up' or 'down'")
         end
     --else
-        --log.debug("New bomb not launched because we already have an active bomb")
+    --log.debug("New bomb not launched because we already have an active bomb")
     end
 end
 

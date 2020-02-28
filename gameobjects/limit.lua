@@ -7,8 +7,8 @@ local LimitClass = {
     height = 0,
     0,
     isLimit = true,
-    --quad = quads.limit.quad
-    quad = love.graphics.newQuad(162, 148, 1, 1, atlasOld:getDimensions())
+    quad = quads.limit.quad
+    --quad = love.graphics.newQuad(162, 148, 1, 1, atlasOld:getDimensions())
 }
 
 LimitClass.__index = LimitClass

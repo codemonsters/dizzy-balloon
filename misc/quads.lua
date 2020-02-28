@@ -1,4 +1,3 @@
--- !!!: La tabla quads hace uso de la variable global atlas. ¿Deberíamos crear la tabla atlas aquí para por lo menos mantener las dos cosas juntas?
 local quads = {
 	circle = {quad = love.graphics.newQuad(0, 0, 210, 210, atlas:getDimensions()), width = 210, height = 210},
 	boot_fast = {quad = love.graphics.newQuad(0, 210, 20, 20, atlas:getDimensions()), width = 20, height = 20},
@@ -32,14 +31,15 @@ local quads = {
 	gamepad = {quad = love.graphics.newQuad(0, 774, 210, 210, atlas:getDimensions()), width = 210, height = 210},
 	heart = {quad = love.graphics.newQuad(210, 181, 20, 20, atlas:getDimensions()), width = 20, height = 20},
 	player_jumping = {quad = love.graphics.newQuad(80, 663, 17, 18, atlas:getDimensions()), width = 17, height = 18},
+	bomb = {quad = love.graphics.newQuad(115, 460, 12, 12, atlas:getDimensions()), width = 12, height = 12},
 	player_standing = {quad = love.graphics.newQuad(230, 181, 18, 18, atlas:getDimensions()), width = 18, height = 18},
 	player_walking_01 = {quad = love.graphics.newQuad(248, 181, 20, 18, atlas:getDimensions()), width = 20, height = 18},
 	player_walking_02 = {quad = love.graphics.newQuad(128, 540, 18, 18, atlas:getDimensions()), width = 18, height = 18},
 	player_walking_03 = {quad = love.graphics.newQuad(128, 558, 20, 18, atlas:getDimensions()), width = 20, height = 18},
-	radish = {quad = love.graphics.newQuad(146, 540, 12, 18, atlas:getDimensions()), width = 12, height = 18},
-	skate = {quad = love.graphics.newQuad(148, 558, 20, 20, atlas:getDimensions()), width = 20, height = 20},
+	radish = {quad = love.graphics.newQuad(115, 472, 12, 18, atlas:getDimensions()), width = 12, height = 18},
+	skate = {quad = love.graphics.newQuad(148, 540, 20, 20, atlas:getDimensions()), width = 20, height = 20},
 	spring = {quad = love.graphics.newQuad(86, 681, 20, 20, atlas:getDimensions()), width = 20, height = 20},
-	bomb = {quad = love.graphics.newQuad(115, 460, 12, 12, atlas:getDimensions()), width = 12, height = 12}
+	limit = {quad = love.graphics.newQuad(127, 460, 1, 1, atlas:getDimensions()), width = 1, height = 1},
 }
 
 return quads
