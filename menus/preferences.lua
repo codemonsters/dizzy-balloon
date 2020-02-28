@@ -20,15 +20,15 @@ function menu.update(dt)
     menu.widgets:Label("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.11))
 
     if menu.widgets:Button("Sonido", menu.widgets.layout:row(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
-        
+
     end
 
     if menu.widgets:Button("X", {id=1}, menu.widgets.layout:col(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
-        
+        sounds.ui_click:play()
     end
 
     if menu.widgets:Button("X", {id=2}, menu.widgets.layout:down(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
-        
+        sounds.ui_click:play()
     end
 
     if menu.widgets:Button("Música", menu.widgets.layout:left(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
@@ -40,11 +40,11 @@ function menu.update(dt)
     end
 
     if menu.widgets:Button("X", {id=3}, menu.widgets.layout:col(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
-        
+        sounds.ui_click:play()
     end
 
     if menu.widgets:Button("X", {id=4}, menu.widgets.layout:down(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
-        
+        sounds.ui_click:play()
     end
 
     if menu.widgets:Button("English", menu.widgets.layout:left(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then

@@ -21,6 +21,7 @@ function menu.update(dt)
 
     if menu.widgets:Button("Jugar", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         --music:stop()
+        sounds.ui_click:play()
         changeScreen(require("screens/game"))
     end
     if menu.widgets:Button("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
@@ -42,6 +43,8 @@ function menu.update(dt)
             menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)
         ).hit
      then
+        sounds.ui_click:play()
+        while sounds.ui_click:isPlaying() do end
         os.exit()
     end
 end

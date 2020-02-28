@@ -185,6 +185,7 @@ game.states = {
     cambiandoDeNivel = {
         load = function(self) -- cargamos el siguiente nivel y dibujamos su primer frame
             music:stop()
+            sounds.level_up:play()
             if LevelDefinitions[(game.currentLevel.id + 1)] == nil then
                 game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[1], game))
             else
