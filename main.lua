@@ -1,5 +1,6 @@
 log = require("libraries/log/log") -- https://github.com/rxi/log.lua
 suit = require("libraries/suit")
+
 local SoundClass = require("sounds")
 sounds = SoundClass.new()
 
@@ -22,17 +23,16 @@ end
 
 function love.load()
     if arg[#arg] == "-debug" then
-      -- if your game is invoked with "-debug" (zerobrane does this by default)
-      -- invoke the debugger
-      require("mobdebug").start()
-      -- disable buffer to read print messages instantly
-      io.stdout:setvbuf("no")
+        -- if your game is invoked with "-debug" (zerobrane does this by default)
+        -- invoke the debugger
+        require("mobdebug").start()
+        -- disable buffer to read print messages instantly
+        io.stdout:setvbuf("no")
     end
     log.level = "trace" -- trace / debug / info / warn / error / fatal
-    log.info("Iniciado programa")
+    log.info("Iniciando")
 
     love.graphics.setDefaultFilter("nearest", "linear") -- Cambiamos el filtro usado durante el escalado
-
 
     font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
 
@@ -59,7 +59,9 @@ function love.load()
     math.randomseed(os.time()) -- NOTE: Quizá redundante, parece que Love ya inicializa la semilla random automáticamente
 
     -- atlas: la textura que contiene todas las imágenes
-    atlas = love.graphics.newImage("assets/images/atlas.png") -- Créditos: Grafixkid (https://opengameart.org/content/arcade-platformer-assets)
+    atlasOld = love.graphics.newImage("assets/images/atlasOld.png") -- Créditos: Grafixkid (https://opengameart.org/content/arcade-platformer-assets)
+    atlas = love.graphics.newImage("assets/images/atlas.png")
+    quads = require("misc/quads") -- quads de todos los elementos incluidos en el atlas
 
     changeScreen(require("screens/menu"))
     log.info("Juego cargado")
@@ -119,7 +121,7 @@ function loadAndStartMusic(m)
     if music then
         music:stop()
     end
-    if m then 
+    if m then
         print("KENTAAAA comenzando musica " .. m.file .. "Volumen: " .. m.volume)
         music = love.audio.newSource("assets/music/" .. m.file, "stream")
         music:setLooping(true)
@@ -131,7 +133,6 @@ function loadAndStartMusic(m)
         error("loadAndStartMusic(m): m is nil")
     end
 end
-
 
 function round(num, n)
     local mult = 10 ^ (n or 0)

@@ -9,14 +9,19 @@ local MushroomClass = {
     states = {
         standing = {
             quads = {
+                quads.radish
+                --[[
                 {
                     quad = love.graphics.newQuad(98, 31, 12, 17, atlas:getDimensions()),
                     width = 12,
                     height = 17
                 }
+                --]]
             },
-            load = function(self) end,
-            update = function(self, dt) end,
+            load = function(self)
+            end,
+            update = function(self, dt)
+            end,
             draw = function(self)
                 love.graphics.draw(
                     atlas,
