@@ -127,7 +127,7 @@ function loadAndStartMusic(m)
         end
         music:play()
     else
-        error("loadAndStartMusic(m): m is nil")
+        log.debug("loadAndStartMusic(m): m is nil")
     end
 end
 

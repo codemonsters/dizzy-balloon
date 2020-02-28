@@ -48,10 +48,11 @@ local menuManager =
             to = nil,
             effect = MenuManagerClass.effects.moveUp
         }
-    }, game
+    },
+    game
 )
 
-function game.continue() 
+function game.continue()
     game.pause = false
     music:play()
 end
@@ -523,9 +524,9 @@ end
 
 function game.keypressed(key, scancode, isrepeat)
     if key == "escape" then
+        --returnToMenu()
         game.pause = true
         music:pause()
-        --returnToMenu()
     elseif key == "w" or key == "up" then
         game.currentLevel.player.up = true
         fireRequested = true
