@@ -1,4 +1,6 @@
 local Enemy = require("gameobjects/enemy")
+local SeedClass = require("gameobjects/seed")
+local PowerUps = require("misc/powerups")
 
 local AirFlyClass = {}
 setmetatable(AirFlyClass, Enemy)
@@ -31,6 +33,14 @@ function AirFlyClass.__index:setTarget(objetivo)
     self.velocidad_y = dist.y/self:mod(dist) * self.moduloVelocidad
 end
 
+function AirFlyClass.__index:atacar()
+    local huevito = SeedClass.new("huevo", self.game.currentLevel.sky, self.world, self.x, self.y, self.game)
+    table.insert(self.game.currentLevel.sky.semillas, huevito)
+    huevito.powerUp = PowerUps.flyAttack
+    
+    huevito:change_state(huevito.states.falling)
+end
+
 AirFlyClass.states.moving = {
     
     load = function(self)
@@ -55,10 +65,11 @@ AirFlyClass.states.moving = {
                 if distObj < 10 then
                     if self.atacando then
                         self.atacando = false
+                        self:atacar()
                     end
                 end
                 self.objetivo = {x = math.random(0, WORLD_WIDTH), y = math.random(0, WORLD_HEIGHT/3)}
-                if math.random(0, 100) < 50 and self.cargado then
+                if math.random(0, 100) < 20 and self.cargado then
                     self.objetivo.x = self.game.currentLevel.player.x
                     self.atacando = true
                 end

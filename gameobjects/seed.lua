@@ -60,6 +60,7 @@ local SeedClass = {
                 }
             },
             load = function(self)
+                self.initY = self.y
                 self.current_frame = 1
                 self.elapsed_time = 0
                 self.collisions_filter = function(item, other)
@@ -78,7 +79,7 @@ local SeedClass = {
                 self.y = target_y
                 self.x = target_x
                 self.x, self.y, cols, len = self.world:move(self, target_x, target_y, self.collisions_filter)
-                if self.y > self.height * 2 and len > 0 then -- la semilla se activará al contacto tras caer 2 veces su altura
+                if self.y - self.initY > self.height * 2 and len > 0 then -- la semilla se activará al contacto tras caer 2 veces su altura
                     self.change_state(self, self.states.touchdown)
                     return
                 end

@@ -22,6 +22,12 @@ local PowerUps = {
         apply = function(self, player)
             player.game.bombasAereas = player.game.bombasAereas + 1
         end
+    },
+    flyAttack = {
+        color = {1, 0.1, 0.1},
+        apply = function(self, player)
+            player:die()
+        end
     }
 }
 
