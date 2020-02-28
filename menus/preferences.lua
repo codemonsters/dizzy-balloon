@@ -1,6 +1,6 @@
 local menu = {
     name = "preferences",
-    widgets = suit.new(ourTheme)
+    widgets = suit.new(require("menus/ourTheme"))
 }
 
 function menu.load(menuManager)
@@ -16,13 +16,10 @@ function menu.update(dt)
     menu.widgets.layout:reset(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.1)
     menu.widgets.layout:padding(SCREEN_HEIGHT * 0.015, SCREEN_WIDTH * 0.015)
     local mouseX, mouseY = love.mouse.getPosition()
-    love.graphics.setFont(font_menu)
 
     menu.widgets:updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
 
     menu.widgets:Label("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.11))
-
-    love.graphics.setFont(font_buttons)
 
     if menu.widgets:Button("Sonido", menu.widgets.layout:row(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
         

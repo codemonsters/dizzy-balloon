@@ -1,10 +1,14 @@
-
 local LimitClass = {
     name = "Limit",
-    x, y = 0, 0,
-    width, height = 0, 0,
+    x,
+    y = 0,
+    0,
+    width,
+    height = 0,
+    0,
     isLimit = true,
-    quad = love.graphics.newQuad(162, 148, 1, 1, atlas:getDimensions())
+    quad = quads.limit.quad
+    --quad = love.graphics.newQuad(162, 148, 1, 1, atlasOld:getDimensions())
 }
 
 LimitClass.__index = LimitClass

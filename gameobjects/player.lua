@@ -26,7 +26,7 @@ local Player = {
     end,
     collisions_filter = function(item, other)
         if other.isBalloon and other.state == BalloonClass.states.growing then
-            return nil  -- TODO: Revisar si deberiamos resolver esta colisión también desde aquí y no solo desde balloon
+            return nil -- TODO: Revisar si deberiamos resolver esta colisión también desde aquí y no solo desde balloon
         elseif other.isBomb and other.state ~= other.states.planted then
             return nil
         elseif other.isSeed and other.state ~= other.states.falling then
@@ -42,11 +42,7 @@ local Player = {
     states = {
         standing = {
             quads = {
-                {
-                    quad = love.graphics.newQuad(8, 14, 18, 18, atlas:getDimensions()),
-                    width = 18,
-                    height = 18
-                }
+                quads.player_standing
             },
             load = function(self)
                 self.current_frame = 1
@@ -56,6 +52,11 @@ local Player = {
         },
         walking = {
             quads = {
+                quads.player_walking_01,
+                quads.player_walking_02,
+                quads.player_walking_03,
+                quads.player_walking_02
+                --[[
                 {
                     quad = love.graphics.newQuad(40, 13, 17, 18, atlas:getDimensions()),
                     width = 18,
@@ -76,6 +77,7 @@ local Player = {
                     width = 18,
                     height = 18
                 }
+                --]]
             },
             load = function(self)
                 self.current_frame = 1
@@ -94,14 +96,11 @@ local Player = {
         },
         jumping = {
             quads = {
-                {
-                    quad = love.graphics.newQuad(40, 13, 17, 18, atlas:getDimensions()),
-                    width = 18,
-                    height = 18
-                }
+                quads.player_jumping
             },
             load = function(self)
                 self.current_frame = 1
+                sounds.player_jump:play()
             end,
             update = function(self, dt)
             end
@@ -135,7 +134,6 @@ function Player.new(world, game)
 end
 
 function Player:update(dt)
-
     self.tVivo = self.tVivo + dt
 
     if self.invencible and self.tVivo >= self.tInvencible then
@@ -148,13 +146,15 @@ function Player:update(dt)
     --colisiones con los pies del jugador SOLO al bajar
     if self.velocidad_y < 0 then
         for i = 1, lenColFeet do
-            if  not self.montado and ((items[i].isBalloon and items[i].state == BalloonClass.states.flying_alone) or items[i].isEnemy) then
+            if
+                not self.montado and
+                    ((items[i].isBalloon and items[i].state == BalloonClass.states.flying_alone) or items[i].isEnemy)
+             then
                 self.montado = true
                 self.montura = items[i]
                 self.y = self.montura.y - self.height
                 self.not_supported = false
                 self.montura:montado(self)
-                
             end
             if self.not_supported == true then --si hay colision al bajar en el eje y
                 self.velocidad_y = self.velyini
@@ -181,7 +181,8 @@ function Player:update(dt)
     end
 
     if not (self.montado and self.montura.isBalloon) then -- cuando estemos montados en el globo no nos podremos mover
-        self.x, ydespues, cols, len = self.world:move(self, self.x + self:vx() * dt, self.y + self:vy() * dt, self.collisions_filter)
+        self.x, ydespues, cols, len =
+            self.world:move(self, self.x + self:vx() * dt, self.y + self:vy() * dt, self.collisions_filter)
     end
 
     if self.not_supported then -- el jugador está en el aire, ya sea subiendo o bajando
@@ -202,7 +203,7 @@ function Player:update(dt)
     else
         if self.left or self.right then
             -- self.state = self.states.walking
-            if not (self.montado and self.montura.isBalloon) then 
+            if not (self.montado and self.montura.isBalloon) then
                 self.change_state(self, Player.states.walking)
             end
         else
@@ -220,7 +221,6 @@ function Player:cabezazo()
 end
 
 function Player:draw()
-
     love.graphics.setColor(255, 255, 255, 255)
 
     if self.invencible then
@@ -249,7 +249,7 @@ function Player:draw()
         self.width / self.state.quads[self.current_frame].width * self.bitmap_direction,
         self.height / self.state.quads[self.current_frame].height
     )
-    
+
     love.graphics.setColor(255, 255, 255, 255)
 end
 
@@ -307,6 +307,7 @@ end
 
 function Player:die()
     if self.invencible == false and self.game then
+        sounds.lostlife:play()
         self.game.vidaperdida()
     end
 end

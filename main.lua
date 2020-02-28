@@ -1,5 +1,6 @@
 log = require("libraries/log/log") -- https://github.com/rxi/log.lua
 suit = require("libraries/suit")
+
 local SoundClass = require("sounds")
 sounds = SoundClass.new()
 
@@ -22,22 +23,18 @@ end
 
 function love.load()
     if arg[#arg] == "-debug" then
-      -- if your game is invoked with "-debug" (zerobrane does this by default)
-      -- invoke the debugger
-      require("mobdebug").start()
-      -- disable buffer to read print messages instantly
-      io.stdout:setvbuf("no")
+        -- if your game is invoked with "-debug" (zerobrane does this by default)
+        -- invoke the debugger
+        require("mobdebug").start()
+        -- disable buffer to read print messages instantly
+        io.stdout:setvbuf("no")
     end
     log.level = "trace" -- trace / debug / info / warn / error / fatal
-    log.info("Iniciado programa")
+    log.info("Iniciando")
 
     love.graphics.setDefaultFilter("nearest", "linear") -- Cambiamos el filtro usado durante el escalado
 
-    font_menu = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 80) -- Orange Juice 2.0 by Brittney Murphy Design https://brittneymurphydesign.com
-    font_buttons = love.graphics.newFont("assets/fonts/GROBOLD.ttf", 50) -- Orange Juice 2.0 by Brittney Murphy Design https://brittneymurphydesign.com
-
     font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
-    love.graphics.setFont(font_menu)
 
     local window_width, window_height = love.window.getDesktopDimensions()
     if love.window.getFullscreen() then
@@ -62,7 +59,9 @@ function love.load()
     math.randomseed(os.time()) -- NOTE: Quizá redundante, parece que Love ya inicializa la semilla random automáticamente
 
     -- atlas: la textura que contiene todas las imágenes
-    atlas = love.graphics.newImage("assets/images/atlas.png") -- Créditos: Grafixkid (https://opengameart.org/content/arcade-platformer-assets)
+    atlasOld = love.graphics.newImage("assets/images/atlasOld.png") -- Créditos: Grafixkid (https://opengameart.org/content/arcade-platformer-assets)
+    atlas = love.graphics.newImage("assets/images/atlas.png")
+    quads = require("misc/quads") -- quads de todos los elementos incluidos en el atlas
 
     changeScreen(require("screens/menu"))
     log.info("Juego cargado")
@@ -115,6 +114,24 @@ function actualizaVariablesEscalado(window_width, window_height)
 
     desplazamientoX = (window_width - factorEscala * SCREEN_WIDTH) / 2
     desplazamientoY = (window_height - factorEscala * SCREEN_HEIGHT) / 2
+end
+
+-- Inicia la música. El argumento music es una tabal con dos claves (file y volume), tal y com se puede definir en el nivel
+function loadAndStartMusic(m)
+    if music then
+        music:stop()
+    end
+    if m then
+        print("KENTAAAA comenzando musica " .. m.file .. "Volumen: " .. m.volume)
+        music = love.audio.newSource("assets/music/" .. m.file, "stream")
+        music:setLooping(true)
+        if m.volume then
+            music:setVolume(m.volume)
+        end
+        music:play()
+    else
+        error("loadAndStartMusic(m): m is nil")
+    end
 end
 
 function round(num, n)

@@ -23,12 +23,14 @@ local SeedClass = {
         sky = {
             name = "sky",
             quads = {
-                {
-                    --quad = love.graphics.newQuad(130, 61, 14, 16, atlas:getDimensions()),
-                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
+                quads.egg
+                --[[{
+                    --quad = love.graphics.newQuad(130, 61, 14, 16, atlasOld:getDimensions()),
+                    quad = love.graphics.newQuad(499, 499, 20, 20, atlasOld:getDimensions()),
                     width = 14,
                     height = 16
                 }
+                --]]
             },
             load = function(self)
                 self.currentframe = 1
@@ -46,6 +48,8 @@ local SeedClass = {
         falling = {
             name = "falling",
             quads = {
+                quads.egg
+                --[[
                 {
                     --quad = love.graphics.newQuad(98, 56, 14, 21, atlas:getDimensions()),
                     quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
@@ -58,6 +62,7 @@ local SeedClass = {
                     width = 14,
                     height = 16
                 }
+                --]]
             },
             load = function(self)
                 self.current_frame = 1
@@ -96,12 +101,15 @@ local SeedClass = {
         touchdown = {
             name = "touchdown",
             quads = {
+                quads.egg
+                --[[
                 {
                     --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
                     quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
                     height = 16
                 }
+                --]]
             },
             load = function(self)
                 self.currentframe = 1
@@ -117,12 +125,16 @@ local SeedClass = {
         onthefloor = {
             name = "onthefloor",
             quads = {
+                quads.egg
+                --[[
                 {
+
                     --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
                     quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
                     height = 16
                 }
+                --]]
             },
             load = function(self)
                 print("onthefloor.load")
@@ -163,12 +175,15 @@ local SeedClass = {
         evolving = {
             name = "evolving",
             quads = {
+                quads.balloon
+                --[[
                 {
                     --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
                     quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
                     width = 14,
                     height = 16
                 }
+                --]]
             },
             load = function(self)
                 print("evolving.load")
@@ -201,11 +216,14 @@ local SeedClass = {
         balloon = {
             name = "balloon",
             quads = {
+                quads.balloon
+                --[[
                 {
                     quad = love.graphics.newQuad(125, 78, 16, 16, atlas:getDimensions()),
                     width = 16,
                     height = 16
                 }
+                --]]
             },
             load = function(self)
                 self.currentframe = 1
@@ -217,7 +235,7 @@ local SeedClass = {
             name = "rotting",
             quads = {
                 {
-                    quad = love.graphics.newQuad(161, 66, 15, 14, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(161, 66, 15, 14, atlasOld:getDimensions()),
                     width = 15,
                     height = 14
                 }
@@ -239,7 +257,7 @@ local SeedClass = {
             size = 200,
             quads = {
                 {
-                    quad = love.graphics.newQuad(130, 61, 14, 16, atlas:getDimensions()),
+                    quad = love.graphics.newQuad(130, 61, 14, 16, atlasOld:getDimensions()),
                     width = 14,
                     height = 16
                 }
@@ -313,10 +331,10 @@ function SeedClass:draw()
         self.x,
         self.y,
         0,
-        self.state.size,
-        self.state.size
-        --self.width / self.state.quads[self.currentFrame].width,
-        --self.height / self.state.quads[self.currentFrame].height
+        --self.state.size,
+        --self.state.size
+        self.width / self.state.quads[self.currentFrame].width,
+        self.height / self.state.quads[self.currentFrame].height
     )
     if self.state == self.states.explode then
         love.graphics.rectangle(

@@ -1,6 +1,6 @@
 local menu = {
     name = "main",
-    widgets = suit.new(ourTheme)
+    widgets = suit.new(require("menus/ourTheme"))
 }
 
 function menu.load(menuManager)
@@ -11,19 +11,16 @@ end
 function menu.update(dt)
     love.graphics.setBlendMode("alpha")
 
-    menu.widgets.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.1)
+    menu.widgets.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.05)
     menu.widgets.layout:padding(0, SCREEN_WIDTH * 0.015)
     local mouseX, mouseY = love.mouse.getPosition()
-    love.graphics.setFont(font_menu)
 
     menu.widgets:updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
 
-    menu.widgets:Label("Dizzy Balloon", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12))
-
-    love.graphics.setFont(font_buttons)
+    menu.widgets:Label("Dizzy Balloon", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.2))
 
     if menu.widgets:Button("Jugar", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        music:stop()
+        --music:stop()
         changeScreen(require("screens/game"))
     end
     if menu.widgets:Button("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
