@@ -107,7 +107,7 @@ function createAtlasQuadsModule(data, outputQuadsModuleFilename)
                                         imageData.w ..
                                             ", " ..
                                                 imageData.h ..
-                                                    " ), width = " ..
+                                                    ", atlas:getDimensions()), width = " ..
                                                         imageData.w .. ", height = " .. imageData.h .. "},\n"
     end
     outputData = outputData .. "}\n\n"
@@ -141,7 +141,7 @@ function love.load()
         print("Creating resulting atlas image...")
         createAtlasImage(data, "atlas.png", atlasWidth, atlasHeight)
         print("Creating resulting atlas quads module...")
-        createAtlasQuadsModule(data, "atlas.lua")
+        createAtlasQuadsModule(data, "quads.lua")
         print("Done")
     end
 
