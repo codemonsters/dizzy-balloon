@@ -53,7 +53,7 @@ local menu = {
 -- carga este screen
 function menu.load()
     -- música
-    loadAndStartMusic({file = "menu.mp3", volume = 0.1})
+    loadAndStartMusic({file = "menu.mp3", volume = 1})
 
     -- animaciones
     world = bump.newWorld(50)

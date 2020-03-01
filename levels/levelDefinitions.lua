@@ -7,10 +7,10 @@ local LevelDefinitions = {
         blocks = {},
         max_enemies = 2,
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
-        --music = {
-        --    file = 'stage1.mp3',
-        --    volume = 0.5
-        --},
+        music = {
+            file = "stage1.mp3",
+            volume = 0.50
+        },
         --music = "pp_fight_or_flight_full_loop.mp3",
         powerups = {
             speedBoost = 3,
