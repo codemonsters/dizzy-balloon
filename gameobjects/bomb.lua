@@ -257,6 +257,14 @@ local Bomb = {
                 --]]
             },
             load = function(self)
+                self.collisions_filter = function(item, other)
+                    if other.isBlock or other.isLimit or other.isGoal then
+                        return nil
+                    else
+                        return "cross"
+                    end
+                end
+
                 self.elapsed_time = 0
                 self.explosion_duration = 0.7
                 self.initial_width = 40
@@ -270,15 +278,7 @@ local Bomb = {
                 self.current_width = self.initial_width
                 self.current_height = self.initial_height
                 self.current_frame = 1
-                self.collisions_filter = function(item, other)
-                    if other.isBlock or other.isLimit then
-                        return nil
-                    elseif other.isGoal then
-                        return nil
-                    else
-                        return "cross"
-                    end
-                end
+
                 sounds.bomb_explosion:play()
             end,
             update = function(self, dt)
@@ -324,20 +324,25 @@ local Bomb = {
                 end
             end,
             draw = function(self)
-                local x_scale =
-                    self.x_scale_factor * self.x_scale_factor * self.state.quads[self.current_frame].width /
-                    self.current_width
-                local y_scale =
-                    self.y_scale_factor * self.y_scale_factor * self.state.quads[self.current_frame].height /
-                    self.current_height
+                print(
+                    "CURRENT EXPLOSION QUAD -> current_frame = " ..
+                        self.current_frame ..
+                            "; width = " ..
+                                self.state.quads[self.current_frame].width ..
+                                    "; height = " .. self.state.quads[self.current_frame].height
+                )
+                local quad_x_scale_factor =
+                    self.initial_width * self.x_scale_factor / self.state.quads[self.current_frame].width
+                local quad_y_scale_factor =
+                    self.initial_height * self.y_scale_factor / self.state.quads[self.current_frame].height
                 love.graphics.draw(
                     atlas,
                     self.state.quads[self.current_frame].quad,
                     self.current_x,
                     self.current_y,
                     0,
-                    x_scale,
-                    y_scale
+                    quad_x_scale_factor,
+                    quad_y_scale_factor
                 )
                 love.graphics.rectangle("line", self.current_x, self.current_y, self.current_width, self.current_height)
             end
