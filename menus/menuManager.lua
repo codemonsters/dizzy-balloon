@@ -37,9 +37,6 @@ function MenuManagerClass.new(menus, transitions, screen)
     menuManager.transitions = transitions
     menuManager.screen = screen
     setmetatable(menuManager, MenuManagerClass)
-    -- estado inicial de los menús
-    --NIL INNECESARIO: menuManager.currentMenu = nil -- forzamos currentMenu a nil para que changeMenuTo sepa que el menú que va a cargar es el primero de esta pantalla
-    --NIL INNECESARIO: menuManager.currentTransition = nil
     menuManager.init(menuManager)
     return menuManager
 end
@@ -64,11 +61,6 @@ MenuManagerClass.getDefinedMenuTransitionFor = function(self, fromMenu, toMenu)
     end
     for i = 1, #self.transitions do
         local transition = self.transitions[i]
-        --[[
-        if fromMenuName == transition.from and toMenuName == transition.to then
-            return transition.effect
-        end
-        --]]
         if transition.from then
             iFromMenuName = transition.from
         else
@@ -95,7 +87,7 @@ MenuManagerClass.screenStates = {
             if self.currentTransition then
                 self.currentTransition.load(self)
             else
-                -- el nuevo menú sustituye instantáneamente al actual (sin utilizar ninguna transición)
+                -- No se ha definido ninguna transición, el nuevo menú sustituye instantáneamente al actual (sin utilizar ninguna transición)
                 self.currentMenu = self.nextMenu
                 self.nextMenu = nil
                 self.changeScreenState(self, MenuManagerClass.screenStates.showingMenu)
