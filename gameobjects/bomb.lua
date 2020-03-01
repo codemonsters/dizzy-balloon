@@ -24,13 +24,6 @@ local Bomb = {
             name = "planted",
             quads = {
                 quads.bomb
-                --[[
-                {
-                    quad = love.graphics.newQuad(194, 18, 12, 12, atlas:getDimensions()),
-                    width = 12,
-                    height = 12
-                }
-                --]]
             },
             load = function(self)
                 local items, len = self.world:queryRect(self.x, self.y + self.height, self.width, self.height)
@@ -76,13 +69,6 @@ local Bomb = {
             name = "prelaunching",
             quads = {
                 quads.bomb
-                --[[
-                {
-                    quad = love.graphics.newQuad(194, 18, 12, 12, atlas:getDimensions()),
-                    width = 12,
-                    height = 12
-                }
-                --]]
             },
             load = function(self)
                 self.world:add(self, self.x, self.y, self.width, self.height)
@@ -128,13 +114,6 @@ local Bomb = {
             name = "launching",
             quads = {
                 quads.bomb
-                --[[
-                {
-                    quad = love.graphics.newQuad(194, 18, 12, 12, atlas:getDimensions()),
-                    width = 12,
-                    height = 12
-                }
-                --]]
             },
             load = function(self)
                 sounds.bomb_launch:play()
@@ -202,59 +181,6 @@ local Bomb = {
                 quads.explosion_16,
                 quads.explosion_17,
                 quads.explosion_18
-
-                --[[
-                {
-                    quad = love.graphics.newQuad(402, 14, 22, 30, atlas:getDimensions()),
-                    width = 22,
-                    height = 30
-                },
-                {
-                    quad = love.graphics.newQuad(441, 13, 22, 31, atlas:getDimensions()),
-                    width = 22,
-                    height = 31
-                },
-                {
-                    quad = love.graphics.newQuad(519, 11, 31, 32, atlas:getDimensions()),
-                    width = 31,
-                    height = 32
-                },
-                {
-                    quad = love.graphics.newQuad(396, 50, 35, 36, atlas:getDimensions()),
-                    width = 35,
-                    height = 36
-                },
-                {
-                    quad = love.graphics.newQuad(436, 50, 36, 36, atlas:getDimensions()),
-                    width = 36,
-                    height = 36
-                },
-                {
-                    quad = love.graphics.newQuad(515, 50, 39, 37, atlas:getDimensions()),
-                    width = 39,
-                    height = 37
-                },
-                {
-                    quad = love.graphics.newQuad(395, 91, 39, 37, atlas:getDimensions()),
-                    width = 39,
-                    height = 37
-                },
-                {
-                    quad = love.graphics.newQuad(434, 89, 39, 37, atlas:getDimensions()),
-                    width = 39,
-                    height = 37
-                },
-                {
-                    quad = love.graphics.newQuad(475, 90, 38, 36, atlas:getDimensions()),
-                    width = 38,
-                    height = 36
-                },
-                {
-                    quad = love.graphics.newQuad(514, 90, 38, 36, atlas:getDimensions()),
-                    width = 38,
-                    height = 36
-                }
-                --]]
             },
             load = function(self)
                 self.collisions_filter = function(item, other)
@@ -324,13 +250,6 @@ local Bomb = {
                 end
             end,
             draw = function(self)
-                print(
-                    "CURRENT EXPLOSION QUAD -> current_frame = " ..
-                        self.current_frame ..
-                            "; width = " ..
-                                self.state.quads[self.current_frame].width ..
-                                    "; height = " .. self.state.quads[self.current_frame].height
-                )
                 local quad_x_scale_factor =
                     self.initial_width * self.x_scale_factor / self.state.quads[self.current_frame].width
                 local quad_y_scale_factor =
@@ -415,8 +334,6 @@ function Bomb:launch(x, y, initialDirection, playerVx, playerVy)
         else
             log.fatal("initialDirection should be 'up' or 'down'")
         end
-    --else
-    --log.debug("New bomb not launched because we already have an active bomb")
     end
 end
 
