@@ -23,7 +23,13 @@ function menu.update(dt)
     if menu.widgets:Button("Jugar", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         --music:stop()
         sounds.ui_click:play()
-        changeScreen(require("screens/game"))
+        menu.menuManager:changeMenuTo(
+            nil,
+            function()
+                changeScreen(require("screens/game"))
+                menu.menuManager:init()
+            end
+        )
     end
     if menu.widgets:Button("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         menu.menuManager:changeMenuTo(menu.menuManager:getMenu("preferences"))
@@ -31,14 +37,10 @@ function menu.update(dt)
     if menu.widgets:Button("Instrucciones", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
-    if
-        menu.widgets:Button(
-            "Salir",
-            menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)
-        ).hit
-     then
+    if menu.widgets:Button("Salir", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         sounds.ui_click:play()
-        while sounds.ui_click:isPlaying() do end
+        while sounds.ui_click:isPlaying() do
+        end
         os.exit()
     end
 end
@@ -46,8 +48,8 @@ end
 function menu.draw()
     --love.graphics.setCanvas(menu.canvas)
     --do
-        love.graphics.setBlendMode("alpha")
-        menu.widgets:draw()
+    love.graphics.setBlendMode("alpha")
+    menu.widgets:draw()
     --end
     --love.graphics.setCanvas()
 end

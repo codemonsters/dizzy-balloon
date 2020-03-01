@@ -24,6 +24,11 @@ local menuManager =
         },
         {
             from = "main",
+            to = nil,
+            effect = MenuManagerClass.effects.moveUp
+        },
+        {
+            from = "main",
             to = "preferences",
             effect = MenuManagerClass.effects.moveLeft
         },
@@ -48,8 +53,8 @@ local menu = {
 -- carga este screen
 function menu.load()
     -- música
-    loadAndStartMusic({ file = "menu.mp3", volume = 1 })
-    
+    loadAndStartMusic({file = "menu.mp3", volume = 0.1})
+
     -- animaciones
     world = bump.newWorld(50)
     jugador = PlayerClass.new(world, nil)
@@ -90,7 +95,6 @@ function menu.draw()
 
     menuManager:draw()
     love.graphics.pop()
-    
 end
 
 function menu.keypressed(key, scancode, isrepeat)

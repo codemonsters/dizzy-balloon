@@ -1,11 +1,11 @@
 local menu = {
-    name = "inGame",
-    widgets = suit.new(require("menus/ourTheme"))
+    name = "inGame"
 }
 
 function menu.load(menuManager, screen)
     menu.menuManager = menuManager
     menu.screen = screen
+    menu.widgets = suit.new(require("menus/ourTheme"))
     --menu.canvas = love.graphics.newCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 end
 
@@ -21,21 +21,30 @@ function menu.update(dt)
     menu.widgets:Label("Dizzy Balloon", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12))
 
     if menu.widgets:Button("Continuar", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        --music:stop()
-        print(menu.game)
-        menu.screen.continue()
+        menu.menuManager:changeMenuTo(
+            nil,
+            function()
+                menu.screen.continue()
+                menu.menuManager:init()
+            end
+        )
     end
     if menu.widgets:Button("Salir", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        changeScreen(require("screens/menu"))
-
+        menu.menuManager:changeMenuTo(
+            nil,
+            function()
+                changeScreen(require("screens/menu"))
+                menu.menuManager:init()
+            end
+        )
     end
 end
 
 function menu.draw()
     --love.graphics.setCanvas(menu.canvas)
     --do
-        love.graphics.setBlendMode("alpha")
-        menu.widgets:draw()
+    love.graphics.setBlendMode("alpha")
+    menu.widgets:draw()
     --end
     --love.graphics.setCanvas()
 end

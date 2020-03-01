@@ -7,10 +7,10 @@ local LevelDefinitions = {
         blocks = {},
         max_enemies = 2,
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
-        music = {
-            file = 'stage1.mp3',
-            volume = 0.5
-        },
+        --music = {
+        --    file = 'stage1.mp3',
+        --    volume = 0.5
+        --},
         --music = "pp_fight_or_flight_full_loop.mp3",
         powerups = {
             speedBoost = 3,
@@ -31,7 +31,7 @@ local LevelDefinitions = {
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
         --music = "pp_silly_goose_full_loop.mp3"
         music = {
-            file = 'stage2.mp3',
+            file = "stage2.mp3",
             volume = 0.5
         },
         powerups = {
@@ -57,7 +57,7 @@ local LevelDefinitions = {
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
         --music = "pp_destiny_full_loop.mp3"
         music = {
-            file = 'stage3.mp3',
+            file = "stage3.mp3",
             volume = 0.5
         },
         powerups = {
@@ -78,7 +78,7 @@ local LevelDefinitions = {
         max_enemies = 3,
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
         music = {
-            file = 'stage4.mp3',
+            file = "stage4.mp3",
             volume = 0.5
         },
         powerups = {
@@ -102,7 +102,7 @@ local LevelDefinitions = {
         player_initial_respawn_position = {330, WORLD_HEIGHT - PlayerClass.height},
         --music = "pp_fight_or_flight_heavy_loop.mp3"
         music = {
-            file = 'stage5.mp3',
+            file = "stage5.mp3",
             volume = 0.5
         },
         powerups = {

@@ -513,12 +513,19 @@ function game.draw()
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(hudCanvas, SCREEN_WIDTH - hud_width, 0, 0, 1, 1)
     love.graphics.draw(gamepadCanvas, 0, 0, 0, 1, 1)
+
     love.graphics.pop()
 
     game.state.draw(game)
 
     if game.pause then
+        love.graphics.push()
+        love.graphics.translate(desplazamientoX, desplazamientoY)
+        love.graphics.scale(factorEscala, factorEscala)
+        love.graphics.setBlendMode("alpha", "premultiplied")
+        love.graphics.setColor(255, 255, 255)
         menuManager:draw()
+        love.graphics.pop()
     end
 end
 

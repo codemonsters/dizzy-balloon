@@ -15,7 +15,7 @@
         * effect: Por ejemplo cualquier de los definidos dentro de menuManagerClass.screenStates.changingMenu.effects.
 
     Inicialmente se cargará y mostrará el primer menú definido en la lista menus.
-]]--
+]] --
 
 local MenuManagerClass = {
     name = "MenuManager",
@@ -40,35 +40,44 @@ function MenuManagerClass.new(menus, transitions, screen)
     -- estado inicial de los menús
     --NIL INNECESARIO: menuManager.currentMenu = nil -- forzamos currentMenu a nil para que changeMenuTo sepa que el menú que va a cargar es el primero de esta pantalla
     --NIL INNECESARIO: menuManager.currentTransition = nil
-    _, menuManager.startMenu = next(menuManager.menus)
-    menuManager.changeMenuTo(menuManager, menuManager.startMenu.menu)
+    menuManager.init(menuManager)
     return menuManager
+end
+
+function MenuManagerClass:init()
+    _, self.startMenu = next(self.menus)
+    self.changeMenuTo(self, self.startMenu.menu)
 end
 
 -- A partir del valor de self.currentMenu y de self.nextMenu devuelve nil o el efecto de transición a aplicar según lo que esté definido en self.transitions
 MenuManagerClass.getDefinedMenuTransitionFor = function(self, fromMenu, toMenu)
     local fromMenuName, toMenuName, iToMenuName, iFromMenuName
     if not fromMenu then
-        fromMenuName = 'nil'
+        fromMenuName = "nil"
     else
         fromMenuName = fromMenu.name
     end
     if not toMenu then
-        toMenuName = 'nil'
+        toMenuName = "nil"
     else
         toMenuName = toMenu.name
     end
     for i = 1, #self.transitions do
         local transition = self.transitions[i]
-        if not transition.from then
-            iFromMenuName = 'nil'
-        else
-            iFromMenuName = transition.from
+        --[[
+        if fromMenuName == transition.from and toMenuName == transition.to then
+            return transition.effect
         end
-        if not transition.to then
-            iToMenuName = 'nil'
+        --]]
+        if transition.from then
+            iFromMenuName = transition.from
         else
+            iFromMenuName = "nil"
+        end
+        if transition.to then
             iToMenuName = transition.to
+        else
+            iToMenuName = "nil"
         end
         if fromMenuName == iFromMenuName and toMenuName == iToMenuName then
             return transition.effect
@@ -78,7 +87,6 @@ MenuManagerClass.getDefinedMenuTransitionFor = function(self, fromMenu, toMenu)
 end
 
 MenuManagerClass.screenStates = {
-    -- TODO: ¿Añadir efecto para utilizar mientras abandonamos esta pantalla?
     changingMenu = {
         -- transición de un menú a otro
         name = "chagingMenu",
@@ -94,27 +102,21 @@ MenuManagerClass.screenStates = {
             end
         end,
         update = function(self, dt)
-            --self.screenStates.changingMenu.effect:update(dt)
             self.currentTransition.update(self, dt)
         end,
         draw = function(self)
             if self.currentMenu then
                 love.graphics.push()
-                love.graphics.translate(
-                    self.currentMenuShiftX,
-                    self.currentMenuShiftY
-                )
+                love.graphics.translate(self.currentMenuShiftX, self.currentMenuShiftY)
                 self.currentMenu.draw(self)
                 love.graphics.pop()
             end
-
-            love.graphics.push()
-            love.graphics.translate(
-                self.nextMenuShiftX,
-                self.nextMenuShiftY
-            )
-            self.nextMenu.draw(self)
-            love.graphics.pop()
+            if self.nextMenu then
+                love.graphics.push()
+                love.graphics.translate(self.nextMenuShiftX, self.nextMenuShiftY)
+                self.nextMenu.draw(self)
+                love.graphics.pop()
+            end
         end
     },
     showingMenu = {
@@ -123,18 +125,34 @@ MenuManagerClass.screenStates = {
         load = function(self)
         end,
         update = function(self, dt)
-            self.currentMenu.update(self, dt)
+            if self.currentMenu then
+                self.currentMenu.update(self, dt)
+            end
+            if self.nextMenu then
+                self.nextMenu.update(self, dt)
+            end
         end,
         draw = function(self)
-            self.currentMenu.draw()
+            if self.currentMenu then
+                self.currentMenu.draw()
+            end
+            if self.nextMenu then
+                self.nextMenu.draw()
+            end
         end
     }
 }
 
-function MenuManagerClass:changeMenuTo(nextMenu)
-    -- guardamos el menú en self.nextMenu y llamamos a su método load()
-    self.nextMenu = nextMenu
-    self.nextMenu.load(self, self.screen) -- al menú le pasamos como argumento el objeto MenuManagerClass para que pueda acceder a él por ejemplo cuando ese menú quiere pedir que se cambie a otro distinto
+-- Inicia la transición desde el menú actual al menú nextMenu, ejecutando después la función afterTransitionCallback (lo que con frecuencia será una función que cambie de pantalla)
+function MenuManagerClass:changeMenuTo(nextMenu, afterTransitionCallback)
+    if nextMenu then
+        -- guardamos el menú en self.nextMenu y llamamos a su método load()
+        self.nextMenu = nextMenu
+        self.nextMenu.load(self, self.screen) -- al menú le pasamos como argumento el objeto MenuManagerClass para que pueda acceder a él por ejemplo cuando ese menú quiere pedir que se cambie a otro distinto
+    else
+        self.nextMenu = nil
+    end
+    self.afterTransitionCallback = afterTransitionCallback
     -- transición de un menú a otro
     self.changeScreenState(self, MenuManagerClass.screenStates.changingMenu)
 end
@@ -160,11 +178,11 @@ function MenuManagerClass:changeScreenState(screenState)
 end
 
 function MenuManagerClass:load()
-  self.screenState.load(self)
+    self.screenState.load(self)
 end
 
 function MenuManagerClass:update(dt)
-  self.screenState.update(self, dt)
+    self.screenState.update(self, dt)
 end
 
 function MenuManagerClass:draw()
@@ -182,13 +200,48 @@ MenuManagerClass.effects = {
             self.velY = 1500
         end,
         update = function(self, dt)
+            self.currentMenuShiftY = self.currentMenuShiftY + dt * self.velY
             self.nextMenuShiftY = self.nextMenuShiftY + dt * self.velY
             if self.nextMenuShiftY > 0 then
                 self.currentMenu = self.nextMenu
                 self.nextMenu = nil
                 self.changeScreenState(self, MenuManagerClass.screenStates.showingMenu)
+                if self.afterTransitionCallback then
+                    self.afterTransitionCallback()
+                end
+            end
+            if self.currentMenu then
                 self.currentMenu.update(self, dt)
-            else
+            end
+            if self.nextMenu then
+                self.nextMenu.update(self, dt)
+            end
+        end
+    },
+    moveUp = {
+        name = "moveUp",
+        load = function(self)
+            self.currentMenuShiftX = 0
+            self.currentMenuShiftY = 0
+            self.nextMenuShiftX = 0
+            self.nextMenuShiftY = SCREEN_HEIGHT
+            self.velY = -1500
+        end,
+        update = function(self, dt)
+            self.currentMenuShiftY = self.currentMenuShiftY + dt * self.velY
+            self.nextMenuShiftY = self.nextMenuShiftY + dt * self.velY
+            if self.nextMenuShiftY <= 0 then
+                self.currentMenu = self.nextMenu
+                self.nextMenu = nil
+                self.changeScreenState(self, MenuManagerClass.screenStates.showingMenu)
+                if self.afterTransitionCallback then
+                    self.afterTransitionCallback()
+                end
+            end
+            if self.currentMenu then
+                self.currentMenu.update(self, dt)
+            end
+            if self.nextMenu then
                 self.nextMenu.update(self, dt)
             end
         end
@@ -208,9 +261,14 @@ MenuManagerClass.effects = {
                 self.currentMenu = self.nextMenu
                 self.nextMenu = nil
                 self.changeScreenState(self, MenuManagerClass.screenStates.showingMenu)
+                if self.afterTransitionCallback then
+                    self.afterTransitionCallback()
+                end
+            end
+            if self.currentMenu then
                 self.currentMenu.update(self, dt)
-            else
-                self.currentMenu.update(self, dt)
+            end
+            if self.nextMenu then
                 self.nextMenu.update(self, dt)
             end
         end
@@ -230,9 +288,14 @@ MenuManagerClass.effects = {
                 self.currentMenu = self.nextMenu
                 self.nextMenu = nil
                 self.changeScreenState(self, MenuManagerClass.screenStates.showingMenu)
+                if self.afterTransitionCallback then
+                    self.afterTransitionCallback()
+                end
+            end
+            if self.currentMenu then
                 self.currentMenu.update(self, dt)
-            else
-                self.currentMenu.update(self, dt)
+            end
+            if self.nextMenu then
                 self.nextMenu.update(self, dt)
             end
         end
