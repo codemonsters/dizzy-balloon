@@ -456,11 +456,13 @@ function game.load()
     game.change_state(game.states.jugando)
     loadAndStartMusic(game.currentLevel.music)
     game.pause = false
+    played_ingame_menu_click = false
 end
 
 function game.update(dt)
     if game.pause then
         menuManager:update(dt)
+        if played_ingame_menu_click == false then sounds.ui_rollover:play() played_ingame_menu_click = true end
     else
         game.state.update(game, dt)
     end
@@ -532,6 +534,7 @@ end
 function game.keypressed(key, scancode, isrepeat)
     if key == "escape" then
         --returnToMenu()
+        played_ingame_menu_click = false
         game.pause = true
         music:pause()
     elseif key == "w" or key == "up" then
