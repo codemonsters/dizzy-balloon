@@ -97,18 +97,7 @@ MenuManagerClass.screenStates = {
             self.currentTransition.update(self, dt)
         end,
         draw = function(self)
-            if self.currentMenu then
-                love.graphics.push()
-                love.graphics.translate(self.currentMenuShiftX, self.currentMenuShiftY)
-                self.currentMenu.draw(self)
-                love.graphics.pop()
-            end
-            if self.nextMenu then
-                love.graphics.push()
-                love.graphics.translate(self.nextMenuShiftX, self.nextMenuShiftY)
-                self.nextMenu.draw(self)
-                love.graphics.pop()
-            end
+            self.currentTransition.draw(self)
         end
     },
     showingMenu = {
@@ -208,6 +197,20 @@ MenuManagerClass.effects = {
             if self.nextMenu then
                 self.nextMenu.update(self, dt)
             end
+        end,
+        draw = function(self)
+            if self.currentMenu then
+                love.graphics.push()
+                love.graphics.translate(self.currentMenuShiftX, self.currentMenuShiftY)
+                self.currentMenu.draw(self)
+                love.graphics.pop()
+            end
+            if self.nextMenu then
+                love.graphics.push()
+                love.graphics.translate(self.nextMenuShiftX, self.nextMenuShiftY)
+                self.nextMenu.draw(self)
+                love.graphics.pop()
+            end
         end
     },
     moveUp = {
@@ -236,6 +239,9 @@ MenuManagerClass.effects = {
             if self.nextMenu then
                 self.nextMenu.update(self, dt)
             end
+        end,
+        draw = function(self)
+            self.effects.moveDown.draw(self)
         end
     },
     moveLeft = {
@@ -265,6 +271,9 @@ MenuManagerClass.effects = {
             if self.nextMenu then
                 self.nextMenu.update(self, dt)
             end
+        end,
+        draw = function(self)
+            self.effects.moveDown.draw(self)
         end
     },
     moveRight = {
@@ -294,6 +303,31 @@ MenuManagerClass.effects = {
             if self.nextMenu then
                 self.nextMenu.update(self, dt)
             end
+        end,
+        draw = function(self)
+            self.effects.moveDown.draw(self)
+        end
+    },
+    fadeToWhite = {
+        name = "fadeToWhite",
+        load = function(self)
+            self.timer = 0
+            self.fadeInMaxTimeInSeconds = 2
+        end,
+        update = function(self, dt)
+            self.timer = self.timer + dt
+            self.alpha = self.alpha - (255 / self.fadeInMaxTimeInSeconds * self.timer)
+            if self.alpha >= 255 then
+                self.currentMenu = self.nextMenu
+                self.nextMenu = nil
+                self.changeScreenState(self, MenuManagerClass.screenStates.showingMenu)
+                if self.afterTransitionCallback then
+                    self.afterTransitionCallback()
+                end
+            end
+        end,
+        draw = function(self)
+            love.graphics.setColor(255, 255, 255, self.alpha)
         end
     }
 }
