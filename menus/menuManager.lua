@@ -134,7 +134,6 @@ function MenuManagerClass:changeMenuTo(nextMenu, afterTransitionCallback)
         self.nextMenu = nil
     end
     self.afterTransitionCallback = afterTransitionCallback
-    -- transición de un menú a otro
     self.changeScreenState(self, MenuManagerClass.screenStates.changingMenu)
 end
 
@@ -312,12 +311,13 @@ MenuManagerClass.effects = {
         name = "fadeToWhite",
         load = function(self)
             self.timer = 0
-            self.fadeInMaxTimeInSeconds = 2
+            self.fadeMaxTimeInSeconds = 1
         end,
         update = function(self, dt)
             self.timer = self.timer + dt
-            self.alpha = self.alpha - (255 / self.fadeInMaxTimeInSeconds * self.timer)
-            if self.alpha >= 255 then
+            self.alpha = self.timer / self.fadeMaxTimeInSeconds
+            if self.alpha > 1 then
+                self.alpha = 1
                 self.currentMenu = self.nextMenu
                 self.nextMenu = nil
                 self.changeScreenState(self, MenuManagerClass.screenStates.showingMenu)
@@ -325,9 +325,14 @@ MenuManagerClass.effects = {
                     self.afterTransitionCallback()
                 end
             end
+            if self.currentMenu then
+                self.currentMenu.update(self, dt)
+            end
         end,
         draw = function(self)
-            love.graphics.setColor(255, 255, 255, self.alpha)
+            self.currentMenu.draw(self)
+            love.graphics.setColor(1, 1, 1, self.alpha)
+            love.graphics.rectangle("fill", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
         end
     }
 }
