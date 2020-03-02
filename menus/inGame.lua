@@ -40,6 +40,7 @@ function menu.update(dt)
 end
 
 function menu.draw()
+    love.graphics.setBlendMode("alpha")
     menu.widgets:draw()
 end
 
