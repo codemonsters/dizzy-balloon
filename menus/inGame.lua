@@ -10,8 +10,6 @@ function menu.load(menuManager, screen)
 end
 
 function menu.update(dt)
-    love.graphics.setBlendMode("alpha")
-
     menu.widgets.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.15)
     menu.widgets.layout:padding(0, SCREEN_WIDTH * 0.015)
     local mouseX, mouseY = love.mouse.getPosition()

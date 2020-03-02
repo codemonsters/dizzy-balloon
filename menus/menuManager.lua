@@ -243,7 +243,9 @@ MenuManagerClass.effects = {
         load = function(self)
             sounds.ui_rollover:play()
             self.currentMenuShiftX = 0
+            self.currentMenuShiftY = 0
             self.nextMenuShiftX = SCREEN_WIDTH
+            self.nextMenuShiftY = 0
             self.velX = -2500
         end,
         update = function(self, dt)
@@ -270,7 +272,9 @@ MenuManagerClass.effects = {
         load = function(self)
             sounds.ui_rollover:play()
             self.currentMenuShiftX = 0
+            self.currentMenuShiftY = 0
             self.nextMenuShiftX = -SCREEN_WIDTH
+            self.nextMenuShiftY = 0
             self.velX = 2500
         end,
         update = function(self, dt)
