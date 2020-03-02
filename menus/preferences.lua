@@ -30,13 +30,13 @@ function menu.update(dt)
         sounds.ui_click:play()
     end
 
-    if menu.widgets:Button("X", {id=2}, menu.widgets.layout:down(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
-        sounds.ui_click:play()
-       
-    end
+   -- if menu.widgets:Button("X", {id=2}, menu.widgets.layout:down(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
+   --     sounds.ui_click:play()
+   --    
+   -- end
 
     if menu.widgets:Button("X", {id=2}, menu.widgets.layout:down(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
-            
+        sounds.ui_click:play()
         if hayMúsica == false then
             music:pause()
             hayMúsica = true
