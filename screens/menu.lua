@@ -25,7 +25,7 @@ local menuManager =
         {
             from = "main",
             to = nil,
-            effect = MenuManagerClass.effects.moveUp
+            effect = MenuManagerClass.effects.fadeToWhite
         },
         {
             from = "main",

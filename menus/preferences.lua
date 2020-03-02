@@ -6,9 +6,7 @@ local menu = {
 function menu.load(menuManager, screen)
     menu.menuManager = menuManager
     menu.screen = screen
-    --menu.canvas = love.graphics.newCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
-
-    hayMúsica = false --música
+    menu.musicOn = false
 end
 
 function menu.update(dt)
@@ -21,50 +19,71 @@ function menu.update(dt)
     menu.widgets:Label("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.11))
 
     if menu.widgets:Button("Sonido", menu.widgets.layout:row(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
-
     end
 
-    if menu.widgets:Button("X", {id=1}, menu.widgets.layout:col(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
+    if
+        menu.widgets:Button(
+            "X",
+            {id = 1},
+            menu.widgets.layout:col(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
+        ).hit
+     then
         sounds.ui_click:play()
     end
 
-    --if menu.widgets:Button("X", {id=2}, menu.widgets.layout:down(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
-    --    sounds.ui_click:play()
-
-    --end
-
-    if menu.widgets:Button("X", {id=2}, menu.widgets.layout:down(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
+    if
+        menu.widgets:Button(
+            "X",
+            {id = 2},
+            menu.widgets.layout:down(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
+        ).hit
+     then
         sounds.ui_click:play()
-        if hayMúsica == false then
-            music:pause()
-            hayMúsica = true
+    end
 
-        else
+    if
+        menu.widgets:Button(
+            "X",
+            {id = 2},
+            menu.widgets.layout:down(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
+        ).hit
+     then
+        if menu.musicOn then
             music:play()
-            hayMúsica = false
-
+            menu.musicOn = false
+        else
+            music:pause()
+            menu.musicOn = true
         end
-
     end
 
     if menu.widgets:Button("Música", menu.widgets.layout:left(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
-
     end
 
     if menu.widgets:Button("Español", menu.widgets.layout:row(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
-
     end
 
-    if menu.widgets:Button("X", {id=3}, menu.widgets.layout:col(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
+    if
+        menu.widgets:Button(
+            "X",
+            {id = 3},
+            menu.widgets.layout:col(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
+        ).hit
+     then
         sounds.ui_click:play()
     end
 
-    if menu.widgets:Button("X", {id=4}, menu.widgets.layout:down(SCREEN_WIDTH * (.1- (0.015/2)), SCREEN_HEIGHT * 0.11)).hit then
+    if
+        menu.widgets:Button(
+            "X",
+            {id = 4},
+            menu.widgets.layout:down(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
+        ).hit
+     then
         sounds.ui_click:play()
     end
 
     if menu.widgets:Button("English", menu.widgets.layout:left(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
-
     end
 
     if
@@ -85,12 +104,7 @@ function menu.update(dt)
 end
 
 function menu.draw()
-    --love.graphics.setCanvas(menu.canvas)
-    --do
-        love.graphics.setBlendMode("alpha")
-        menu.widgets:draw()
-    --end
-    --love.graphics.setCanvas()
+    menu.widgets:draw()
 end
 
 function menu.keypressed(key, scancode, isrepeat)

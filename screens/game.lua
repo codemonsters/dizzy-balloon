@@ -462,7 +462,10 @@ end
 function game.update(dt)
     if game.pause then
         menuManager:update(dt)
-        if played_ingame_menu_click == false then sounds.ui_rollover:play() played_ingame_menu_click = true end
+        if played_ingame_menu_click == false then
+            sounds.ui_rollover:play()
+            played_ingame_menu_click = true
+        end
     else
         game.state.update(game, dt)
     end

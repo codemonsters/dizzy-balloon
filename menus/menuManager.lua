@@ -166,6 +166,7 @@ function MenuManagerClass:update(dt)
 end
 
 function MenuManagerClass:draw()
+    love.graphics.setBlendMode("alpha")
     self.screenState.draw(self)
 end
 
