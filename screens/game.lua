@@ -214,7 +214,7 @@ game.states = {
     cambiandoDeNivel = {
         load = function(self) -- cargamos el siguiente nivel y dibujamos su primer frame
             music:stop()
-            sounds.level_up:play()
+            sounds.play(sounds.levelUp)
             if LevelDefinitions[(game.currentLevel.id + 1)] == nil then
                 game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[1], game))
             else
@@ -463,7 +463,7 @@ function game.update(dt)
     if game.pause then
         menuManager:update(dt)
         if played_ingame_menu_click == false then
-            sounds.ui_rollover:play()
+            sounds.play(sounds.uiRollOver)
             played_ingame_menu_click = true
         end
     else
