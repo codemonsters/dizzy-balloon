@@ -32,7 +32,7 @@ function menu.update(dt)
         menu.menuManager:changeMenuTo(menu.menuManager:getMenu("preferences"))
     end
     if menu.widgets:Button("Instrucciones", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
+        menu.menuManager:changeMenuTo(menu.menuManager:getMenu("instructions"))
     end
     if menu.widgets:Button("Salir", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         sounds.ui_click:play()

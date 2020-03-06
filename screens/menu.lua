@@ -14,6 +14,10 @@ local menuManager =
         {
             name = "preferences",
             menu = require("menus/preferences")
+        },
+        {
+            name = "instructions",
+            menu = require("menus/instructions")
         }
     },
     {
@@ -36,6 +40,16 @@ local menuManager =
             from = "preferences",
             to = "main",
             effect = MenuManagerClass.effects.moveRight
+        },
+        {
+            from = "main",
+            to = "instructions",
+            effect = MenuManagerClass.effects.moveRight
+        },
+        {
+            from = "instructions",
+            to = "main",
+            effect = MenuManagerClass.effects.moveLeft
         }
     }
 )
