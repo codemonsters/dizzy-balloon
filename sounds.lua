@@ -44,7 +44,6 @@ function SoundsClass.new()
 end
 
 function SoundsClass.play(soundTable)
-    --soundTable.audioSource:setLooping(false)
     soundTable.audioSource:setVolume(soundTable.volume)
     soundTable.audioSource:play()
 end
