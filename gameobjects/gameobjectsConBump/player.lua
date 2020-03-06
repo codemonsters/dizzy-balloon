@@ -4,24 +4,10 @@ local Player = {
     name = "Player",
     width = 40,
     height = 40,
-    montado = false,
-    montura = {},
     isPlayer = true,
-    velyini = -0.5,
-    speed = 180,
+    vx = 0,
+    vy = 0,
     extraJumpSpeed = 0,
-    vx = function(self)
-        local vxFactor = 0
-        if self.left then
-            vxFactor = -1
-        elseif self.right then
-            vxFactor = 1
-        end
-        return self.speed * vxFactor
-    end,
-    vy = function(self)
-        return -self.velocidadY * 80
-    end,
     collisionsFilter = function(item, other)
         if     other.isBalloon and other.state == BalloonClass.states.growing then return nil
         elseif other.isBomb and other.state ~= other.states.planted           then return nil
@@ -116,10 +102,11 @@ function Player.new(world, game)
     player.game = game
     player.world = world
     player.width, player.height = Player.width, Player.height
-    player.x, player.y = 1, 1
-    player.velocidadY = Player.velyini
-    player.left, player.right, player.down, player.notSupported = false, false, false, false
-    player.speed, player.extraJumpSpeed = Player.speed, Player.extraJumpSpeed
+    player.x, player.y = 200, 200
+    player.up, player.down = false, false
+    player.movingLeft, player.movingRight = false, false
+    player.vx, player.vy, player.extraJumpSpeed, player.vy = Player.vx, Player.vy, Player.extraJumpSpeed, 0
+    player.canJump, player.onEnemy = false, false
     player.offset = 0
     player.bitmapDirection = 1
     player.invencible = false
@@ -132,67 +119,62 @@ function Player.new(world, game)
     return player
 end
 
+function Player:left(value)
+    self.movingLeft = value
+end
+
+function Player:right(value)
+    self.movingRight = value
+end
+
+
 function Player:update(dt)
     self.tVivo = self.tVivo + dt
     if self.invencible and self.tVivo >= self.tInvencible then
         self.invencible = false
     end
-    self:movePlayer(dt)
-    if self.notSupported then
-        self:changeState(Player.states.jumping)
-    elseif self.left or self.right then
-        if not self.montura.isBalloon then
-            self:changeState(Player.states.walking)
-        end
+    if self.movingLeft then
+        self.vx = -180
+        self:changeState(self.states.walking)
+    elseif self.movingRight then
+        self.vx = 180
+        self:changeState(self.states.walking)
     else
-        self:changeState(Player.states.standing)
+        self.vx = 0
+        self:changeState(self.states.standing)
     end
+    self:movePlayer(dt)
     self.state.update(self, dt)
     self.world:update(self, self.x, self.y)
 end
 
 function Player:movePlayer(dt)
+    self.x, self.y, cols, len = self.world:move(self, self.x + self.vx * dt, self.y + self.vy * dt, self.collisionsFilter)
     local items, lenColFeet = self:checkFeet(dt)
-    if self.velocidadY < 0 then
+    if lenColFeet == 0 then
+        self.vy = self.vy + 800 * dt
+        self.canJump = false
+        self:changeState(self.states.jumping)
+    else
         for i = 1, lenColFeet do
-            if not self.montado and ((items[i].isBallon and items[i].state == BalloonClass.states.flying_alone) or items[i].isEnemy) then
-                self.montado = true
-                self.montura = items[i]
-                self.y = self.montura.y - self.height
-                self.notSupported = false
-                self.montura:montado(self)
-            end
-            if self.notSupported then
-                self.velocidadY = self.velyini
-                self.notSupported = false
+            if items[i].isEnemy then
+                self.vx = items[i].vx * dt
+                self.vy = items[i].vy * dt
+            else
+                self.vx = 0
+                self.vy = 0
             end
         end
+        self.canJump = true
+        self:changeState(self.states.standing)
     end
     
     local items, lenColHead = self:checkHead(dt)
-    if lenColFeet == 0 then
-        self.notSupported = true
-    end
     for i = 1, lenColHead do
         if items[i].isGoal and self.game then
             self.game.cambioDeNivel()
-        end
-        if self.velocidadY > 0 then
-            self:cabezazo()
-        end
-    end
-    
-    if not self.montura.isBalloon then
-        self.x, goalY, cols, len = self.world:move(self, self.x + self:vx() * dt, self.y + self:vy() * dt, self.collisionsFilter)
-        if self.notSupported then
-            self.velocidadY = self.velocidadY - 10 * dt
-            self.y = goalY
-        end
-    end
-
-    if self.montura.isEnemy then
-        if self.montura.x - self.x > self.width or self.montura.x - self.x < -self.width then
-            self:desmontar()
+        else
+            self:cabezazo(dt)
         end
     end
 end
@@ -209,22 +191,13 @@ end
 
 function Player:cabezazo(dt)
     self.x, self.y, cols, len = self.world:move(self, self.x, self.y + 2, self.collisionsFilter)
-    self.velocidadY = self.velyini
+    self.vy = self.velyini
 end
 
 function Player:jump()
-    if not self.notSupported then
-        self.notSupported = true
-        self.velocidadY = 5 + self.extraJumpSpeed
-        if self.montado then
-            self:desmontar()
-        end
+    if self.canJump then
+        self.vy = -400 - self.extraJumpSpeed
     end
-end
-
-function Player:desmontar()
-    self.montado = false
-    self.notSupported = true
 end
 
 function Player:draw()
@@ -238,10 +211,10 @@ function Player:draw()
     end
 
     -- TODO: eliminar offset y dibujar todos los frames del mismo tamaño
-    if self.right then
+    if self.movingRight then
         self.bitmapDirection = 1
         self.offset = 0
-    elseif self.left then
+    elseif self.movingLeft6 then
         self.bitmapDirection = -1
         self.offset = self.width
     end 
@@ -264,7 +237,7 @@ function Player:changeState(newState)
     end
 end
 
-function Player:empujar(vector, empujador)
+function Player:empujar(vector, empujador, dt)
     if vector.x ~= 0 then
         initialX = self.x
         self.x, self.y, cols, len = self.world:move(self, self.x + vector.x, self.y, self.collisions_filter)
@@ -293,5 +266,19 @@ function Player:empujar(vector, empujador)
     end
 end
 
+function Player:die()
+    if self.invencible == false and self.game then
+        self.game.vidaperdida()
+    end
+end
+
+function Player:revive()
+    self.invencible = true
+    self.tVivo = 0
+end
+
+function Player:translate(x, y)
+    self.x, self.y, cols, len = self.world:move(self, self.x + x, self.y + y, self.collisions_filter)
+end
 
 return Player

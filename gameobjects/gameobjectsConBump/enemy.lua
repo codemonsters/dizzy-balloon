@@ -3,7 +3,6 @@ local Enemy = {
     wipe = false,
     x = 0,
     y = 0,
-    riders = {},
     width = 40,
     height = 40,
     speed = 300,
@@ -25,7 +24,7 @@ local Enemy = {
                 elseif other.isLimit then
                     return "bounce"
                 elseif other.isPlayer then
-                    return "slide"
+                    return
                 end
             end,
             load = function(self)
@@ -39,7 +38,7 @@ local Enemy = {
                 for i = 1, len do
                     local other = cols[i].other
                     if other.isPlayer then
-                        other:empujar({x = self.vx, y = self.vy}, self, dt)
+                        other:empujar({x = self.vx * dt, y = self.vy * dt}, self, dt)
                     else
                         local vecBounce = {x = cols[i].bounce.x - cols[i].touch.x, y = cols[i].bounce.y - cols[i].touch.y}
                         local moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
@@ -58,7 +57,7 @@ local Enemy = {
         swiping = {
             collisionFilter = function(item, other)
                 if other.isPlayer then
-                    return "slide"
+                    return
                 else
                     return "touch"
                 end
@@ -98,7 +97,7 @@ local Enemy = {
                             self.vy = 0
                         end
                     elseif col.other.isPlayer then
-                        col.other:empujar({x = self.vx, y = self.vy}, self, dt)
+                        col.other:empujar({x = self.vx * dt, y = self.vy * dt}, self, dt)
                     end
                 end
 
@@ -156,17 +155,6 @@ function Enemy:update(dt)
     end
 
     self.state.update(self, dt)
-
-    if table.getn(self.riders) > 0 then
-        for key, rider in ipairs(self.riders) do
-            if not rider.montado then -- eliminar de la tabla riders los que se desmonten
-                table.remove(self.riders, key)
-            else
-                vector = {x = self.vx, y = self.vy}
-                rider:empujar(vector, self, dt)
-            end
-        end
-    end
 end
 
 function Enemy:draw()
@@ -188,10 +176,6 @@ function Enemy:changeState(newState)
         self.state = newState
         self.state.load(self)
     end
-end
-
-function Enemy:montado(rider)
-    table.insert(self.riders, rider)
 end
 
 function Enemy:die()

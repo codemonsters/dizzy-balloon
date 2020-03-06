@@ -1,6 +1,6 @@
 local bump = require "libraries/bump/bump"
 local game = {name = "Juego"}
-local PlayerClass = require("gameobjects/player")
+local PlayerClass = require("gameobjects/gameobjectsConBump/player")
 local EnemyClass = require("gameobjects/gameobjectsConBump/enemy")
 local SkyClass = require("gameobjects/sky")
 local PointerClass = require("misc/pointer")
@@ -503,13 +503,13 @@ function game.keypressed(key, scancode, isrepeat)
         fireRequested = true
         fireInitialDirection = "up"
     elseif key == "a" or key == "left" then
-        game.currentLevel.player.left = true
+        game.currentLevel.player:left(true)
     elseif key == "s" or key == "down" then
         game.currentLevel.player.down = true
         fireRequested = true
         fireInitialDirection = "down"
     elseif key == "d" or key == "right" then
-        game.currentLevel.player.right = true
+        game.currentLevel.player:right(true)
     elseif key == "space" then
         game.currentLevel.player:jump()
     elseif key == "v" then
@@ -534,11 +534,11 @@ function game.keyreleased(key, scancode, isrepeat)
     elseif key == "w" or key == "up" then
         game.currentLevel.player.up = false
     elseif key == "a" or key == "left" then
-        game.currentLevel.player.left = false
+        game.currentLevel.player:left(false)
     elseif key == "s" or key == "down" then
         game.currentLevel.player.down = false
     elseif key == "d" or key == "right" then
-        game.currentLevel.player.right = false
+        game.currentLevel.player:right(false)
     end
 end
 
