@@ -18,7 +18,7 @@ function menu.update(dt)
     menu.widgets:Label("Dizzy Balloon", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12))
 
     if menu.widgets:Button("Continuar", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        sounds.ui_click:play()
+        sounds.play(sounds.uiClick)
         menu.menuManager:changeMenuTo(
             nil,
             function()
@@ -28,7 +28,7 @@ function menu.update(dt)
         )
     end
     if menu.widgets:Button("Salir", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        sounds.ui_rollover:play()
+        sounds.play(sounds.uiRollOver)
         menu.menuManager:changeMenuTo(
             nil,
             function()

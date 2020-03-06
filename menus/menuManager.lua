@@ -247,7 +247,7 @@ MenuManagerClass.effects = {
     moveLeft = {
         name = "moveLeft",
         load = function(self)
-            sounds.ui_rollover:play()
+            sounds.play(sounds.uiRollOver)
             self.currentMenuShiftX = 0
             self.currentMenuShiftY = 0
             self.nextMenuShiftX = SCREEN_WIDTH
@@ -279,7 +279,7 @@ MenuManagerClass.effects = {
     moveRight = {
         name = "moveRight",
         load = function(self)
-            sounds.ui_rollover:play()
+            sounds.play(sounds.uiRollOver)
             self.currentMenuShiftX = 0
             self.currentMenuShiftY = 0
             self.nextMenuShiftX = -SCREEN_WIDTH

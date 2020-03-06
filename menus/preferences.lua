@@ -28,7 +28,7 @@ function menu.update(dt)
             menu.widgets.layout:col(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
         ).hit
      then
-        sounds.ui_click:play()
+        sounds.play(sounds.uiClick)
     end
 
     if
@@ -38,7 +38,7 @@ function menu.update(dt)
             menu.widgets.layout:down(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
         ).hit
      then
-        sounds.ui_click:play()
+        sounds.play(sounds.uiClick)
     end
 
     if
@@ -70,7 +70,7 @@ function menu.update(dt)
             menu.widgets.layout:col(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
         ).hit
      then
-        sounds.ui_click:play()
+        sounds.play(sounds.uiClick)
     end
 
     if
@@ -80,7 +80,7 @@ function menu.update(dt)
             menu.widgets.layout:down(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
         ).hit
      then
-        sounds.ui_click:play()
+        sounds.play(sounds.uiClick)
     end
 
     if menu.widgets:Button("English", menu.widgets.layout:left(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then

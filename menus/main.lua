@@ -19,7 +19,8 @@ function menu.update(dt)
 
     if menu.widgets:Button("Jugar", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         --music:stop()
-        sounds.ui_click:play()
+        sounds.play(sounds.uiClick)
+        --sounds.ui_click:play()
         menu.menuManager:changeMenuTo(
             nil,
             function()
@@ -35,9 +36,6 @@ function menu.update(dt)
         print("Te esperas. Todavía no está hecho. Si lo quieres usar, lo escribes y todos contentos :)")
     end
     if menu.widgets:Button("Salir", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        sounds.ui_click:play()
-        while sounds.ui_click:isPlaying() do
-        end
         os.exit()
     end
 end
