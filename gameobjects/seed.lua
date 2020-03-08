@@ -36,6 +36,22 @@ local SeedClass = {
                     self.x = 0 - self.width
                 end
                 self.x, self.y, cols, len = self.world:move(self, self.x + self.vx * dt, self.y, self.collisions_filter)
+            end,
+            draw = function(self)
+                if self.powerUp ~= nil then
+                    love.graphics.setColor(self.powerUp.color)
+                end
+                love.graphics.draw(
+                    atlas,
+                    self.states.sky.quads[self.currentFrame].quad,
+                    self.x,
+                    self.y,
+                    0,
+                    --self.state.size,
+                    --self.state.size
+                    self.width / self.states.sky.quads[self.currentFrame].width,
+                    self.height / self.states.sky.quads[self.currentFrame].height
+                )
             end
         },
         falling = {
@@ -75,6 +91,9 @@ local SeedClass = {
                         self.current_frame = 1
                     end
                 end
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
             end
         },
         touchdown = {
@@ -91,6 +110,9 @@ local SeedClass = {
                 else
                     self.change_state(self, self.states.onthefloor)
                 end
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
             end
         },
         onthefloor = {
@@ -121,17 +143,15 @@ local SeedClass = {
                 if player_over == false then
                     self.elapsed_time = self.elapsed_time + dt
                 end
-                --[[if player_over then
-                    print("PLAYER OVER")
-                else
-                    print("PLAYER NOT OVER")
-                end--]]
                 if self.player_over_timer > 2 then
                     self.game.create_balloon_from_seed(self)
                     self.change_state(self, self.states.balloon)
                 elseif self.elapsed_time > 5 then
                     self.change_state(self, self.states.rotting)
                 end
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
             end
         },
         evolving = {
@@ -165,6 +185,9 @@ local SeedClass = {
                     self.game.create_balloon_from_seed(self)
                     self.change_state(self, self.states.balloon)
                 end
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
             end
         },
         balloon = {
@@ -176,6 +199,9 @@ local SeedClass = {
                 self.currentframe = 1
             end,
             update = function(self, dt)
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
             end
         },
         rotting = {
@@ -197,6 +223,9 @@ local SeedClass = {
                 if self.elapsed_time > 2 then
                     self:die()
                 end
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
             end
         },
         explode = {
@@ -232,6 +261,16 @@ local SeedClass = {
                 if initialTime >= 0.3 then
                     self:die()
                 end
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
+                love.graphics.rectangle(
+                    "fill",
+                    self.x - self.state.size / 2,
+                    self.y - self.state.size / 2,
+                    self.state.size,
+                    self.state.size
+                )
             end
         }
     }
@@ -260,29 +299,7 @@ function SeedClass:update(dt)
 end
 
 function SeedClass:draw()
-    if self.powerUp ~= nil then
-        love.graphics.setColor(self.powerUp.color)
-    end
-    love.graphics.draw(
-        atlas,
-        self.state.quads[self.currentFrame].quad,
-        self.x,
-        self.y,
-        0,
-        --self.state.size,
-        --self.state.size
-        self.width / self.state.quads[self.currentFrame].width,
-        self.height / self.state.quads[self.currentFrame].height
-    )
-    if self.state == self.states.explode then
-        love.graphics.rectangle(
-            "fill",
-            self.x - self.state.size / 2,
-            self.y - self.state.size / 2,
-            self.state.size,
-            self.state.size
-        )
-    end
+    self.state.draw(self)
     love.graphics.setColor(255, 255, 255)
     --love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end
