@@ -124,17 +124,33 @@ MenuManagerClass.screenStates = {
     }
 }
 
--- Inicia la transición desde el menú actual al menú nextMenu, ejecutando después la función afterTransitionCallback (lo que con frecuencia será una función que cambie de pantalla)
-function MenuManagerClass:changeMenuTo(nextMenu, afterTransitionCallback)
-    if nextMenu then
-        -- guardamos el menú en self.nextMenu y llamamos a su método load()
-        self.nextMenu = nextMenu
-        self.nextMenu.load(self, self.screen) -- al menú le pasamos como argumento el objeto MenuManagerClass para que pueda acceder a él por ejemplo cuando ese menú quiere pedir que se cambie a otro distinto
+-- Inicia la transición desde el menú actual al menú nextMenu, ejecutando después la función afterTransitionCallback (lo que con frecuencia será una acción que cambie de pantalla). Si delayExecAfterDraw vale true entonces ejecutará la acción justo después de update() y de draw()
+function MenuManagerClass:changeMenuTo(nextMenu, afterTransitionCallback, delayExecAfterDraw)
+    if delayExecAfterDraw then
+        print("Añadiendo función para ejecutar tras draw()")
+        self.execAfterDraw = function(self)
+            print("Ejecutando función al final de draw()")
+            if nextMenu then
+                -- guardamos el menú en self.nextMenu y llamamos a su método load()
+                self.nextMenu = nextMenu
+                self.nextMenu.load(self, self.screen) -- al menú le pasamos como argumento el objeto MenuManagerClass para que pueda acceder a él por ejemplo cuando ese menú quiere pedir que se cambie a otro distinto
+            else
+                self.nextMenu = nil
+            end
+            self.afterTransitionCallback = afterTransitionCallback
+            self.changeScreenState(self, MenuManagerClass.screenStates.changingMenu)
+        end
     else
-        self.nextMenu = nil
+        if nextMenu then
+            -- guardamos el menú en self.nextMenu y llamamos a su método load()
+            self.nextMenu = nextMenu
+            self.nextMenu.load(self, self.screen) -- al menú le pasamos como argumento el objeto MenuManagerClass para que pueda acceder a él por ejemplo cuando ese menú quiere pedir que se cambie a otro distinto
+        else
+            self.nextMenu = nil
+        end
+        self.afterTransitionCallback = afterTransitionCallback
+        self.changeScreenState(self, MenuManagerClass.screenStates.changingMenu)
     end
-    self.afterTransitionCallback = afterTransitionCallback
-    self.changeScreenState(self, MenuManagerClass.screenStates.changingMenu)
 end
 
 function MenuManagerClass:getMenu(menuName)
@@ -168,6 +184,14 @@ end
 function MenuManagerClass:draw()
     love.graphics.setBlendMode("alpha")
     self.screenState.draw(self)
+    if self.delayedAfterDrawAction then
+        self.delayedAfterDrawAction()
+        self.delayedAfterDrawAction = nil
+    end
+    if self.execAfterDraw then
+        self.execAfterDraw(self)
+        self.execAfterDraw = nil
+    end
 end
 
 MenuManagerClass.effects = {

@@ -26,7 +26,8 @@ function menu.update(dt)
             function()
                 changeScreen(require("screens/game"))
                 menu.menuManager:init()
-            end
+            end,
+            true
         )
     end
     if menu.widgets:Button("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
