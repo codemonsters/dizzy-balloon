@@ -332,8 +332,8 @@ MenuManagerClass.effects = {
             self.effects.moveDown.draw(self)
         end
     },
-    fadeToWhite = {
-        name = "fadeToWhite",
+    fadeOut = {
+        name = "fadeOut",
         load = function(self)
             self.timer = 0
             self.fadeMaxTimeInSeconds = 1
@@ -356,7 +356,7 @@ MenuManagerClass.effects = {
         end,
         draw = function(self)
             self.currentMenu.draw(self)
-            love.graphics.setColor(1, 1, 1, self.alpha)
+            love.graphics.setColor(0, 0, 0, self.alpha)
             love.graphics.rectangle("fill", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
         end
     }

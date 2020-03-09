@@ -29,7 +29,7 @@ local menuManager =
         {
             from = "main",
             to = nil,
-            effect = MenuManagerClass.effects.fadeToWhite
+            effect = MenuManagerClass.effects.fadeOut
         },
         {
             from = "main",
