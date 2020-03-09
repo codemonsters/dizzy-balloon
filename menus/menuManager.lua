@@ -124,12 +124,10 @@ MenuManagerClass.screenStates = {
     }
 }
 
--- Inicia la transición desde el menú actual al menú nextMenu, ejecutando después la función afterTransitionCallback (lo que con frecuencia será una acción que cambie de pantalla). Si delayExecAfterDraw vale true entonces ejecutará la acción justo después de update() y de draw()
-function MenuManagerClass:changeMenuTo(nextMenu, afterTransitionCallback, delayExecAfterDraw)
-    if delayExecAfterDraw then
-        print("Añadiendo función para ejecutar tras draw()")
-        self.execAfterDraw = function(self)
-            print("Ejecutando función al final de draw()")
+-- Inicia la transición desde el menú actual al menú nextMenu, ejecutando después la función afterTransitionCallback (lo que con frecuencia será una acción que cambie de pantalla). Si delayExec value true la acción se ejecutará justo después de update() y de draw()
+function MenuManagerClass:changeMenuTo(nextMenu, afterTransitionCallback, delayExec)
+    if delayExec then
+        self.execOnceAfterDraw = function(self)
             if nextMenu then
                 -- guardamos el menú en self.nextMenu y llamamos a su método load()
                 self.nextMenu = nextMenu
@@ -188,9 +186,9 @@ function MenuManagerClass:draw()
         self.delayedAfterDrawAction()
         self.delayedAfterDrawAction = nil
     end
-    if self.execAfterDraw then
-        self.execAfterDraw(self)
-        self.execAfterDraw = nil
+    if self.execOnceAfterDraw then
+        self.execOnceAfterDraw(self)
+        self.execOnceAfterDraw = nil
     end
 end
 

@@ -99,20 +99,44 @@ local SeedClass = {
         touchdown = {
             name = "touchdown",
             quads = {
+                quads.egg_01,
+                quads.egg_02,
+                quads.egg_03,
+                quads.egg_04,
+                quads.egg_03,
+                quads.egg_02,
+                quads.egg_01,
                 quads.egg_00
             },
             load = function(self)
                 self.currentframe = 1
+                self.elapsed_time = 0
+                self.state_max_time = 1
             end,
             update = function(self, dt)
-                if self.powerUp ~= nil then
-                    self.change_state(self, self.states.explode)
+                self.elapsed_time = self.elapsed_time + dt
+                if self.elapsed_time > self.state_max_time then
+                    if self.powerUp ~= nil then
+                        self.change_state(self, self.states.explode)
+                    else
+                        self.change_state(self, self.states.onthefloor)
+                    end
                 else
-                    self.change_state(self, self.states.onthefloor)
+                    self.current_frame = math.floor(1 + #self.state.quads * self.elapsed_time / self.state_max_time)
                 end
             end,
             draw = function(self)
-                self.states.sky.draw(self)
+                love.graphics.draw(
+                    atlas,
+                    self.state.quads[self.currentFrame].quad,
+                    self.x,
+                    self.y,
+                    0,
+                    --self.state.size,
+                    --self.state.size
+                    self.width / self.state.quads[self.currentFrame].width,
+                    self.height / self.state.quads[self.currentFrame].height
+                )
             end
         },
         onthefloor = {
@@ -239,6 +263,7 @@ local SeedClass = {
                 }
             },
             load = function(self)
+                self.currentFrame = 1
                 initialTime = 0
                 canApply = true
                 self.world:remove(self)
