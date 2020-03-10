@@ -79,6 +79,8 @@ game.states = {
                 game.alpha = 0
                 game.execOnceAfterDraw = function()
                     game.state = game.states.jugando
+                    game.alpha = 1
+                    game.timer = 0
                 end
             end
             print("ALPHA = " .. game.alpha)
