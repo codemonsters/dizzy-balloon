@@ -6,6 +6,7 @@ function menu.load(menuManager, screen)
     menu.menuManager = menuManager
     menu.screen = screen
     menu.widgets = suit.new(require("menus/ourTheme"))
+    menu.closing = false -- flag que cuando vale true indica que estamos cerrando este menú
 end
 
 function menu.update(dt)
@@ -18,24 +19,20 @@ function menu.update(dt)
     menu.widgets:Label("Dizzy Balloon", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12))
 
     if menu.widgets:Button("Continuar", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        sounds.play(sounds.uiClick)
-        menu.menuManager:changeMenuTo(
-            nil,
-            function()
-                menu.screen.continue()
-                menu.menuManager:init()
-            end
-        )
+        menu.continueGame()
     end
     if menu.widgets:Button("Salir", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        sounds.play(sounds.uiRollOver)
-        menu.menuManager:changeMenuTo(
-            nil,
-            function()
-                changeScreen(require("screens/menu"))
-                menu.menuManager:init()
-            end
-        )
+        if not menu.closing then
+            menu.closing = true
+            sounds.play(sounds.uiRollOver)
+                menu.menuManager:changeMenuTo(
+                nil,
+                function()
+                    changeScreen(require("screens/menu"))
+                    menu.menuManager:init()
+                end
+            )
+        end
     end
 end
 
@@ -45,13 +42,23 @@ function menu.draw()
 end
 
 function menu.keypressed(key, scancode, isrepeat)
-    if key == "space" then
-        music:stop()
-        changeScreen(require("screens/game"))
+    if key == "escape" and not menu.closing then
+        menu.closing = true
+        menu.continueGame()
     end
 end
 
 function menu.keyreleased(key, scancode, isrepeat)
 end
 
+function menu.continueGame()
+    sounds.play(sounds.uiClick)
+    menu.menuManager:changeMenuTo(
+        nil,
+        function()
+            menu.screen.continue()
+            menu.menuManager:init()
+        end
+    )
+end
 return menu

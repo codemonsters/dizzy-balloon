@@ -124,9 +124,19 @@ MenuManagerClass.screenStates = {
     }
 }
 
--- Inicia la transición desde el menú actual al menú nextMenu, ejecutando después la función afterTransitionCallback (lo que con frecuencia será una acción que cambie de pantalla). Si delayExec value true la acción se ejecutará justo después de update() y de draw()
-function MenuManagerClass:changeMenuTo(nextMenu, afterTransitionCallback, delayExec)
-    if delayExec then
+function MenuManagerClass:keypressed(key, scancode, isrepeat)
+    if self.screenState == MenuManagerClass.screenStates.showingMenu and self.currentMenu then
+        self.currentMenu.keypressed(key, scancode, isrepeat)    end
+end
+
+function MenuManagerClass:keyreleased(key, scancode, isrepeat)
+    if self.screenState == MenuManagerClass.screenStates.showingMenu and self.currentMenu then
+        self.currentMenu.keyreleased(key, scancode, isrepeat)
+    end
+end
+-- Inicia la transición desde el menú actual al menú nextMenu, ejecutando después la función afterTransitionCallback (lo que con frecuencia será una acción que cambie de pantalla). Si delayedExec vale true la acción se ejecutará justo después de update() y de draw()
+function MenuManagerClass:changeMenuTo(nextMenu, afterTransitionCallback, delayedExec)
+    if delayedExec then
         self.execOnceAfterDraw = function(self)
             if nextMenu then
                 -- guardamos el menú en self.nextMenu y llamamos a su método load()

@@ -569,6 +569,13 @@ function game.draw()
 end
 
 function game.keypressed(key, scancode, isrepeat)
+    -- Dado que el juego está en pausa delegamos cómo resolver el evento al menú actual
+    if game.pause then
+        if menuManager.currentMenu then
+            menuManager.currentMenu.keypressed(key, scancode.isrepeat)
+        end
+        return
+    end
     if key == "escape" then
         --returnToMenu()
         played_ingame_menu_click = false
@@ -605,6 +612,13 @@ function game.keypressed(key, scancode, isrepeat)
 end
 
 function game.keyreleased(key, scancode, isrepeat)
+    -- Dado que el juego está en pausa delegamos cómo resolver el evento al menú actual
+    if game.pause then
+        if menuManager.currentMenu then
+            menuManager.currentMenu.keyreleased(key, scancode.isrepeat)
+        end
+        return
+    end
     if key == "q" then
         returnToMenu()
     elseif key == "w" or key == "up" then
