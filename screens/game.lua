@@ -83,7 +83,6 @@ game.states = {
                     game.timer = 0
                 end
             end
-            print("ALPHA = " .. game.alpha)
             game.states.jugando.update(self, dt)
         end,
         draw = function(self)
