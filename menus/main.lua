@@ -18,26 +18,33 @@ function menu.update(dt)
     menu.widgets:Label("Dizzy Balloon", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.2))
 
     if menu.widgets:Button("Jugar", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        --music:stop()
-        sounds.play(sounds.uiClick)
-        --sounds.ui_click:play()
-        menu.menuManager:changeMenuTo(
-            nil,
-            function()
-                changeScreen(require("screens/game"))
-                menu.menuManager:init()
-            end,
-            true
-        )
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            sounds.play(sounds.uiClick)
+            --sounds.ui_click:play()
+            menu.menuManager:changeMenuTo(
+                nil,
+                function()
+                    changeScreen(require("screens/game"))
+                    menu.menuManager:init()
+                end,
+                true
+            )
+        end
     end
     if menu.widgets:Button("Preferencias", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        menu.menuManager:changeMenuTo(menu.menuManager:getMenu("preferences"))
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            menu.menuManager:changeMenuTo(menu.menuManager:getMenu("preferences"))
+        end
     end
     if menu.widgets:Button("Instrucciones", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        menu.menuManager:changeMenuTo(menu.menuManager:getMenu("instructions"))
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            menu.menuManager:changeMenuTo(menu.menuManager:getMenu("instructions"))
+        end
     end
     if menu.widgets:Button("Salir", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        os.exit()
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            os.exit()
+        end
     end
 end
 

@@ -26,7 +26,9 @@ function menu.update(dt)
             menu.widgets.layout:col(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
         ).hit
      then
-        sounds.ui_click:play()
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            sounds.ui_click:play()
+        end
     end
 
     if
@@ -36,19 +38,27 @@ function menu.update(dt)
             menu.widgets.layout:down(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
         ).hit
      then
-        if menu.musicOn then
-            music:play()
-            menu.musicOn = false
-        else
-            music:pause()
-            menu.musicOn = true
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            if menu.musicOn then
+                music:play()
+                menu.musicOn = false
+            else
+                music:pause()
+                menu.musicOn = true
+            end
         end
     end
 
     if menu.widgets:Button("Música", menu.widgets.layout:left(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            -- TODO: Implementar
+        end
     end
 
     if menu.widgets:Button("Español", menu.widgets.layout:row(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            -- TODO: Implementar
+        end
     end
 
     if
@@ -58,7 +68,9 @@ function menu.update(dt)
             menu.widgets.layout:col(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
         ).hit
      then
-        sounds.ui_click:play()
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            sounds.ui_click:play()
+        end
     end
 
     if
@@ -68,10 +80,15 @@ function menu.update(dt)
             menu.widgets.layout:down(SCREEN_WIDTH * (.1 - (0.015 / 2)), SCREEN_HEIGHT * 0.11)
         ).hit
      then
-        sounds.ui_click:play()
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            sounds.ui_click:play()
+        end
     end
 
     if menu.widgets:Button("English", menu.widgets.layout:left(SCREEN_WIDTH * .7, SCREEN_HEIGHT * 0.11)).hit then
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            -- TODO: Implementar
+        end
     end
 
     if
@@ -87,7 +104,9 @@ function menu.update(dt)
             menu.widgets.layout:down(SCREEN_WIDTH * .8, SCREEN_HEIGHT * 0.11)
         ).hit
      then
-        menu.menuManager:changeMenuTo(menu.menuManager:getMenu("main"))
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            menu.menuManager:changeMenuTo(menu.menuManager:getMenu("main"))
+        end
     end
 end
 
@@ -98,7 +117,10 @@ end
 
 function menu.keypressed(key, scancode, isrepeat)
     if key == "space" then
-        changeScreen(require("screens/menu"))
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            -- TODO: ¿Es correcto que al pulsar espacio se ejecute esto?
+            changeScreen(require("screens/menu"))
+        end
     end
 end
 

@@ -19,19 +19,23 @@ function menu.update(dt)
     menu.widgets:Label("Dizzy Balloon", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12))
 
     if menu.widgets:Button("Continuar", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        menu.continueGame()
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            menu.continueGame()
+        end
     end
     if menu.widgets:Button("Salir", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        if not menu.closing then
-            menu.closing = true
-            sounds.play(sounds.uiRollOver)
-                menu.menuManager:changeMenuTo(
-                nil,
-                function()
-                    changeScreen(require("screens/menu"))
-                    menu.menuManager:init()
-                end
-            )
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            if not menu.closing then
+                menu.closing = true
+                sounds.play(sounds.uiRollOver)
+                    menu.menuManager:changeMenuTo(
+                    nil,
+                    function()
+                        changeScreen(require("screens/menu"))
+                        menu.menuManager:init()
+                    end
+                )
+            end
         end
     end
 end

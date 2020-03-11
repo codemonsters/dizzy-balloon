@@ -29,7 +29,9 @@ function menu.update(dt)
             menu.widgets.layout:down(SCREEN_WIDTH * .8, SCREEN_HEIGHT * 0.11)
         ).hit
      then
-        menu.menuManager:changeMenuTo(menu.menuManager:getMenu("main"))
+        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+            menu.menuManager:changeMenuTo(menu.menuManager:getMenu("main"))
+        end
     end
 end
 
