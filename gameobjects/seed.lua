@@ -60,6 +60,7 @@ local SeedClass = {
                 quads.egg_00
             },
             load = function(self)
+                self.vy = 25
                 self.current_frame = 1
                 self.elapsed_time = 0
                 self.collisions_filter = function(item, other)
@@ -73,7 +74,8 @@ local SeedClass = {
                 end
             end,
             update = function(self, dt)
-                target_y = self.y + 100 * dt
+                self.vy = self.vy + 120 * dt
+                target_y = self.y + self.vy * dt
                 target_x = self.x
                 self.y = target_y
                 self.x = target_x
