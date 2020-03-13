@@ -1,7 +1,8 @@
 local bump = require "libraries/bump/bump"
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
-local EnemyClass = require("gameobjects/airfly")
+local EnemyClass = require("gameobjects/enemy")
+local AirflyClass = require("gameobjects/airfly")
 local SkyClass = require("gameobjects/sky")
 local PointerClass = require("misc/pointer")
 local BombClass = require("gameobjects/bomb")
@@ -40,6 +41,19 @@ game.states = {
         name = "Jugando",
         load = function(self)
             love.graphics.clear(0, 0, 0)
+            if airflies then
+                for i = 1, game.currentLevel.airflies,1 do
+                    airfly = AirflyClass.new(
+                        "airfly",
+                        EnemyClass.width,
+                        EnemyClass.height,
+                        game.currentLevel.world,
+                        game,
+                        math.random() * 360
+                    )
+                    table.insert(game.currentLevel.enemies, airfly)
+                end
+            end
         end,
         update = function(self, dt)
             -- comprobamos si debemos crear un enemigo nuevo
