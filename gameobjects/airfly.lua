@@ -26,6 +26,10 @@ function AirFlyClass.__index:mod(vec)
     return math.sqrt(math.pow(vec.x,2)+math.pow(vec.y,2))
 end
 
+function AirFlyClass.__index:getPos(objetivo)
+    return {x = self.x, y = self.y}
+end
+
 function AirFlyClass.__index:setTarget(objetivo)
     local dist = self:dist({x = self.x, y = self.y}, objetivo)
 
@@ -34,7 +38,7 @@ function AirFlyClass.__index:setTarget(objetivo)
 end
 
 function AirFlyClass.__index:atacar()
-    local huevito = SeedClass.new("huevo", self.game.currentLevel.sky, self.world, self.x, self.y, self.game)
+    local huevito = SeedClass.new("huevo", self.game.currentLevel.sky, self.world, self.x, self.y + self.height, self.game)
     table.insert(self.game.currentLevel.sky.semillas, huevito)
     huevito.powerUp = PowerUps.flyAttack
     
@@ -60,18 +64,26 @@ AirFlyClass.states.moving = {
             end
         else
             self.x, self.y, cols, len = self.world:move(self, self.movSigx, self.movSigy, self.flyFilter)
-            distObj = self:mod(self:dist({x = self.x, y = self.y}, self.objetivo))
+            distObj = self:mod(self:dist(self:getPos(), self.objetivo))
             if distObj < 10 or len > 0 then
                 if distObj < 10 then
                     if self.atacando then
-                        self.atacando = false
-                        self:atacar()
+                        distPlayer = self:mod(self:dist(self:getPos(), {y = self.objetivo.y, x = self.game.currentLevel.player.x}))
+                        
+                        if distPlayer < 10 then
+                            self.atacando = false
+                            self.cargado = false
+                            self:atacar()
+                        end
                     end
                 end
                 self.objetivo = {x = math.random(0, WORLD_WIDTH), y = math.random(0, WORLD_HEIGHT/3)}
                 if math.random(0, 100) < 20 and self.cargado then
-                    self.objetivo.x = self.game.currentLevel.player.x
                     self.atacando = true
+                end
+
+                if self.atacando then
+                    self.objetivo.x = self.game.currentLevel.player.x
                 end
 
                 self:setTarget(self.objetivo)
