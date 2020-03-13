@@ -27,7 +27,7 @@ function menu.update(dt)
         ).hit
      then
         if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
-            sounds.ui_click:play()
+            sounds.play(sounds.uiClick)
         end
     end
 
@@ -69,7 +69,7 @@ function menu.update(dt)
         ).hit
      then
         if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
-            sounds.ui_click:play()
+            sounds.play(sounds.uiClick)
         end
     end
 
@@ -81,7 +81,7 @@ function menu.update(dt)
         ).hit
      then
         if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
-            sounds.ui_click:play()
+            sounds.play(sounds.uiClick)
         end
     end
 
