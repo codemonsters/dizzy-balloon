@@ -65,6 +65,36 @@ else
 end
 
 game.states = {
+    fadeIn = {
+        name = "FadeIn",
+        load = function(self)
+            game.timer = 0
+            game.fadeMaxTimeInSeconds = 1
+            game.states.jugando.load(self)
+        end,
+        update = function(self, dt)
+            game.timer = game.timer + dt
+            game.alpha = 1 - game.timer / game.fadeMaxTimeInSeconds
+            if game.alpha < 0 then
+                game.alpha = 0
+                game.execOnceAfterDraw = function()
+                    game.state = game.states.jugando
+                    game.alpha = 1
+                    game.timer = 0
+                end
+            end
+            game.states.jugando.update(self, dt)
+        end,
+        draw = function(self)
+            game.states.jugando.draw(self)
+            love.graphics.push()
+            love.graphics.translate(desplazamientoX, desplazamientoY)
+            love.graphics.scale(factorEscala, factorEscala)
+            love.graphics.setColor(0, 0, 0, game.alpha)
+            love.graphics.rectangle("fill", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
+            love.graphics.pop()
+        end
+    },
     jugando = {
         name = "Jugando",
         load = function(self)
@@ -214,7 +244,7 @@ game.states = {
     cambiandoDeNivel = {
         load = function(self) -- cargamos el siguiente nivel y dibujamos su primer frame
             music:stop()
-            sounds.level_up:play()
+            sounds.play(sounds.levelUp)
             if LevelDefinitions[(game.currentLevel.id + 1)] == nil then
                 game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[1], game))
             else
@@ -453,7 +483,7 @@ function game.load()
     game.bombasAereas = 9
     game.currentLevel = LevelClass.new(LevelDefinitions[1], game)
     game.loadlevel(game.currentLevel)
-    game.change_state(game.states.jugando)
+    game.change_state(game.states.fadeIn)
     loadAndStartMusic(game.currentLevel.music)
     game.pause = false
     played_ingame_menu_click = false
@@ -463,7 +493,7 @@ function game.update(dt)
     if game.pause then
         menuManager:update(dt)
         if played_ingame_menu_click == false then
-            sounds.ui_rollover:play()
+            sounds.play(sounds.uiRollOver)
             played_ingame_menu_click = true
         end
     else
@@ -523,6 +553,10 @@ function game.draw()
 
     game.state.draw(game)
 
+    if game.execOnceAfterDraw then
+        game.execOnceAfterDraw()
+        game.execOnceAfterDraw = nil
+    end
     if game.pause then
         love.graphics.push()
         love.graphics.translate(desplazamientoX, desplazamientoY)
@@ -535,6 +569,13 @@ function game.draw()
 end
 
 function game.keypressed(key, scancode, isrepeat)
+    -- Dado que el juego está en pausa delegamos cómo resolver el evento al menú actual
+    if game.pause then
+        if menuManager.currentMenu then
+            menuManager.currentMenu.keypressed(key, scancode.isrepeat)
+        end
+        return
+    end
     if key == "escape" then
         --returnToMenu()
         played_ingame_menu_click = false
@@ -571,6 +612,13 @@ function game.keypressed(key, scancode, isrepeat)
 end
 
 function game.keyreleased(key, scancode, isrepeat)
+    -- Dado que el juego está en pausa delegamos cómo resolver el evento al menú actual
+    if game.pause then
+        if menuManager.currentMenu then
+            menuManager.currentMenu.keyreleased(key, scancode.isrepeat)
+        end
+        return
+    end
     if key == "q" then
         returnToMenu()
     elseif key == "w" or key == "up" then

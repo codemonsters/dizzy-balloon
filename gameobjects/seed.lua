@@ -23,14 +23,7 @@ local SeedClass = {
         sky = {
             name = "sky",
             quads = {
-                quads.egg
-                --[[{
-                    --quad = love.graphics.newQuad(130, 61, 14, 16, atlasOld:getDimensions()),
-                    quad = love.graphics.newQuad(499, 499, 20, 20, atlasOld:getDimensions()),
-                    width = 14,
-                    height = 16
-                }
-                --]]
+                quads.egg_00
             },
             load = function(self)
                 self.currentframe = 1
@@ -43,28 +36,31 @@ local SeedClass = {
                     self.x = 0 - self.width
                 end
                 self.x, self.y, cols, len = self.world:move(self, self.x + self.vx * dt, self.y, self.collisions_filter)
+            end,
+            draw = function(self)
+                if self.powerUp ~= nil then
+                    love.graphics.setColor(self.powerUp.color)
+                end
+                love.graphics.draw(
+                    atlas,
+                    self.states.sky.quads[self.currentFrame].quad,
+                    self.x,
+                    self.y,
+                    0,
+                    --self.state.size,
+                    --self.state.size
+                    self.width / self.states.sky.quads[self.currentFrame].width,
+                    self.height / self.states.sky.quads[self.currentFrame].height
+                )
             end
         },
         falling = {
             name = "falling",
             quads = {
-                quads.egg
-                --[[
-                {
-                    --quad = love.graphics.newQuad(98, 56, 14, 21, atlas:getDimensions()),
-                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
-                    width = 14,
-                    height = 16
-                },
-                {
-                    --quad = love.graphics.newQuad(114, 57, 14, 19, atlas:getDimensions()),
-                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
-                    width = 14,
-                    height = 16
-                }
-                --]]
+                quads.egg_00
             },
             load = function(self)
+                self.vy = 25
                 self.current_frame = 1
                 self.elapsed_time = 0
                 self.collisions_filter = function(item, other)
@@ -78,7 +74,8 @@ local SeedClass = {
                 end
             end,
             update = function(self, dt)
-                target_y = self.y + 100 * dt
+                self.vy = self.vy + 120 * dt
+                target_y = self.y + self.vy * dt
                 target_x = self.x
                 self.y = target_y
                 self.x = target_x
@@ -96,45 +93,58 @@ local SeedClass = {
                         self.current_frame = 1
                     end
                 end
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
             end
         },
         touchdown = {
             name = "touchdown",
             quads = {
-                quads.egg
-                --[[
-                {
-                    --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
-                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
-                    width = 14,
-                    height = 16
-                }
-                --]]
+                quads.egg_01,
+                quads.egg_02,
+                quads.egg_03,
+                quads.egg_04,
+                quads.egg_03,
+                quads.egg_02,
+                quads.egg_01,
+                quads.egg_00
             },
             load = function(self)
                 self.currentframe = 1
+                self.elapsed_time = 0
+                self.state_max_time = 1
             end,
             update = function(self, dt)
-                if self.powerUp ~= nil then
-                    self.change_state(self, self.states.explode)
+                self.elapsed_time = self.elapsed_time + dt
+                if self.elapsed_time > self.state_max_time then
+                    if self.powerUp ~= nil then
+                        self.change_state(self, self.states.explode)
+                    else
+                        self.change_state(self, self.states.onthefloor)
+                    end
                 else
-                    self.change_state(self, self.states.onthefloor)
+                    self.current_frame = math.floor(1 + #self.state.quads * self.elapsed_time / self.state_max_time)
                 end
+            end,
+            draw = function(self)
+                love.graphics.draw(
+                    atlas,
+                    self.state.quads[self.currentFrame].quad,
+                    self.x,
+                    self.y,
+                    0,
+                    --self.state.size,
+                    --self.state.size
+                    self.width / self.state.quads[self.currentFrame].width,
+                    self.height / self.state.quads[self.currentFrame].height
+                )
             end
         },
         onthefloor = {
             name = "onthefloor",
             quads = {
                 quads.egg
-                --[[
-                {
-
-                    --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
-                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
-                    width = 14,
-                    height = 16
-                }
-                --]]
             },
             load = function(self)
                 print("onthefloor.load")
@@ -159,31 +169,21 @@ local SeedClass = {
                 if player_over == false then
                     self.elapsed_time = self.elapsed_time + dt
                 end
-                --[[if player_over then
-                    print("PLAYER OVER")
-                else
-                    print("PLAYER NOT OVER")
-                end--]]
                 if self.player_over_timer > 2 then
                     self.game.create_balloon_from_seed(self)
                     self.change_state(self, self.states.balloon)
                 elseif self.elapsed_time > 5 then
                     self.change_state(self, self.states.rotting)
                 end
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
             end
         },
         evolving = {
             name = "evolving",
             quads = {
                 quads.balloon
-                --[[
-                {
-                    --quad = love.graphics.newQuad(146, 65, 14, 14, atlas:getDimensions()),
-                    quad = love.graphics.newQuad(499, 499, 20, 20, atlas:getDimensions()),
-                    width = 14,
-                    height = 16
-                }
-                --]]
             },
             load = function(self)
                 print("evolving.load")
@@ -211,24 +211,23 @@ local SeedClass = {
                     self.game.create_balloon_from_seed(self)
                     self.change_state(self, self.states.balloon)
                 end
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
             end
         },
         balloon = {
             name = "balloon",
             quads = {
                 quads.balloon
-                --[[
-                {
-                    quad = love.graphics.newQuad(125, 78, 16, 16, atlas:getDimensions()),
-                    width = 16,
-                    height = 16
-                }
-                --]]
             },
             load = function(self)
                 self.currentframe = 1
             end,
             update = function(self, dt)
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
             end
         },
         rotting = {
@@ -250,6 +249,9 @@ local SeedClass = {
                 if self.elapsed_time > 2 then
                     self:die()
                 end
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
             end
         },
         explode = {
@@ -263,6 +265,7 @@ local SeedClass = {
                 }
             },
             load = function(self)
+                self.currentFrame = 1
                 initialTime = 0
                 canApply = true
                 self.world:remove(self)
@@ -285,6 +288,16 @@ local SeedClass = {
                 if initialTime >= 0.3 then
                     self:die()
                 end
+            end,
+            draw = function(self)
+                self.states.sky.draw(self)
+                love.graphics.rectangle(
+                    "fill",
+                    self.x - self.state.size / 2,
+                    self.y - self.state.size / 2,
+                    self.state.size,
+                    self.state.size
+                )
             end
         }
     }
@@ -313,38 +326,7 @@ function SeedClass:update(dt)
 end
 
 function SeedClass:draw()
-    --[[
-    love.graphics.draw(
-        self.image,
-        self.x,
-        self.y,
-        0,
-        self.width / self.image:getWidth(),
-        self.height/ self.image:getHeight())
-    --]]
-    if self.powerUp ~= nil then
-        love.graphics.setColor(self.powerUp.color)
-    end
-    love.graphics.draw(
-        atlas,
-        self.state.quads[self.currentFrame].quad,
-        self.x,
-        self.y,
-        0,
-        --self.state.size,
-        --self.state.size
-        self.width / self.state.quads[self.currentFrame].width,
-        self.height / self.state.quads[self.currentFrame].height
-    )
-    if self.state == self.states.explode then
-        love.graphics.rectangle(
-            "fill",
-            self.x - self.state.size / 2,
-            self.y - self.state.size / 2,
-            self.state.size,
-            self.state.size
-        )
-    end
+    self.state.draw(self)
     love.graphics.setColor(255, 255, 255)
     --love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end

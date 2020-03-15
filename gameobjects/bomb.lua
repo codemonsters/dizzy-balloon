@@ -116,7 +116,7 @@ local Bomb = {
                 quads.bomb
             },
             load = function(self)
-                sounds.bomb_launch:play()
+                sounds.play(sounds.bombLaunch)
                 self.elapsed_time = 0
                 self.collisions_filter = function(item, other)
                     if other.isBlock or other.isLimit then
@@ -205,7 +205,7 @@ local Bomb = {
                 self.current_height = self.initial_height
                 self.current_frame = 1
 
-                sounds.bomb_explosion:play()
+                sounds.play(sounds.bombExplosion)
             end,
             update = function(self, dt)
                 self.elapsed_time = self.elapsed_time + dt

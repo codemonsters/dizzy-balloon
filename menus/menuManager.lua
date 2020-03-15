@@ -124,17 +124,41 @@ MenuManagerClass.screenStates = {
     }
 }
 
--- Inicia la transición desde el menú actual al menú nextMenu, ejecutando después la función afterTransitionCallback (lo que con frecuencia será una función que cambie de pantalla)
-function MenuManagerClass:changeMenuTo(nextMenu, afterTransitionCallback)
-    if nextMenu then
-        -- guardamos el menú en self.nextMenu y llamamos a su método load()
-        self.nextMenu = nextMenu
-        self.nextMenu.load(self, self.screen) -- al menú le pasamos como argumento el objeto MenuManagerClass para que pueda acceder a él por ejemplo cuando ese menú quiere pedir que se cambie a otro distinto
-    else
-        self.nextMenu = nil
+function MenuManagerClass:keypressed(key, scancode, isrepeat)
+    if self.screenState == MenuManagerClass.screenStates.showingMenu and self.currentMenu then
+        self.currentMenu.keypressed(key, scancode, isrepeat)    end
+end
+
+function MenuManagerClass:keyreleased(key, scancode, isrepeat)
+    if self.screenState == MenuManagerClass.screenStates.showingMenu and self.currentMenu then
+        self.currentMenu.keyreleased(key, scancode, isrepeat)
     end
-    self.afterTransitionCallback = afterTransitionCallback
-    self.changeScreenState(self, MenuManagerClass.screenStates.changingMenu)
+end
+-- Inicia la transición desde el menú actual al menú nextMenu, ejecutando después la función afterTransitionCallback (lo que con frecuencia será una acción que cambie de pantalla). Si delayedExec vale true la acción se ejecutará justo después de update() y de draw()
+function MenuManagerClass:changeMenuTo(nextMenu, afterTransitionCallback, delayedExec)
+    if delayedExec then
+        self.execOnceAfterDraw = function(self)
+            if nextMenu then
+                -- guardamos el menú en self.nextMenu y llamamos a su método load()
+                self.nextMenu = nextMenu
+                self.nextMenu.load(self, self.screen) -- al menú le pasamos como argumento el objeto MenuManagerClass para que pueda acceder a él por ejemplo cuando ese menú quiere pedir que se cambie a otro distinto
+            else
+                self.nextMenu = nil
+            end
+            self.afterTransitionCallback = afterTransitionCallback
+            self.changeScreenState(self, MenuManagerClass.screenStates.changingMenu)
+        end
+    else
+        if nextMenu then
+            -- guardamos el menú en self.nextMenu y llamamos a su método load()
+            self.nextMenu = nextMenu
+            self.nextMenu.load(self, self.screen) -- al menú le pasamos como argumento el objeto MenuManagerClass para que pueda acceder a él por ejemplo cuando ese menú quiere pedir que se cambie a otro distinto
+        else
+            self.nextMenu = nil
+        end
+        self.afterTransitionCallback = afterTransitionCallback
+        self.changeScreenState(self, MenuManagerClass.screenStates.changingMenu)
+    end
 end
 
 function MenuManagerClass:getMenu(menuName)
@@ -168,6 +192,14 @@ end
 function MenuManagerClass:draw()
     love.graphics.setBlendMode("alpha")
     self.screenState.draw(self)
+    if self.delayedAfterDrawAction then
+        self.delayedAfterDrawAction()
+        self.delayedAfterDrawAction = nil
+    end
+    if self.execOnceAfterDraw then
+        self.execOnceAfterDraw(self)
+        self.execOnceAfterDraw = nil
+    end
 end
 
 MenuManagerClass.effects = {
@@ -247,7 +279,7 @@ MenuManagerClass.effects = {
     moveLeft = {
         name = "moveLeft",
         load = function(self)
-            sounds.ui_rollover:play()
+            sounds.play(sounds.uiRollOver)
             self.currentMenuShiftX = 0
             self.currentMenuShiftY = 0
             self.nextMenuShiftX = SCREEN_WIDTH
@@ -279,7 +311,7 @@ MenuManagerClass.effects = {
     moveRight = {
         name = "moveRight",
         load = function(self)
-            sounds.ui_rollover:play()
+            sounds.play(sounds.uiRollOver)
             self.currentMenuShiftX = 0
             self.currentMenuShiftY = 0
             self.nextMenuShiftX = -SCREEN_WIDTH
@@ -308,8 +340,8 @@ MenuManagerClass.effects = {
             self.effects.moveDown.draw(self)
         end
     },
-    fadeToWhite = {
-        name = "fadeToWhite",
+    fadeOut = {
+        name = "fadeOut",
         load = function(self)
             self.timer = 0
             self.fadeMaxTimeInSeconds = 1
@@ -332,7 +364,7 @@ MenuManagerClass.effects = {
         end,
         draw = function(self)
             self.currentMenu.draw(self)
-            love.graphics.setColor(1, 1, 1, self.alpha)
+            love.graphics.setColor(0, 0, 0, self.alpha)
             love.graphics.rectangle("fill", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
         end
     }
