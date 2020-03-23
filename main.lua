@@ -54,6 +54,9 @@ function love.load()
             }
         )
     end
+
+    if mobile == true then love.window.setFullscreen(true) end
+
     actualizaVariablesEscalado(window_width, window_height)
 
     math.randomseed(os.time()) -- NOTE: Quizá redundante, parece que Love ya inicializa la semilla random automáticamente
