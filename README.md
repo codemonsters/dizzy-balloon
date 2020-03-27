@@ -67,13 +67,11 @@ Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
 
 
 ### Android: Creación de un APK
-
-Requisitos:
-* love-android-sdl2 (aquí se explica como descargarla y prepararla: https://love2d.org/wiki/Game_Distribution#Android )
-* android-ndk-r14b  (descargas la versión 14b de la página oficial)
+Usar el método de aquí: https://love2d.org/wiki/Game_Distribution/APKTool
 
 ### Discord: Trabajo a distancia
 Invitación al servidor de Discord para la actividad de Laboratorio: https://discord.gg/ZQaNtRF
+
 
 ## Documentación
 
