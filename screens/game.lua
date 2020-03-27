@@ -642,9 +642,11 @@ end
 
 function love.mousepressed(x, y, button, istouch, presses)
     if button == 1 and not mobile then
+        mouseX, mouseY = (x - desplazamientoX) / factorEscala, (y - desplazamientoY) / factorEscala
+        print(mouseX .. ",  " .. x)
         jugadorquieremoverse = true
         --jugadorquieredisparar = true
-        mousepointer:touchpressed(x, y)
+        mousepointer:touchpressed(mouseX, mouseY)
     end
 end
 
@@ -667,16 +669,18 @@ function love.touchmoved(id, x, y, dx, dy, pressure)
 end
 
 function love.touchpressed(id, x, y, dx, dy, pressure)
-    if x > SCREEN_WIDTH / 2 then
-        rightFinger:touchpressed(x, y)
+    mouseX, mouseY = (x - desplazamientoX) / factorEscala, (y - desplazamientoY) / factorEscala
+    if mouseX > SCREEN_WIDTH / 2 then
+        rightFinger:touchpressed(mouseX, mouseY)
     else
         jugadorquieremoverse = true
         --jugadorquieredisparar = true
-        leftFinger:touchpressed(x, y)
+        leftFinger:touchpressed(mouseX, mouseY)
     end
 end
 
 function love.touchreleased(id, x, y, dx, dy, pressure)
+
     if x > SCREEN_WIDTH / 2 then
         rightFinger:touchreleased(dx, dy)
     else

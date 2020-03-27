@@ -3,12 +3,21 @@ local menu = {
     widgets = suit.new(require("menus/ourTheme"))
 }
 
+local screenButtons = {
+    selectedButton = 1,
+    button1 = 'Jugar',
+    button2 = "Preferencias",
+    button3 = 'Instrucciones',
+    button4 = 'Salir'
+}
+
 function menu.load(menuManager, screen)
     menu.menuManager = menuManager
     menu.screen = screen
 end
 
 function menu.update(dt)
+
     menu.widgets.layout:reset(SCREEN_WIDTH * 0.2, SCREEN_HEIGHT * 0.05)
     menu.widgets.layout:padding(0, SCREEN_WIDTH * 0.015)
     local mouseX, mouseY = love.mouse.getPosition()
@@ -49,6 +58,11 @@ function menu.update(dt)
 end
 
 function menu.draw()
+    if screenButtons.selectedButton == 1 then
+        suit.setHovered('Jugar')
+        print('hovered')
+    end
+
     love.graphics.setBlendMode("alpha")
     menu.widgets:draw()
 end

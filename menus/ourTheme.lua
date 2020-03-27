@@ -5,7 +5,6 @@ ourTheme = setmetatable({}, {__index = suit.theme})
 --       dress.theme.color.normal will also change suit.theme.color.normal!
 local labelColor = {normal = {fg = {255, 255, 255}}}
 
---ourTheme.fontDefaultButtons = love.graphics.newFont("assets/fonts/FutureNow.ttf", 70)
 ourTheme.fontDefaultButtons = love.graphics.newFont("assets/fonts/unlearne.ttf", 60) -- https://www.1001fonts.com/unlearned-font.html
 ourTheme.fontDefaultLabels = love.graphics.newFont("assets/fonts/edunline.ttf", 80)
 
