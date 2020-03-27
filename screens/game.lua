@@ -28,6 +28,8 @@ local circle = love.graphics.newImage("assets/images/old/circle.png")
 local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
 local hud_height = SCREEN_HEIGHT
 
+local dimensionesBotonPausa = hud_width * .25
+
 local MenuManagerClass = require("menus/menuManager")
 local menuManager =
     MenuManagerClass.new(
@@ -515,6 +517,10 @@ function game.draw()
         love.graphics.printf("LVL - " .. game.currentLevel.id, font_hud, 0, 100, hud_width, "center")
         love.graphics.printf("x " .. game.vidas, font_hud, 140, 160, hud_width, "left")
         love.graphics.printf("x " .. game.bombasAereas, font_hud, 140, 220, hud_width, "left")
+        --el botón de pausa
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.rectangle("fill", hud_width - dimensionesBotonPausa, 0, dimensionesBotonPausa, dimensionesBotonPausa)
+        love.graphics.setColor(255, 255, 255)
 
         ------------
         love.graphics.draw(atlas, PlayerClass.states.standing.quads[1].quad, 95, 154, 0, 2, 2) -- dibujamos el jugador en el hud
@@ -642,6 +648,13 @@ end
 
 function love.mousepressed(x, y, button, istouch, presses)
     if button == 1 and not mobile then
+        print(SCREEN_WIDTH)
+        if x > hud_width + WORLD_WIDTH + (dimensionesBotonPausa * 3) and y < dimensionesBotonPausa then
+            played_ingame_menu_click = false
+            game.pause = true
+            music:pause()
+        end
+
         jugadorquieremoverse = true
         --jugadorquieredisparar = true
         mousepointer:touchpressed(x, y)
