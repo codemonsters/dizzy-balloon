@@ -6,6 +6,7 @@ local LevelDefinitions = {
         name = "Nivel 1",
         blocks = {},
         max_enemies = 2,
+        airflies = 1,
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
         music = "stage1.mp3",
         --music = "pp_fight_or_flight_full_loop.mp3",
@@ -48,7 +49,7 @@ local LevelDefinitions = {
             {name = "Bloque 6", x = 300, y = 695, width = 100, height = 25}
         },
         max_enemies = 4,
-        airflies = 1,
+        airflies = 3,
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
         --music = "pp_destiny_full_loop.mp3"
         music = "stage3.mp3",
