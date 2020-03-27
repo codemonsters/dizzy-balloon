@@ -1,7 +1,7 @@
 local bump = require "libraries/bump/bump"
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/gameobjectsConBump/player")
-local EnemyClass = require("gameobjects/gameobjectsConBump/enemy")
+local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
 local PointerClass = require("misc/pointer")
 local BombClass = require("gameobjects/bomb")
@@ -134,6 +134,8 @@ game.states = {
             love.graphics.setCanvas(game.currentLevel.worldCanvas) -- a partir de ahora dibujamos en el canvas
             do
                 love.graphics.setBlendMode("alpha")
+
+                love.graphics.rectangle("line", game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
 
                 -- El fondo del mundo
                 love.graphics.setColor(192, 0, 109)
@@ -387,6 +389,8 @@ end
 
 function game.loadlevel(level)
     level.player = PlayerClass.new(level.world, game)
+    level.player.x = 100
+    level.player.y = 100
     level.bomb = BombClass.new("Bomb", level.world, game)
     if level.music ~= nil then
         level.music = love.audio.newSource("assets/music/" .. level.music, "stream")
@@ -503,13 +507,13 @@ function game.keypressed(key, scancode, isrepeat)
         fireRequested = true
         fireInitialDirection = "up"
     elseif key == "a" or key == "left" then
-        game.currentLevel.player:left(true)
+        game.currentLevel.player.left = true
     elseif key == "s" or key == "down" then
         game.currentLevel.player.down = true
         fireRequested = true
         fireInitialDirection = "down"
     elseif key == "d" or key == "right" then
-        game.currentLevel.player:right(true)
+        game.currentLevel.player.right = true
     elseif key == "space" then
         game.currentLevel.player:jump()
     elseif key == "v" then
@@ -534,11 +538,11 @@ function game.keyreleased(key, scancode, isrepeat)
     elseif key == "w" or key == "up" then
         game.currentLevel.player.up = false
     elseif key == "a" or key == "left" then
-        game.currentLevel.player:left(false)
+        game.currentLevel.player.left = false
     elseif key == "s" or key == "down" then
         game.currentLevel.player.down = false
     elseif key == "d" or key == "right" then
-        game.currentLevel.player:right(false)
+        game.currentLevel.player.right = false
     end
 end
 
