@@ -49,6 +49,7 @@ local menu = {
 function menu.load()
     -- música
     music = love.audio.newSource("assets/music/menu.mp3", "stream")
+    love.audio.setVolume(0)
     music:setLooping(true)
     music:play()
 

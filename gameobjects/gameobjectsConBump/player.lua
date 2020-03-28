@@ -3,7 +3,7 @@ local Player = {
     width = 40,
     height = 40,
     isPlayer = true,
-    vx = 180,
+    vx = 0,
     dir = function(self)
         local dir = 0
         if self.left then dir = -1
@@ -11,9 +11,11 @@ local Player = {
         end
         return self.vx * dir
     end,
-    vy = 80,
+    vy = 0,
     supported = false,
-    collisions_filter = function(item, other)
+    montado = false,
+    montura = nil,
+    collisionsFilter = function(item, other)
         if other.isBomb then return "slide"
         elseif other.isSeed and other.state ~= "falling" then return "touch"
         elseif other.isGoal then return "touch"
@@ -98,7 +100,7 @@ function Player.new(world, game)
     player.game, player.world = game, world
     player.x, player.y = 100, 100
     player.vx, player.vy = Player.vx, Player.vy
-    player.supported = false
+    player.supported, player.montado, player.montura = false, false, nil
     player.width, player.height = Player.width, Player.height
     player.left, player.right, player.supported = false, false, false, false, false
     player.invencible, player.tVivo, player.tInvencible, player.nBlinks, player.nTramo = false, 0, 4, 8, 0
@@ -112,21 +114,51 @@ function Player:update(dt)
         self.invencible = false
     end
 
+    if not self.montado then
+        if self.left then
+            self.vx = -200
+        elseif self.right then
+            self.vx = 200
+        else
+            self.vx = 0
+        end
+    else
+        self.vx = self.montura.vx
+        if self.left then
+            self.vx = self.vx - 200
+        elseif self.right then
+            self.vx = self.vx + 200
+        end
+    end
+
     local feetItems, feetLen = self.world:queryRect(self.x + 1, self.y + self.height, self.width - 1, 1)
     local headItems, headLen = self.world:queryRect(self.x + 1, self.y - 1, self.width - 1, 1)
     local bodyItems, bodyLen = self.world:queryRect(self.x, self.y, self.width, self.height)
 
-    if feetLen == 0 then -- El jugador tiene que ser afectado por la gravedad
+    if feetLen <= 0 then -- El jugador no está apoyado
         self.supported = false
-        self.vy = self.vy - (9.81 * dt)
+        self.montado = false
     else                 -- El jugador ha tocado suelo y ha de parar de bajar
         self.supported = true
-        self.vy = 0
+        for i = 1, feetLen do
+            if feetItems[i].isEnemy then
+                self.montado = true
+                self.montura = feetItems[i]
+            end
+        end
+    end
+
+    if self.supported then
+        --self.vy = 0
+    else
+        self.vy = self.vy + 10
     end
 
     if headLen > 0 and self.vy > 0 then -- El jugador se ha chocado mientras saltaba, ha de rebotar
-        self.vy = -4
+        self.vy = 4
     end
+
+    self.x, self.y, cols, len = self.world:move(self, self.x + self.vx * dt, self.y + self.vy * dt, self.collisionsFilter)
 
     -- Las colisiones contra el cuerpo del jugador pienso que han de ser manejadas por el otro cuerpo,
     -- por ejemplo, si un enemigo empuja al jugador, es el jugador quien debe ser empujado y no ha de
@@ -136,7 +168,12 @@ function Player:update(dt)
 end
 
 function Player:jump()
-    self.vy = 5
+    if self.supported then
+        self.supported = false
+        self.montado = false
+        self.montura = nil
+        self.vy = -500
+    end
 end
 
 function Player:draw()
@@ -160,7 +197,7 @@ function Player:draw()
         self.offset = self.width
     end
 
-    love.graphics.draw(atlas, Player.states.standing.quads[1].quad, self.x, self.y, self.width, self.height)
+    love.graphics.draw(atlas, Player.states.standing.quads[1].quad, self.x, self.y)
     
     love.graphics.setColor(255, 255, 255, 255)
 end

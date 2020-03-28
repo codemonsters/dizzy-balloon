@@ -1,7 +1,7 @@
 local bump = require "libraries/bump/bump"
 local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/gameobjectsConBump/player")
-local EnemyClass = require("gameobjects/enemy")
+local EnemyClass = require("gameobjects/gameobjectsConBump/enemy")
 local SkyClass = require("gameobjects/sky")
 local PointerClass = require("misc/pointer")
 local BombClass = require("gameobjects/bomb")
@@ -135,8 +135,6 @@ game.states = {
             do
                 love.graphics.setBlendMode("alpha")
 
-                love.graphics.rectangle("line", game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
-
                 -- El fondo del mundo
                 love.graphics.setColor(192, 0, 109)
                 love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
@@ -165,6 +163,10 @@ game.states = {
                 for i, mushroom in ipairs(game.currentLevel.mushrooms) do
                     mushroom:draw()
                 end
+                
+                love.graphics.setColor(255, 255, 255)
+                love.graphics.rectangle("line", game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
+            
             end
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
 
@@ -394,6 +396,7 @@ function game.loadlevel(level)
     level.bomb = BombClass.new("Bomb", level.world, game)
     if level.music ~= nil then
         level.music = love.audio.newSource("assets/music/" .. level.music, "stream")
+        love.audio.setVolume(0)
         level.music:setLooping(true)
     end
 
