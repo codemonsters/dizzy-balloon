@@ -28,6 +28,8 @@ local circle = love.graphics.newImage("assets/images/old/circle.png")
 local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
 local hud_height = SCREEN_HEIGHT
 
+local dimensionesBotonPausa = window_width * .05
+
 local MenuManagerClass = require("menus/menuManager")
 local menuManager =
     MenuManagerClass.new(
@@ -515,7 +517,6 @@ function game.draw()
         love.graphics.printf("LVL - " .. game.currentLevel.id, font_hud, 0, 100, hud_width, "center")
         love.graphics.printf("x " .. game.vidas, font_hud, 140, 160, hud_width, "left")
         love.graphics.printf("x " .. game.bombasAereas, font_hud, 140, 220, hud_width, "left")
-
         ------------
         love.graphics.draw(atlas, PlayerClass.states.standing.quads[1].quad, 95, 154, 0, 2, 2) -- dibujamos el jugador en el hud
 
@@ -524,6 +525,11 @@ function game.draw()
         love.graphics.setColor(255, 0, 0)
         love.graphics.draw(circle, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
         love.graphics.setColor(255, 255, 255)
+        --el botón de pausa
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.rectangle("line", hud_width - dimensionesBotonPausa, 0, dimensionesBotonPausa / 3, dimensionesBotonPausa)        
+        love.graphics.rectangle("line", hud_width - dimensionesBotonPausa * (1/3), 0, dimensionesBotonPausa / 3, dimensionesBotonPausa)        
+
     end
 
     love.graphics.setCanvas(gamepadCanvas) -- canvas del gamepad
@@ -669,9 +675,15 @@ function love.touchmoved(id, x, y, dx, dy, pressure)
 end
 
 function love.touchpressed(id, x, y, dx, dy, pressure)
-    mouseX, mouseY = (x - desplazamientoX) / factorEscala, (y - desplazamientoY) / factorEscala
-    if mouseX > SCREEN_WIDTH / 2 then
-        rightFinger:touchpressed(mouseX, mouseY)
+    if x > window_width - dimensionesBotonPausa and y < dimensionesBotonPausa then
+        played_ingame_menu_click = false
+        game.pause = true
+        music:pause()
+    end
+
+    if x > SCREEN_WIDTH / 2 then
+        rightFinger:touchpressed(x, y)
+    
     else
         jugadorquieremoverse = true
         --jugadorquieredisparar = true
