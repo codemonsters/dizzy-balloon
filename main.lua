@@ -80,11 +80,14 @@ function love.draw()
     love.graphics.setColor(0, 0, 0, 255)
     local screen_width = love.graphics.getWidth()
     local screen_height = love.graphics.getHeight()
-    love.graphics.print("RESOLUCIÓN VENTANA: " .. screen_height .. " X " .. screen_width, 0, 0)
-    love.graphics.print("PANTALLA COMPLETA:  " .. tostring(love.window.getFullscreen()), 0, 20)
+    love.graphics.print("PANTALLA COMPLETA:  " .. tostring(love.window.getFullscreen()), 0, 0)
+    love.graphics.print("RESOLUCIÓN VENTANA: " .. screen_width .. " X " .. screen_height, 0, 20)
     local _, _, flags = love.window.getMode()
     local width, height = love.window.getDesktopDimensions(flags.display)
-    love.graphics.print(("PANTALLA %d: %d x %d"):format(flags.display, width, height), 0, 40)
+    love.graphics.print(("RESOLUCIÓN PANTALLA %d: %d x %d"):format(flags.display, width, height), 0, 40)
+    love.graphics.print("DESPLAZAMIENTO X:  " .. desplazamientoX .. "   DESPLAZAMIENTO Y: " .. desplazamientoY, 0, 60)
+    love.graphics.print("FACTOR ESCALA:  " .. factorEscala, 0, 80)
+
 end
 
 function love.resize(w, h)
