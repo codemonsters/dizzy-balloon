@@ -148,9 +148,7 @@ function Player:update(dt)
         end
     end
 
-    if self.supported then
-        --self.vy = 0
-    else
+    if not self.supported then
         self.vy = self.vy + 10
     end
 
@@ -159,11 +157,6 @@ function Player:update(dt)
     end
 
     self.x, self.y, cols, len = self.world:move(self, self.x + self.vx * dt, self.y + self.vy * dt, self.collisionsFilter)
-
-    -- Las colisiones contra el cuerpo del jugador pienso que han de ser manejadas por el otro cuerpo,
-    -- por ejemplo, si un enemigo empuja al jugador, es el jugador quien debe ser empujado y no ha de
-    -- empujarse a sí mismo. Si una bomba mata a un jugador, el jugador no ha de suicidarse, si no que
-    -- la bomba ha de ser la que lo mate. Y así con el resto de colisiones, como los bloques.
 
 end
 

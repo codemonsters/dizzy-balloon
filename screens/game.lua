@@ -1,7 +1,7 @@
 local bump = require "libraries/bump/bump"
 local game = {name = "Juego"}
-local PlayerClass = require("gameobjects/gameobjectsConBump/player")
-local EnemyClass = require("gameobjects/gameobjectsConBump/enemy")
+local PlayerClass = require("gameobjects/player")
+local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
 local PointerClass = require("misc/pointer")
 local BombClass = require("gameobjects/bomb")
@@ -400,10 +400,17 @@ function game.loadlevel(level)
         level.music:setLooping(true)
     end
 
-    local borderWidth = 50
+    local borderWidth = 150
     table.insert(
         level.blocks,
-        BlockClass.new("Suelo", -borderWidth, WORLD_HEIGHT, WORLD_WIDTH + 2 * borderWidth, borderWidth, level.world)
+        BlockClass.new(
+            "Suelo",
+            -borderWidth,
+            WORLD_HEIGHT,
+            WORLD_WIDTH + 2 * borderWidth,
+            borderWidth,
+            level.world
+        )
     )
     table.insert(
         level.blocks,
@@ -662,7 +669,7 @@ function game.vidaperdida()
     game.change_state(game.states.muriendo)
 end
 
-function game.removeEnemy(enemy)
+function game.remove_enemy(enemy)
     for i, v in ipairs(game.currentLevel.enemies) do
         if v == enemy then
             game.currentLevel.world:remove(enemy)
