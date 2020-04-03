@@ -35,8 +35,10 @@ function love.load()
     love.graphics.setDefaultFilter("nearest", "linear") -- Cambiamos el filtro usado durante el escalado
 
     font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
-
+    
+    if mobile == true then love.window.setFullscreen(true) end
     window_width, window_height = love.window.getDesktopDimensions()
+   
     if love.window.getFullscreen() then
         -- scale the window to match the screen resolution
         log.debug("Corriendo en pantalla completa (resolución: " .. window_width .. " x " .. window_height .. " px)")
@@ -54,6 +56,8 @@ function love.load()
             }
         )
     end
+
+
     actualizaVariablesEscalado(window_width, window_height)
 
     math.randomseed(os.time()) -- NOTE: Quizá redundante, parece que Love ya inicializa la semilla random automáticamente

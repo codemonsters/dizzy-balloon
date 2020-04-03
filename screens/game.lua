@@ -652,7 +652,7 @@ function love.mousepressed(x, y, button, istouch, presses)
         print(mouseX .. ",  " .. x)
         jugadorquieremoverse = true
         --jugadorquieredisparar = true
-        mousepointer:touchpressed(x, y)
+        mousepointer:touchpressed(mouseX, mouseY)
     end
 end
 
@@ -683,14 +683,16 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
 
     if x > SCREEN_WIDTH / 2 then
         rightFinger:touchpressed(x, y)
+    
     else
         jugadorquieremoverse = true
         --jugadorquieredisparar = true
-        leftFinger:touchpressed(x, y)
+        leftFinger:touchpressed(mouseX, mouseY)
     end
 end
 
 function love.touchreleased(id, x, y, dx, dy, pressure)
+
     if x > SCREEN_WIDTH / 2 then
         rightFinger:touchreleased(dx, dy)
     else
