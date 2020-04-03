@@ -1,6 +1,7 @@
 log = require("libraries/log/log") -- https://github.com/rxi/log.lua
 suit = require("libraries/suit")
 
+
 local SoundClass = require("sounds")
 sounds = SoundClass.new()
 
@@ -76,6 +77,14 @@ end
 
 function love.draw()
     screen.draw()
+    love.graphics.setColor(0, 0, 0, 255)
+    local screen_width = love.graphics.getWidth()
+    local screen_height = love.graphics.getHeight()
+    love.graphics.print("RESOLUCIÓN VENTANA: " .. screen_height .. " X " .. screen_width, 0, 0)
+    love.graphics.print("PANTALLA COMPLETA:  " .. tostring(love.window.getFullscreen()), 0, 20)
+    local _, _, flags = love.window.getMode()
+    local width, height = love.window.getDesktopDimensions(flags.display)
+    love.graphics.print(("PANTALLA %d: %d x %d"):format(flags.display, width, height), 0, 40)
 end
 
 function love.resize(w, h)
