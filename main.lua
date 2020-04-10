@@ -23,7 +23,6 @@ function changeScreen(new_screen)
 end
 
 function love.load()
-    love.window.setFullscreen(false)
     if arg[#arg] == "-debug" then
         -- if your game is invoked with "-debug" (zerobrane does this by default)
         -- invoke the debugger
@@ -57,10 +56,15 @@ function love.load()
         )
     end
 
-    if mobile == true then love.window.setFullscreen(true) end
-
-    actualizaVariablesEscalado(window_width, window_height)
-
+    if mobile == true then
+        love.window.setFullscreen(true)
+        local _, _, flags = love.window.getMode()
+        local width, height = love.window.getDesktopDimensions(flags.display)
+        actualizaVariablesEscalado(width, height)
+    else
+        actualizaVariablesEscalado(window_width, window_height)
+    end
+    
     math.randomseed(os.time()) -- NOTE: Quizá redundante, parece que Love ya inicializa la semilla random automáticamente
 
     -- atlas: la textura que contiene todas las imágenes
