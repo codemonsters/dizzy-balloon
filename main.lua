@@ -59,11 +59,9 @@ function love.load()
     if mobile == true then
         love.window.setFullscreen(true)
         local _, _, flags = love.window.getMode()
-        local width, height = love.window.getDesktopDimensions(flags.display)
-        actualizaVariablesEscalado(width, height)
-    else
-        actualizaVariablesEscalado(window_width, window_height)
-    end
+        local window_width, window_height = love.window.getDesktopDimensions(flags.display)
+    end  
+    actualizaVariablesEscalado(window_width, window_height)
     
     math.randomseed(os.time()) -- NOTE: Quizá redundante, parece que Love ya inicializa la semilla random automáticamente
 
@@ -92,7 +90,7 @@ function love.draw()
     love.graphics.print(("RESOLUCIÓN PANTALLA %d: %d x %d"):format(flags.display, width, height), 0, 40)
     love.graphics.print("DESPLAZAMIENTO X:  " .. desplazamientoX .. "   DESPLAZAMIENTO Y: " .. desplazamientoY, 0, 60)
     love.graphics.print("FACTOR ESCALA:  " .. factorEscala, 0, 80)
-
+    --love.graphics.print("window_width: " .. window_width .. "  " .. "window_height: " .. window_height, 0, 100)
 end
 
 function love.resize(w, h)

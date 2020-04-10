@@ -59,7 +59,7 @@ end
 function menu.draw()
     if screenButtons.selectedButton == 1 then
         suit.setHovered('Jugar')
-        print('hovered')
+        --print('hovered')
     end
 
     love.graphics.setBlendMode("alpha")
