@@ -37,6 +37,8 @@ function love.load()
 
     font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
 
+    if mobile == true then love.window.setFullscreen(true) end
+
     local window_width, window_height = love.window.getDesktopDimensions()
     if love.window.getFullscreen() then
         -- scale the window to match the screen resolution
@@ -55,8 +57,6 @@ function love.load()
             }
         )
     end
-
-    if mobile == true then love.window.setFullscreen(true) end
 
     actualizaVariablesEscalado(window_width, window_height)
 
