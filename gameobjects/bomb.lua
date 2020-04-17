@@ -142,6 +142,14 @@ local Bomb = {
                     end
                 end
 
+                -- la bomba ha de rebotar hacia abajo cuando choca contra un bloque que tiene encima
+                local headItems, headLen = self.world:queryRect(self.x, self.y - 1, self.width, 1)
+                if headLen > 0 then
+                    if self.vy < 0 then
+                        self.vy = 0
+                    end
+                end
+
                 -- explosión tras tiempo máximo
                 self.elapsed_time = self.elapsed_time + dt
                 if self.elapsed_time > 2.345 then

@@ -163,19 +163,23 @@ game.states = {
                     x, y = game.currentLevel.player.x, game.currentLevel.player.y
                     if fireInitialDirection == "down" then
                         if not game.currentLevel.player.not_supported then
-                            game.currentLevel.player.x, game.currentLevel.player.y =
-                                game.currentLevel.world:move(
-                                game.currentLevel.player,
-                                game.currentLevel.player.x,
-                                game.currentLevel.player.y - game.currentLevel.bomb.height * 1.05
-                            )
-                            game.currentLevel.bomb:launch(
-                                x,
-                                y,
-                                fireInitialDirection,
-                                game.currentLevel.player:vx(),
-                                game.currentLevel.player:vy()
-                            )
+                            --comprobamos si hay espacio suficiente para que el juador suba
+                            local items, len = game.currentLevel.world:queryRect(game.currentLevel.player.x, game.currentLevel.player.y - game.currentLevel.bomb.height * 1.05 - 1, game.currentLevel.player.width, game.currentLevel.bomb.height * 1.05 + 1)
+                            if len == 0 then
+                                game.currentLevel.player.x, game.currentLevel.player.y =
+                                    game.currentLevel.world:move(
+                                    game.currentLevel.player,
+                                    game.currentLevel.player.x,
+                                    game.currentLevel.player.y - game.currentLevel.bomb.height * 1.05
+                                )
+                                game.currentLevel.bomb:launch(
+                                    x,
+                                    y,
+                                    fireInitialDirection,
+                                    game.currentLevel.player:vx(),
+                                    game.currentLevel.player:vy()
+                                )
+                            end
                         end
                     elseif game.bombasAereas > 0 then
                         game.currentLevel.bomb:launch(

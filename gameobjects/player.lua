@@ -140,7 +140,7 @@ function Player:update(dt)
         self.invencible = false
     end
 
-    local feetHeight = 5
+    local feetHeight = 5    
     local items, lenColFeet = self.world:queryRect(self.x, self.y + self.height + 1, self.width, feetHeight) --detector de los pies del jugador
 
     --colisiones con los pies del jugador SOLO al bajar
