@@ -636,7 +636,7 @@ function game.keypressed(key, scancode, isrepeat)
         fireInitialDirection = "down"
     elseif key == "d" or key == "right" then
         game.currentLevel.player.right = true
-    elseif key == "space" then
+    elseif key == "space" and not game.pause then
         game.currentLevel.player:jump()
     elseif key == "v" then
         -- TODO: Eliminar esto en la versión pública
@@ -738,7 +738,7 @@ function love.touchreleased(id, x, y, dx, dy, pressure)
 end
 
 function game.pointerpressed(pointer)
-    if pointer.x > SCREEN_WIDTH / 2 then
+    if pointer.x > SCREEN_WIDTH / 2  and not game.pause then
         game.currentLevel.player:jump()
     end
 end
