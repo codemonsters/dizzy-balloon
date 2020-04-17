@@ -4,8 +4,27 @@ local PowerUps = require("misc/powerups")
 
 local AirFlyClass = copyTable(Enemy)
 
+--[[
+local AirFlyClass.new(name, x, y, world, game, direction)
+    local newObject = {
+        enemy = Enemy.new(name, x, y, world, game, direction)
+    }
+    return newObject
+end
+
+function AirFlyClass:draw()
+    self.enemy.draw()
+ed
+
+function AirFlyClass:update(dt)
+    self.enemy.update(dt)
+end
+--]]
+
 function AirFlyClass.newAirfly(name, x, y, world, game, direction)
     local newObject = AirFlyClass.new(name, x, y, world, game, direction)
+    setmetatable(newObject, AirFlyClass)
+    newObject:change_state(newObject.states.moving)
 
     --setmetatable(enemy, Enemy)
 
@@ -51,10 +70,8 @@ AirFlyClass.states.moving = {
         self.contadorDescanso = 0
         self.objetivo = {x = math.random(0, WORLD_WIDTH), y = math.random(0, WORLD_HEIGHT / 3)}
         self:setTarget(self.objetivo)
-        print("Load de AirFly")
     end,
     update = function(self, dt)
-        print(self.x .. " " .. self.y .. " ")
         self.contadorDescanso = self.contadorDescanso + dt
         if self.contadorDescanso > 5 then
             if self.contadorDescanso > 7 then
@@ -91,9 +108,23 @@ AirFlyClass.states.moving = {
                 self:setTarget(self.objetivo)
             end
         end
-    end,
-    draw = function(self, dt)
     end
 }
+
+function AirFlyClass:draw()
+    if self.dead then
+        return
+    end
+    love.graphics.setColor(1, 0, 0, 1)
+    love.graphics.draw(
+        self.image,
+        self.x,
+        self.y,
+        0,
+        self.width / self.image:getWidth(),
+        self.height / self.image:getHeight()
+    )
+    love.graphics.setColor(1, 1, 1, 1)
+end
 
 return AirFlyClass

@@ -79,7 +79,6 @@ game.states = {
             game.currentLevel.player:update(dt)
 
             for i, enemy in ipairs(game.currentLevel.enemies) do
-                print("actualizando: " .. enemy.name)
                 enemy:update(dt)
             end
 
