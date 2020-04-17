@@ -26,7 +26,7 @@ local circle = love.graphics.newImage("assets/images/old/circle.png")
 
 local game = {
     name = "Juego",
-    widgets = suit.new(require("menus/ourTheme"))
+    widgets = suit.new(require("../menus/ourTheme"))
 }
 
 local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
@@ -505,6 +505,21 @@ function game.update(dt)
     else
         game.state.update(game, dt)
     end
+
+    -- botón de pausa
+    local hud_margin = hud_width * 0.2
+    game.widgets.layout:reset(SCREEN_WIDTH - hud_width + hud_margin, hud_margin, hud_margin, hud_margin)
+    --game.widgets.layout:padding(0, SCREEN_WIDTH * 0.015)
+    local mouseX, mouseY = love.mouse.getPosition()
+    game.widgets:updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
+    if game.widgets:Button("MENU", {align='left', valign='top'}, game.widgets.layout:row(hud_width - hud_margin * 2, SCREEN_HEIGHT * 0.08)).hit then
+        if not game.pause then
+            played_ingame_menu_click = false
+            game.pause = true
+            music:pause()
+        end
+    end
+    -- fin botón de pausa
 end
 
 function game.draw()
@@ -530,6 +545,7 @@ function game.draw()
         love.graphics.draw(circle, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
         love.graphics.setColor(255, 255, 255)
         --el botón de pausa
+        --[[
         love.graphics.setColor(255, 255, 255)
         love.graphics.rectangle(
             "line",
@@ -545,6 +561,7 @@ function game.draw()
             dimensionesBotonPausa / 3,
             dimensionesBotonPausa
         )
+        --]]
     end
 
     love.graphics.setCanvas(gamepadCanvas) -- canvas del gamepad
@@ -571,14 +588,7 @@ function game.draw()
     love.graphics.draw(gamepadCanvas, 0, 0, 0, 1, 1)
 
     -- botón de pausa
-    --game.widgets.layout:reset(hud_width, SCREEN_HEIGHT)
-    game.widgets.layout:reset(20, 20, 20, 20)
-    --game.widgets.layout:padding(0, SCREEN_WIDTH * 0.015)
-    if game.widgets:Button("MENU", game.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
-        played_ingame_menu_click = false
-        game.pause = true
-        music:pause()
-    end
+    game.widgets:draw()
     love.graphics.circle("fill", 10, 10, 10)
     -- fin botón de pausa
 
