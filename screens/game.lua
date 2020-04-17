@@ -17,8 +17,8 @@ local jugadorpuedesaltar = true
 local jugadorquieremoverse = false
 local BlockClass = require("gameobjects/block")
 local gameFilter
-local temporizador_respawn_enemigo = 0
-local TIEMPO_RESPAWN_ENEMIGO = 1
+local enemyRespawnTimer = 0
+local ENEMYRESPAWNTIMER = 1
 local inicioCambioNivel = 0
 local finalCambioNivel = 5
 local state
@@ -109,8 +109,8 @@ game.states = {
                 game.vidaperdida()
             end
             if game.currentLevel.max_enemies > #game.currentLevel.enemies then
-                temporizador_respawn_enemigo = temporizador_respawn_enemigo + dt
-                if temporizador_respawn_enemigo > TIEMPO_RESPAWN_ENEMIGO then
+                enemyRespawnTimer = enemyRespawnTimer + dt
+                if enemyRespawnTimer > ENEMYRESPAWNTIMER then
                     if math.random() > 0.5 then
                         enemigo =
                             EnemyClass.new(
@@ -133,7 +133,7 @@ game.states = {
                         )
                     end
                     table.insert(game.currentLevel.enemies, enemigo)
-                    temporizador_respawn_enemigo = 0
+                    enemyRespawnTimer = 0
                 end
             end
 
@@ -228,6 +228,10 @@ game.states = {
                 for i, mushroom in ipairs(game.currentLevel.mushrooms) do
                     mushroom:draw()
                 end
+                
+                love.graphics.setColor(255, 255, 255)
+                love.graphics.rectangle("line", game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
+            
             end
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
 
@@ -451,11 +455,25 @@ end
 
 function game.loadlevel(level)
     level.player = PlayerClass.new(level.world, game)
+    level.player.x = 100
+    level.player.y = 100
     level.bomb = BombClass.new("Bomb", level.world, game)
-    local borderWidth = 50
+    if level.music ~= nil then
+        level.music = love.audio.newSource("assets/music/" .. level.music, "stream")
+        level.music:setLooping(true)
+    end
+
+    local borderWidth = 150
     table.insert(
         level.blocks,
-        BlockClass.new("Suelo", -borderWidth, WORLD_HEIGHT, WORLD_WIDTH + 2 * borderWidth, borderWidth, level.world)
+        BlockClass.new(
+            "Suelo",
+            -borderWidth,
+            WORLD_HEIGHT,
+            WORLD_WIDTH + 2 * borderWidth,
+            borderWidth,
+            level.world
+        )
     )
     table.insert(
         level.blocks,

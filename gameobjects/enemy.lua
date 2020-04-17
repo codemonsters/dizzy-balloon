@@ -6,7 +6,7 @@ local Enemy = {
     riders = nil,
     width = 40,
     height = 40,
-    moduloVelocidad = math.sqrt(12), -- velocidad inicial (2 unidades en el eje x y 2 en el y a 45º)
+    moduloVelocidad = 5, -- velocidad inicial (2 unidades en el eje x y 2 en el y a 45º)
     velocidad_x = 0,
     velocidad_y = 0,
     isEnemy = true,
@@ -38,7 +38,7 @@ local Enemy = {
                     if col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then -- si se pone "if not other.col.isBomb" then da un error cuando el enemigo choca con algo, puede ser problema de la bomba no teniendo un collision_filter o algo por el estilo
                         self:rebotar(col)
                     elseif col.other.isPlayer then
-                        col.other:empujar({x = self.velocidad_x * 2, y = self.velocidad_y * 2}, self)
+                        col.other:empujar({x = self.velocidad_x - col.other:vx() * dt, y = 0}, self)
                     end
                 end
             end,
@@ -68,14 +68,14 @@ local Enemy = {
                             self.lastXvelocity = self.velocidad_x
                             self.velocidad_x = 0
                             self.velocidad_y = 4
-                        else -- colisión llendo hacia abajo
+                        else -- colisión yendo hacia abajo
                             self.upBounceCounter = self.upBounceCounter + 1
                             self.horizontal = true
                             self.velocidad_x = -self.lastXvelocity
                             self.velocidad_y = 0
                         end
                     elseif col.other.isPlayer then
-                        col.other:empujar({x = self.velocidad_x * 2, y = self.velocidad_y * 2}, self)
+                        col.other:empujar({x = self.velocidad_x - col.other:vx() * dt, y = 0}, self)
                     end
                 end
 
@@ -137,16 +137,7 @@ function Enemy:update(dt)
     if len > 0 then
         local col = cols[1]
         if col.isPlayer then
-            col:empujar({x = self.velocidad_x * 2, y = 0}, self)
-        end
-    end
-
-    --choques con el eje y
-    cols, len = self.world:queryRect(self.x, self.movSigy, self.width, self.height)
-    if len > 0 then
-        local col = cols[1]
-        if col.isPlayer then
-            col:empujar({x = 0, y = self.velocidad_y * 2}, self)
+            col:empujar({x = self.velocidad_x - col:vx() * dt, y = 0}, self)
         end
     end
 
