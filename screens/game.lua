@@ -458,11 +458,9 @@ function game.loadlevel(level)
     level.player.x = 100
     level.player.y = 100
     level.bomb = BombClass.new("Bomb", level.world, game)
-    if level.music ~= nil then
-        level.music = love.audio.newSource("assets/music/" .. level.music, "stream")
-        level.music:setLooping(true)
-    end
-
+    loadAndStartMusic(game.currentLevel.music)
+    game.pause = false
+    played_ingame_menu_click = false
     local borderWidth = 150
     table.insert(
         level.blocks,
