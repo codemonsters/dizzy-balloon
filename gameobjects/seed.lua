@@ -61,6 +61,7 @@ local SeedClass = {
             },
             load = function(self)
                 self.vy = 25
+                self.initY = self.y
                 self.current_frame = 1
                 self.elapsed_time = 0
                 self.collisions_filter = function(item, other)
