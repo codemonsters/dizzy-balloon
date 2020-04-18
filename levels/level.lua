@@ -2,6 +2,7 @@ local BlockClass = require("gameobjects/block")
 local SkyClass = require("gameobjects/sky")
 local GoalClass = require("gameobjects/goal")
 local LimitClass = require("gameobjects/limit")
+local AirflyClass = require("gameobjects/airfly")
 local bump = require "libraries/bump/bump"
 
 local LevelClass = {
@@ -20,11 +21,30 @@ function LevelClass.new(levelDefinition, game)
     level.max_enemies = level.levelDefinition.max_enemies
     level.music = level.levelDefinition.music
     level.time = level.levelDefinition.time
+    level.airflies = level.levelDefinition.airflies
     level.blocks = {}
     for _, block in ipairs(level.levelDefinition.blocks) do
         table.insert(level.blocks, BlockClass.new(block.name, block.x, block.y, block.width, block.height, level.world))
     end
     level.enemies = {}
+
+    if level.levelDefinition.airflies then
+        print("Número de moscas: " .. level.levelDefinition.airflies)
+        for i = 1, level.levelDefinition.airflies, 1 do
+            print("Creando nueva MOSCA")
+            airfly =
+                AirflyClass.newAirfly(
+                "airfly",
+                AirflyClass.width,
+                AirflyClass.height,
+                level.world,
+                game,
+                math.random() * 360
+            )
+            table.insert(level.enemies, airfly)
+        end
+    end
+
     level.mushrooms = {}
     level.balloons = {}
     level.sky = SkyClass.new(level.world, level.game, level)

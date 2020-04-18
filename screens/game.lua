@@ -232,10 +232,10 @@ game.states = {
                 for i, mushroom in ipairs(game.currentLevel.mushrooms) do
                     mushroom:draw()
                 end
-                
+
                 love.graphics.setColor(255, 255, 255)
                 love.graphics.rectangle("line", game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
-            
+
             end
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
 

@@ -5,7 +5,8 @@ local LevelDefinitions = {
         id = 1,
         name = "Nivel 1",
         blocks = {},
-        max_enemies = 1,
+        max_enemies = 2,
+        airflies = 1,
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
         music = {
             file = "stage1.mp3",
@@ -52,6 +53,7 @@ local LevelDefinitions = {
             {name = "Bloque 6", x = 300, y = 695, width = 100, height = 25}
         },
         max_enemies = 4,
+        airflies = 3,
         player_initial_respawn_position = {1, WORLD_HEIGHT - PlayerClass.height},
         music = {
             file = "stage3.mp3",
