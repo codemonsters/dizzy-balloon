@@ -28,7 +28,7 @@ function menu.update(dt)
             if not menu.closing then
                 menu.closing = true
                 sounds.play(sounds.uiRollOver)
-                    menu.menuManager:changeMenuTo(
+                menu.menuManager:changeMenuTo(
                     nil,
                     function()
                         changeScreen(require("screens/menu"))

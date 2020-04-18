@@ -1,5 +1,4 @@
 local bump = require "libraries/bump/bump"
-local game = {name = "Juego"}
 local PlayerClass = require("gameobjects/player")
 local EnemyClass = require("gameobjects/enemy")
 local SkyClass = require("gameobjects/sky")
@@ -24,6 +23,11 @@ local finalCambioNivel = 5
 local state
 local gamepad = love.graphics.newImage("assets/images/old/gamepad.png")
 local circle = love.graphics.newImage("assets/images/old/circle.png")
+
+local game = {
+    name = "Juego",
+    widgets = suit.new(require("../menus/ourTheme"))
+}
 
 local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
 local hud_height = SCREEN_HEIGHT
@@ -521,6 +525,21 @@ function game.update(dt)
     else
         game.state.update(game, dt)
     end
+
+    -- botón de pausa
+    local hud_margin = hud_width * 0.2
+    game.widgets.layout:reset(SCREEN_WIDTH - hud_width + hud_margin, hud_margin, hud_margin, hud_margin)
+    --game.widgets.layout:padding(0, SCREEN_WIDTH * 0.015)
+    local mouseX, mouseY = love.mouse.getPosition()
+    game.widgets:updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
+    if game.widgets:Button("MENU", {align='left', valign='top'}, game.widgets.layout:row(hud_width - hud_margin * 2, SCREEN_HEIGHT * 0.08)).hit then
+        if not game.pause then
+            played_ingame_menu_click = false
+            game.pause = true
+            music:pause()
+        end
+    end
+    -- fin botón de pausa
 end
 
 function game.draw()
@@ -546,10 +565,23 @@ function game.draw()
         love.graphics.draw(circle, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
         love.graphics.setColor(255, 255, 255)
         --el botón de pausa
+        --[[
         love.graphics.setColor(255, 255, 255)
-        love.graphics.rectangle("line", hud_width - dimensionesBotonPausa, 0, dimensionesBotonPausa / 3, dimensionesBotonPausa)        
-        love.graphics.rectangle("line", hud_width - dimensionesBotonPausa * (1/3), 0, dimensionesBotonPausa / 3, dimensionesBotonPausa)        
-
+        love.graphics.rectangle(
+            "line",
+            hud_width - dimensionesBotonPausa,
+            0,
+            dimensionesBotonPausa / 3,
+            dimensionesBotonPausa
+        )
+        love.graphics.rectangle(
+            "line",
+            hud_width - dimensionesBotonPausa * (1 / 3),
+            0,
+            dimensionesBotonPausa / 3,
+            dimensionesBotonPausa
+        )
+        --]]
     end
 
     love.graphics.setCanvas(gamepadCanvas) -- canvas del gamepad
@@ -574,6 +606,11 @@ function game.draw()
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(hudCanvas, SCREEN_WIDTH - hud_width, 0, 0, 1, 1)
     love.graphics.draw(gamepadCanvas, 0, 0, 0, 1, 1)
+
+    -- botón de pausa
+    game.widgets:draw()
+    love.graphics.circle("fill", 10, 10, 10)
+    -- fin botón de pausa
 
     love.graphics.pop()
 
@@ -619,7 +656,7 @@ function game.keypressed(key, scancode, isrepeat)
         fireInitialDirection = "down"
     elseif key == "d" or key == "right" then
         game.currentLevel.player.right = true
-    elseif key == "space" then
+    elseif key == "space" and not game.pause then
         game.currentLevel.player:jump()
     elseif key == "v" then
         -- TODO: Eliminar esto en la versión pública
@@ -703,7 +740,6 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
 
     if x > SCREEN_WIDTH / 2 then
         rightFinger:touchpressed(x, y)
-    
     else
         jugadorquieremoverse = true
         --jugadorquieredisparar = true
@@ -712,7 +748,6 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
 end
 
 function love.touchreleased(id, x, y, dx, dy, pressure)
-
     if x > SCREEN_WIDTH / 2 then
         rightFinger:touchreleased(dx, dy)
     else
@@ -723,7 +758,7 @@ function love.touchreleased(id, x, y, dx, dy, pressure)
 end
 
 function game.pointerpressed(pointer)
-    if pointer.x > SCREEN_WIDTH / 2 then
+    if pointer.x > SCREEN_WIDTH / 2  and not game.pause then
         game.currentLevel.player:jump()
     end
 end
