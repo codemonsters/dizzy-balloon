@@ -40,11 +40,13 @@ Inicialmente necesitaremos clonar el repositorio Git en nuestro equipo:
     * O bien usamos un programa con interfaz gráfica (SmartSVN, GitKraken...)
 3. Abrimos la *carpeta* en Visual Studio Code
 
-### Trabajando con branches (frecuentemente una branch implica una nueva característica):
+### Trabajando con ramas
+
+Con frecuencia cuando comencemos a desarrollar una nueva característica del juego nos interesará crear una nueva rama (branch):
 
 * Para crear una nueva rama y comenzar a utilizarla: ```git checkout -b nombre_rama```
-* Hacemos tantos commit y push dentro la rama como sea necesario
-* Cuando consideremos el trabajo acabado mezclamos/publicamos los cambios en la rama principal (master): ```git checkout master; git merge nombre_rama```
+* Podemos hacer tantos commit y push dentro la rama como sea necesario
+* Cuando consideremos el trabajo está acabado mezclamos/publicamos los cambios en la rama principal (master): ```git checkout master; git merge nombre_rama```
 
 ### Problemas con el usuario
 
