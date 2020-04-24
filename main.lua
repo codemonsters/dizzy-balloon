@@ -34,7 +34,8 @@ function love.load()
 
     love.graphics.setDefaultFilter("nearest", "linear") -- Cambiamos el filtro usado durante el escalado
 
-    font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
+    -- font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
+    font_hud = love.graphics.newFont("assets/fonts/unlearne.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
 
     if mobile == true then
         love.window.setFullscreen(true)
