@@ -12,14 +12,21 @@ local Player = {
     isPlayer = true,
     vx = function(self)
         local vx_factor = 0
+        local airSlow = 1
         if self.left then
+            if self.jumpRight then
+                airSlow = 0.5
+            end
             vx_factor = -1
         end
         if self.right then
+            if self.jumpLeft then
+                airSlow = 0.5
+            end
             vx_factor = 1
         end
 
-        return vx_factor * 180 * self.vmultiplier
+        return vx_factor * 180 * self.vmultiplier * airSlow
     end,
     vy = function(self)
         return -self.velocidad_y * 80 * self.ymultiplier -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
@@ -121,6 +128,7 @@ function Player.new(world, game)
     player.y = WORLD_HEIGHT - Player.height
     player.velocidad_y = Player.velyini --la velocidad y debe ser negativa para que haya diferencia en el movimiento de eje y para saber cuando aplicar aceleración
     player.left, player.right, player.up, player.down, player.not_supported = false, false, false, false, false
+    player.jumpLeft, player.jumpRight = false, false
     player.offset = 0
     player.bitmap_direction = 1
     player.invencible = false
@@ -210,6 +218,7 @@ function Player:update(dt)
             -- self.state = self.states.standing
             self.change_state(self, Player.states.standing)
         end
+        self.jumpLeft, self.jumpRight = false, false
     end
 
     self.state.update(self, dt)
@@ -264,6 +273,9 @@ function Player:jump()
     if not self.not_supported then
         self.not_supported = true
         self.velocidad_y = 8
+        if self.left then self.jumpLeft = true
+        elseif self.right then self.jumpRight = true
+        end
 
         if self.montado then
             self:desmontar()
