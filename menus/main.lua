@@ -1,19 +1,13 @@
 local menu = {
     name = "main",
-    widgets = suit.new(require("menus/ourTheme"))
-}
-
-local screenButtons = {
-    selectedButton = 1,
-    button1 = 'Jugar',
-    button2 = "Preferencias",
-    button3 = 'Instrucciones',
-    button4 = 'Salir'
+    widgets = suit.new(require("menus/ourTheme")),widgetsNew = {}
 }
 
 function menu.load(menuManager, screen)
     menu.menuManager = menuManager
     menu.screen = screen
+    local widgetsClass = require("misc/widgets")
+    table.insert(menu.widgetsNew, widgetsClass.newButton("Jugar", SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.2, SCREEN_WIDTH * 0.8, SCREEN_WIDTH * 0.1))
 end
 
 function menu.update(dt)
@@ -22,9 +16,9 @@ function menu.update(dt)
     menu.widgets.layout:padding(0, SCREEN_WIDTH * 0.015)
     local mouseX, mouseY = love.mouse.getPosition()
 
-    menu.widgets:updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
+    -- menu.widgets:updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
 
-    menu.widgets:Label("Dizzy Balloon", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.2))
+    -- menu.widgets:Label("Dizzy Balloon", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.2))
 
     if menu.widgets:Button("Jugar", menu.widgets.layout:row(SCREEN_WIDTH * .6, SCREEN_HEIGHT * 0.12)).hit then
         if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
@@ -58,13 +52,13 @@ function menu.update(dt)
 end
 
 function menu.draw()
-    if screenButtons.selectedButton == 1 then
-        suit.setHovered('Jugar')
-        print('hovered')
-    end
-
     love.graphics.setBlendMode("alpha")
-    menu.widgets:draw()
+    love.graphics.printf( "Dizzy Balloon", font_title, 0, SCREEN_HEIGHT * 0.1, 1280, "center")
+    for i = 1, #menu.widgetsNew do
+        menu.widgetsNew[i].draw()
+    end
+    --menu.widgets:draw()
+
 end
 
 function menu.keypressed(key, scancode, isrepeat)
