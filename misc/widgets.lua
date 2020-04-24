@@ -22,8 +22,10 @@ function widgetClass.newButton(label, x, y, width, height)
         love.graphics.circle("fill", object.x + object.width - widgetClass.cornerRadius, object.y + object.height - widgetClass.cornerRadius, widgetClass.cornerRadius)
         -- texto
         love.graphics.setColor(1, 1, 1)
-
-        love.graphics.printf(object.label, widgetClass.fontButtons, object.x, object.y, object.width, "center")
+        local textWidth = widgetClass.fontButtons:getWidth(object.label)
+        local textHeight = widgetClass.fontButtons:getHeight()
+        love.graphics.setFont(widgetClass.fontButtons)
+        love.graphics.print(object.label, object.x + (object.width - textWidth) / 2, object.y + (object.height - textHeight) / 2)
     end
     return object
 end
