@@ -186,7 +186,7 @@ function Player:update(dt)
     end
 
     if self.not_supported then -- el jugador está en el aire, ya sea subiendo o bajando
-        self.velocidad_y = self.velocidad_y - 9.8 * dt
+        self.velocidad_y = self.velocidad_y - 20 * dt
         self.y = ydespues
     end
 
@@ -263,7 +263,7 @@ end
 function Player:jump()
     if not self.not_supported then
         self.not_supported = true
-        self.velocidad_y = 5
+        self.velocidad_y = 8
 
         if self.montado then
             self:desmontar()

@@ -6,7 +6,8 @@ local Enemy = {
     riders = nil,
     width = 40,
     height = 40,
-    moduloVelocidad = 5, -- velocidad inicial (2 unidades en el eje x y 2 en el y a 45º)
+    moduloVelocidadInicial = 6,
+    moduloVelocidad = 6,
     velocidad_x = 0,
     velocidad_y = 0,
     isEnemy = true,
@@ -47,7 +48,7 @@ local Enemy = {
         },
         swiping = {
             load = function(self)
-                self.initalVel = self.moduloVelocidad
+                self.initalVel = self.moduloVelocidadInicial
                 self.horizontal = true
                 self.lastXvelocity = self.initalVel
                 self.yAfterDiving = 0
@@ -66,8 +67,11 @@ local Enemy = {
                             self.horizontal = false
                             self.yAfterDiving = self.y
                             self.lastXvelocity = self.velocidad_x
+                            -- aumenta la velocidad cada choque lateral
+                            self.moduloVelocidad = self.moduloVelocidad + (self.moduloVelocidad /10)
+                            if self.moduloVelocidad > 13 then self.moduloVelocidad = 13 end -- máximo
                             self.velocidad_x = 0
-                            self.velocidad_y = 4
+                            self.velocidad_y = self.moduloVelocidad
                         else -- colisión yendo hacia abajo
                             self.upBounceCounter = self.upBounceCounter + 1
                             self.horizontal = true
@@ -83,13 +87,18 @@ local Enemy = {
                     if math.abs(self.yAfterDiving - self.y) >= self.height then
                         self.upBounceCounter = 0 -- reseteamos si el enemigo es capaz de bajar
                         self.horizontal = true
-                        self.velocidad_x = -self.lastXvelocity
+                        if self.lastXvelocity < 0 then
+                            self.velocidad_x = self.moduloVelocidad
+                        else
+                            self.velocidad_x = -self.moduloVelocidad
+                        end
                         self.velocidad_y = 0
                     end
                 end
 
                 if self.upBounceCounter == 3 then
                     self.direction = 45
+                    self.moduloVelocidad = self.moduloVelocidadInicial -- la velocidad vuelve a normal
                     self:change_state(self.states.moving)
                 end
             end,
