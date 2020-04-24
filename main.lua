@@ -68,7 +68,7 @@ function love.load()
     atlasOld = love.graphics.newImage("assets/images/atlasOld.png") -- Créditos: Grafixkid (https://opengameart.org/content/arcade-platformer-assets)
     atlas = love.graphics.newImage("assets/images/atlas.png")
     quads = require("misc/quads") -- quads de todos los elementos incluidos en el atlas
-
+    enablemusic = true
     changeScreen(require("screens/menu"))
     log.info("Juego cargado")
 end
@@ -121,18 +121,20 @@ end
 
 -- Inicia la música. El argumento music es una tabal con dos claves (file y volume), tal y com se puede definir en el nivel
 function loadAndStartMusic(m)
-    if music then
-        music:stop()
-    end
-    if m then
-        music = love.audio.newSource("assets/music/" .. m.file, "stream")
-        music:setLooping(true)
-        if m.volume then
-            music:setVolume(m.volume)
+    if enablemusic then
+        if music then
+            music:stop()
         end
-        music:play()
-    else
-        log.debug("loadAndStartMusic(m): m is nil")
+        if m then
+            music = love.audio.newSource("assets/music/" .. m.file, "stream")
+            music:setLooping(true)
+            if m.volume then
+                music:setVolume(m.volume)
+            end
+            music:play()
+        else
+            log.debug("loadAndStartMusic(m): m is nil")
+        end
     end
 end
 

@@ -6,7 +6,6 @@ local menu = {
 function menu.load(menuManager, screen)
     menu.menuManager = menuManager
     menu.screen = screen
-    menu.musicOn = false
 end
 
 function menu.update(dt)
@@ -39,12 +38,12 @@ function menu.update(dt)
         ).hit
      then
         if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
-            if menu.musicOn then
-                music:play()
-                menu.musicOn = false
-            else
+            if enablemusic then
                 music:pause()
-                menu.musicOn = true
+                enablemusic = false
+            else
+                music:play()
+                enablemusic = true
             end
         end
     end

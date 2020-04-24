@@ -60,7 +60,7 @@ local menuManager =
 
 function game.continue()
     game.pause = false
-    music:play()
+    if enablemusic then music:play() end
 end
 
 if mobile then

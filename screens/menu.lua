@@ -68,7 +68,6 @@ local menu = {
 function menu.load()
     -- música
     loadAndStartMusic({file = "menu.mp3", volume = 1})
-
     -- animaciones
     world = bump.newWorld(50)
     jugador = PlayerClass.new(world, nil)

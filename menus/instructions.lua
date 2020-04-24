@@ -6,7 +6,6 @@ local menu = {
 function menu.load(menuManager, screen)
     menu.menuManager = menuManager
     menu.screen = screen
-    menu.musicOn = false
 end
 
 function menu.update(dt)
