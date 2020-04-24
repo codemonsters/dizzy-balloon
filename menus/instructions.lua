@@ -8,25 +8,23 @@ function menu.load(menuManager, screen)
     menu.screen = screen
     menu.musicOn = false
     
-    tutorialStarted = false
     tutorialPage = 1
     tutorialPages = {
-        "Comenzar tutorial",
+        "Presiona siguiente para comenzar el tutorial",
         "Tu objetivo es llegar al cielo sin ser eliminado",
         "Puedes moverte hacia los lados, saltar y lanzar bombas", 
-        "Puedes matar a los enemigos con bombas, y ellos pueden matarte a ti de aplastamiento",
-        "Si matas a un enemigo, la semilla que tenían encima caerá al suelo",
-        "Estas semillas pueden ser incubadas al posarse sobre ellas, y harán crecer un globo",
-        "Cuando te subas a estos globos, podrás conducirlos libremente por todo el nivel ", 
-        "Tu habilidad de lanzar bombas no estará disponible durante los viajes en globo", 
+        "Puedes matar a los enemigos con bombas, y ellos pueden matarte aplastándote",
+        "Si matas a un enemigo, la semilla que había sobre él caerá al suelo",
+        "Estas semillas pueden ser incubadas posándose en ellas para hacer crecer un globo",
+        "Cuando te subas a uno de estos globos, podrás conducirlos libremente", 
+        "Tu habilidad de lanzar bombas no estará disponible mientras montes en globo", 
         "Presta atención a las semillas que causan reacciones especiales al tocar el suelo",
-        "Las bombas que no hayan detonado correctamente se convertirán en setas", 
-        "Ten cuidado con la zona de explosión de tus propias bombas",  
+        "Las bombas que no hayan detonado exitosamente se convertirán en setas", 
+        "Ten cuidado con tus propias bombas",  
         "El espacio mínimo que necesitas en el techo para pasar al siguiente nivel es de tres semillas",
-        " Algunos niveles tienen plataformas a las que puedes subirte, y contra las que pueden aplastarte", 
+        "Algunos niveles tienen plataformas a las que puedes subirte", 
         "Pásalo bien",  
         }
-
 end
 
 function menu.update(dt)
@@ -36,15 +34,20 @@ function menu.update(dt)
     
     menu.widgets:updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
 
-
-    if menu.widgets:Button(tutorialPages[tutorialPage], menu.widgets.layout:down(SCREEN_WIDTH * .8, SCREEN_HEIGHT * 0.4)).hit then
-       if tutorialPage < 14 then
-            tutorialPage = tutorialPage + 1
-       else
-            tutorialPage = 1
-       end
+    if menu.widgets:Button(tutorialPages[tutorialPage], menu.widgets.layout:down(SCREEN_WIDTH * .8, SCREEN_HEIGHT * 0.45)).hit then
     end
 
+    if menu.widgets:Button("Anterior", menu.widgets.layout:down(SCREEN_WIDTH * .4, SCREEN_HEIGHT * 0.11)).hit then
+        if tutorialPage > 1 then
+            tutorialPage = tutorialPage - 1
+        end
+    end
+
+    if menu.widgets:Button("Siguiente", menu.widgets.layout:right(SCREEN_WIDTH * .4, SCREEN_HEIGHT * 0.11)).hit then
+        if tutorialPage < 14 then
+            tutorialPage = tutorialPage + 1
+        end
+    end
 
     if
         menu.widgets:Button(
@@ -56,7 +59,7 @@ function menu.update(dt)
                     active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}}
                 }
             },
-            menu.widgets.layout:down(SCREEN_WIDTH * .8, SCREEN_HEIGHT * 0.11)
+            menu.widgets.layout:down(SCREEN_WIDTH * .4, SCREEN_HEIGHT * 0.11)
         ).hit
      then
         if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
