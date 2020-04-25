@@ -36,6 +36,7 @@ function love.load()
 
     font_title = love.graphics.newFont("assets/fonts/edunline.ttf", 80)
     -- font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
+    font_buttons = love.graphics.newFont("assets/fonts/unlearne.ttf", 60) -- https://www.1001fonts.com/
     font_hud = love.graphics.newFont("assets/fonts/unlearne.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
 
     if mobile == true then
