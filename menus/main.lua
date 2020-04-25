@@ -1,5 +1,5 @@
 local menu = {
-    name = "main",
+    name = "main"
 }
 
 function menu.load(menuManager, screen)
