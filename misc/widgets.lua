@@ -1,6 +1,9 @@
 local widgetClass = {
     cornerRadius = 10,
-    defaultFontButtons = font_title
+    defaultFontButtons = font_title,
+    alphaNotSelected = 0.6,
+    alphaSelected = 0.85
+
 }
 
 -- Crea un botón nuevo. 'font' es opcional, si no se recibe uno se utiliza el font por defecto definido en widgetClass
@@ -25,7 +28,8 @@ function widgetClass.newButton(label, x, y, width, height, callback, font)
         -- circulo de la esquina inferior derecha
         love.graphics.circle("fill", object.width - widgetClass.cornerRadius, object.height - widgetClass.cornerRadius, widgetClass.cornerRadius)
         -- texto
-        love.graphics.setColor(1, 1, 1, 1)
+        --love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.setColor(0.753 * 1.4, 0.3, 0.427 * 1.4, 1)
         local textWidth = object.font:getWidth(object.label)
         local textHeight = object.font:getHeight()
         love.graphics.setFont(object.font)
@@ -44,12 +48,12 @@ function widgetClass.newButton(label, x, y, width, height, callback, font)
     end
     object.update = function()
         if object.mouseOver() then
-            object.alpha = 1
+            object.alpha = widgetClass.alphaSelected
             if love.mouse.isDown(1) then
                 object.callback()
             end
         else
-            object.alpha = 0.75
+            object.alpha = widgetClass.alphaNotSelected
         end
     end
     object.draw = function()

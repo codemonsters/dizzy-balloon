@@ -47,7 +47,7 @@ function menu.load(menuManager, screen)
                     os.exit()
                 end
             end
-         }
+        }
     }
     menu.widgets = {}
     for i = 1, #buttons do
