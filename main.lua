@@ -1,5 +1,4 @@
 log = require("libraries/log/log") -- https://github.com/rxi/log.lua
-suit = require("libraries/suit")
 
 local SoundClass = require("sounds")
 sounds = SoundClass.new()

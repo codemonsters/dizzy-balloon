@@ -11,6 +11,7 @@ function widgetClass.newButton(label, x, y, width, height, callback, font)
     local object = { }
     object.label, object.x, object.y, object.width, object.height, object.callback = label, x, y, width, height, callback
     object.font = font or widgetClass.defaultFontButtons
+    object.justChanged = true  -- flag que evita múltiples cambios de estado mientras mantenemos pulsado el botón del mouse
     -- dibujamos el botón en un canvas y guardamos el canvas como imagen. Utilizaremos esta imagen para dibujar el botón tantas veces como se solicite
     local objectCanvas = love.graphics.newCanvas(object.width, object.height)
     love.graphics.setCanvas(objectCanvas)
@@ -49,8 +50,11 @@ function widgetClass.newButton(label, x, y, width, height, callback, font)
     object.update = function()
         if object.mouseOver() then
             object.alpha = widgetClass.alphaSelected
-            if love.mouse.isDown(1) then
+            if love.mouse.isDown(1) and not object.justChanged then
+                object.justChanged = true
                 object.callback()
+            elseif not love.mouse.isDown(1) then
+                object.justChanged = false
             end
         else
             object.alpha = widgetClass.alphaNotSelected

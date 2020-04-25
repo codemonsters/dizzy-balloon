@@ -15,13 +15,6 @@ function menu.load(menuManager, screen)
             labelOff = "Sonido desactivado",
             callback = function()
                 -- TODO: Añadir el código que se ejecutará cuando el botón cambia de un estado a otro
-                --[[
-                if self.on then
-                    self.on = false
-                else
-                    self.on = true
-                end
-                --]]
             end,
         },
         {
