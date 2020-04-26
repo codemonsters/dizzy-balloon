@@ -1,42 +1,40 @@
 local menu = {
     name = "instructions",
-    widgets = suit.new(require("menus/ourTheme"))
 }
 
 function menu.load(menuManager, screen)
     menu.menuManager = menuManager
     menu.screen = screen
+
+    -- creamos los botones del menú
+    local widgetsClass = require("misc/widgets")
+    local buttons = {
+        {
+            label = "Volver",
+            callback = function()
+                if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+                    menu.menuManager:changeMenuTo(menu.menuManager:getMenu("main"))
+                end
+            end
+        }
+    }
+    menu.widgets = {}
+    for i = 1, #buttons do
+        table.insert(menu.widgets, widgetsClass.newButton(buttons[i].label, SCREEN_WIDTH * 0.15, 50 + i * SCREEN_HEIGHT * 0.16, SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.13, buttons[i].callback, font_buttons))
+    end
 end
 
 function menu.update(dt)
-    menu.widgets.layout:reset(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT * 0.4)
-    menu.widgets.layout:padding(SCREEN_HEIGHT * 0.015, SCREEN_WIDTH * 0.015)
-    local mouseX, mouseY = love.mouse.getPosition()
-
-    menu.widgets:updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
-
-    if
-        menu.widgets:Button(
-            "Volver",
-            {
-                color = {
-                    normal = {bg = {0, 0, 0, 0.15}, fg = {1, 1, 1}},
-                    hovered = {fg = {1, 1, 1}, bg = {0.5, 0.5, 0.5, 0.5}},
-                    active = {bg = {0, 0, 0, 0.5}, fg = {255, 255, 255}}
-                }
-            },
-            menu.widgets.layout:down(SCREEN_WIDTH * .8, SCREEN_HEIGHT * 0.11)
-        ).hit
-     then
-        if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
-            menu.menuManager:changeMenuTo(menu.menuManager:getMenu("main"))
-        end
+    for i = 1, #menu.widgets do
+        menu.widgets[i].update()
     end
 end
 
 function menu.draw()
     love.graphics.setBlendMode("alpha")
-    menu.widgets:draw()
+    for i = 1, #menu.widgets do
+        menu.widgets[i].draw()
+    end
 end
 
 return menu

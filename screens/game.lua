@@ -26,7 +26,6 @@ local circle = love.graphics.newImage("assets/images/old/circle.png")
 
 local game = {
     name = "Juego",
-    widgets = suit.new(require("../menus/ourTheme"))
 }
 
 local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
@@ -513,6 +512,22 @@ function game.load()
     loadAndStartMusic(game.currentLevel.music)
     game.pause = false
     played_ingame_menu_click = false
+
+    local widgetsClass = require("misc/widgets")
+    game.botonPausa = widgetsClass.newButton(
+        "Menú",
+        SCREEN_WIDTH - hud_width + 80,
+        SCREEN_HEIGHT * 0.05,
+        hud_width - 80 * 2,
+        50,
+        function()
+            if not game.pause then
+                played_ingame_menu_click = false
+                game.pause = true
+                music:pause()
+            end
+        end,
+        font_hud)
 end
 
 function game.update(dt)
@@ -524,22 +539,8 @@ function game.update(dt)
         end
     else
         game.state.update(game, dt)
+        game.botonPausa.update()
     end
-
-    -- botón de pausa
-    local hud_margin = hud_width * 0.2
-    game.widgets.layout:reset(SCREEN_WIDTH - hud_width + hud_margin, hud_margin, hud_margin, hud_margin)
-    --game.widgets.layout:padding(0, SCREEN_WIDTH * 0.015)
-    local mouseX, mouseY = love.mouse.getPosition()
-    game.widgets:updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
-    if game.widgets:Button("MENU", {align='left', valign='top'}, game.widgets.layout:row(hud_width - hud_margin * 2, SCREEN_HEIGHT * 0.08)).hit then
-        if not game.pause then
-            played_ingame_menu_click = false
-            game.pause = true
-            music:pause()
-        end
-    end
-    -- fin botón de pausa
 end
 
 function game.draw()
@@ -608,8 +609,7 @@ function game.draw()
     love.graphics.draw(gamepadCanvas, 0, 0, 0, 1, 1)
 
     -- botón de pausa
-    game.widgets:draw()
-    love.graphics.circle("fill", 10, 10, 10)
+    game.botonPausa.draw()
     -- fin botón de pausa
 
     love.graphics.pop()
