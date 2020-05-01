@@ -1,5 +1,5 @@
 log = require("libraries/log/log") -- https://github.com/rxi/log.lua
-
+config = require("misc/config") -- nuestros ajustes de configuración del juego
 local SoundClass = require("sounds")
 sounds = SoundClass.new()
 
