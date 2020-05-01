@@ -59,7 +59,7 @@ local menuManager =
 
 function game.continue()
     game.pause = false
-    if enablemusic then music:play() end
+    if config.get("music") == "on" then music:play() end
 end
 
 if mobile then
@@ -256,7 +256,7 @@ game.states = {
     },
     cambiandoDeNivel = {
         load = function(self) -- cargamos el siguiente nivel y dibujamos su primer frame
-            music:stop()
+            if music then music:pause() end
             sounds.play(sounds.levelUp)
             if LevelDefinitions[(game.currentLevel.id + 1)] == nil then
                 game.nextLevel = game.loadlevel(LevelClass.new(LevelDefinitions[1], game))
@@ -524,7 +524,7 @@ function game.load()
             if not game.pause then
                 played_ingame_menu_click = false
                 game.pause = true
-                music:pause()
+                if music then music:pause() end
             end
         end,
         font_hud)
@@ -643,7 +643,7 @@ function game.keypressed(key, scancode, isrepeat)
         --returnToMenu()
         played_ingame_menu_click = false
         game.pause = true
-        music:pause()
+        if music then music:pause() end
     elseif key == "w" or key == "up" then
         game.currentLevel.player.up = true
         fireRequested = true
@@ -735,7 +735,7 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
     if x > window_width - dimensionesBotonPausa and y < dimensionesBotonPausa then
         played_ingame_menu_click = false
         game.pause = true
-        music:pause()
+        if music then music:pause() end
     end
 
     if x > SCREEN_WIDTH / 2 then

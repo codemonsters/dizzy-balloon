@@ -68,13 +68,26 @@ function widgetClass.newButton(label, x, y, width, height, callback, font)
 end
 
 -- botón con dos estados
-function widgetClass.newToggleButton(labelOn, labelOff, x, y, width, height, callback, font)
-    local object = {
+function widgetClass.newToggleButton(labelOn, labelOff, x, y, width, height, initialstatus, callback, font)
+    local object = {   
         on = true
     }
-    object.callback = callback
-    object.buttonOn = widgetClass.newButton(labelOn, x, y, width, height, function() object.on = not object.on end, font)
-    object.buttonOff = widgetClass.newButton(labelOff, x, y, width, height, function() object.on = not object.on end, font)
+    if initialstatus == "on" then
+        object = {   
+            on = true
+        }
+    else
+        object = {   
+            on = false
+        }
+    end
+    --object.callback = callback
+    object.callback = function()
+        object.on = not object.on
+        callback()
+    end
+    object.buttonOn = widgetClass.newButton(labelOn, x, y, width, height, object.callback, font)
+    object.buttonOff = widgetClass.newButton(labelOff, x, y, width, height, object.callback, font)
     object.update = function()
         if object.on then
             object.buttonOn.update()
