@@ -29,7 +29,6 @@ function widgetClass.newButton(label, x, y, width, height, callback, font)
         -- circulo de la esquina inferior derecha
         love.graphics.circle("fill", object.width - widgetClass.cornerRadius, object.height - widgetClass.cornerRadius, widgetClass.cornerRadius)
         -- texto
-        --love.graphics.setColor(1, 1, 1, 1)
         love.graphics.setColor(0.753 * 1.4, 0.3, 0.427 * 1.4, 1)
         local textWidth = object.font:getWidth(object.label)
         local textHeight = object.font:getHeight()
@@ -41,7 +40,6 @@ function widgetClass.newButton(label, x, y, width, height, callback, font)
         local mouseX, mouseY = love.mouse.getPosition()
         mouseX = (mouseX - desplazamientoX) / factorEscala
         mouseY = (mouseY - desplazamientoY) / factorEscala
-        --menu.widgets:updateMouse((mouseX - desplazamientoX) / factorEscala, (mouseY - desplazamientoY) / factorEscala)
         if mouseX >= object.x and mouseX <= object.x + object.width and mouseY >= object.y and mouseY < object.y + object.height then
             return true
         end
@@ -52,7 +50,7 @@ function widgetClass.newButton(label, x, y, width, height, callback, font)
             object.alpha = widgetClass.alphaSelected
             if love.mouse.isDown(1) and not object.justChanged then
                 object.justChanged = true
-                object.callback()
+                object.callback(object)
             elseif not love.mouse.isDown(1) then
                 object.justChanged = false
             end
@@ -68,13 +66,13 @@ function widgetClass.newButton(label, x, y, width, height, callback, font)
 end
 
 -- botón con dos estados
-function widgetClass.newToggleButton(labelOn, labelOff, x, y, width, height, callback, font)
+function widgetClass.newToggleButton(labelOn, labelOff, x, y, width, height, value, callback, font)
     local object = {
-        on = true
+        on = value
     }
+    object.buttonOn = widgetClass.newButton(labelOn, x, y, width, height, function() object.on = not object.on; object.callback(object) end, font)
+    object.buttonOff = widgetClass.newButton(labelOff, x, y, width, height, function() object.on = not object.on; object.callback(object) end, font)
     object.callback = callback
-    object.buttonOn = widgetClass.newButton(labelOn, x, y, width, height, function() object.on = not object.on end, font)
-    object.buttonOff = widgetClass.newButton(labelOff, x, y, width, height, function() object.on = not object.on end, font)
     object.update = function()
         if object.on then
             object.buttonOn.update()
