@@ -48,7 +48,7 @@ function love.load()
         log.debug("Corriendo en pantalla completa (resolución: " .. window_width .. " x " .. window_height .. " px)")
     else
         -- definimos el tamaño inicial de la ventana
-        window_width, window_height = window_width * .8, window_height * .8
+        window_width, window_height = window_width * .7, window_height * .7
         log.debug("Corriendo en una ventana de: " .. window_width .. " x " .. window_height .. " px")
         love.window.setMode(
             window_width,

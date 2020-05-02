@@ -13,30 +13,37 @@ function menu.load(menuManager, screen)
             type = "toggle",
             labelOn = "Sonido activado",
             labelOff = "Sonido desactivado",
-            callback = function()
-                -- TODO: Añadir el código que se ejecutará cuando el botón cambia de un estado a otro
+            value = config.get("sound"),
+            callback = function(self)
+                config.set("sound", self.on)
             end,
         },
         {
             type = "toggle",
             labelOn = "Música activada",
             labelOff = "Música desactivada",
-            callback = function()
-                -- TODO: Añadir el código que se ejecutará cuando el botón cambia de un estado a otro
-            end
+            value = config.get("music"),
+            callback = function(self)
+                config.set("music", self.on)
+            end,
         },
         {
             type = "toggle",
             labelOn = "Español",
             labelOff = "English",
-            callback = function()
-                -- TODO: Añadir el código que se ejecutará cuando el botón cambia de un estado a otro
-            end
+            value = config.get("language"),
+            callback = function(self)
+                if self.on then
+                    config.set("language", "es")
+                else
+                    config.set("language", "en")
+                end
+            end,
         },
         {
             type = "standard",
             label = "Volver",
-            callback = function()
+            callback = function(self)
                 if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
                     menu.menuManager:changeMenuTo(menu.menuManager:getMenu("main"))
                 end
@@ -49,7 +56,14 @@ function menu.load(menuManager, screen)
         if button.type == "standard" then
             table.insert(menu.widgets, widgetsClass.newButton(button.label, SCREEN_WIDTH * 0.15, 50 + i * SCREEN_HEIGHT * 0.16, SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.13, button.callback, font_buttons))
         elseif button.type == "toggle" then
-            table.insert(menu.widgets, widgetsClass.newToggleButton(button.labelOn, button.labelOff, SCREEN_WIDTH * 0.15, 50 + i * SCREEN_HEIGHT * 0.16, SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.13, button.callback, font_buttons))
+            local value = button.value
+            if button.value == "es" then
+                value = true
+            elseif button.value == "en" then
+                value = false
+            end
+            local newButton = widgetsClass.newToggleButton(button.labelOn, button.labelOff, SCREEN_WIDTH * 0.15, 50 + i * SCREEN_HEIGHT * 0.16, SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.13, value, button.callback, font_buttons)
+            table.insert(menu.widgets, newButton)
         else
             error("Error: tipo de botón no soportado: '" .. button.type)
         end
