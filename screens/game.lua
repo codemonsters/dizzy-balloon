@@ -6,6 +6,7 @@ local PointerClass = require("misc/pointer")
 local BombClass = require("gameobjects/bomb")
 local BalloonClass = require("gameobjects/balloon")
 local MushroomClass = require("gameobjects/mushroom")
+local CloudClass = require("gameobjects/cloud")
 local GoalClass = require("gameobjects/goal")
 local LimitClass = require("gameobjects/limit")
 local LevelClass = require("levels/level")
@@ -460,6 +461,7 @@ function game.loadlevel(level)
     level.player.x = 100
     level.player.y = 100
     level.bomb = BombClass.new("Bomb", level.world, game)
+    level.cloud = CloudClass.new("Cloud", 10, 10, level.world)
     loadAndStartMusic(game.currentLevel.music)
     game.pause = false
     played_ingame_menu_click = false
