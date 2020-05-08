@@ -511,10 +511,11 @@ function game.load()
     loadAndStartMusic(game.currentLevel.music)
     game.pause = false
     played_ingame_menu_click = false
-
+    
+    local strings = require("misc/strings")
     local widgetsClass = require("misc/widgets")
     game.botonPausa = widgetsClass.newButton(
-        "Menú",
+        getString(strings.menu),
         SCREEN_WIDTH - hud_width + 80,
         SCREEN_HEIGHT * 0.05,
         hud_width - 80 * 2,

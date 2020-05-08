@@ -7,10 +7,11 @@ function menu.load(menuManager, screen)
     menu.screen = screen
 
     -- creamos los botones del menú
+    local strings = require("misc/strings")
     local widgetsClass = require("misc/widgets")
     local buttons = {
         {
-            label = "Volver",
+            label = getString(strings.goBack),
             callback = function()
                 if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
                     menu.menuManager:changeMenuTo(menu.menuManager:getMenu("main"))

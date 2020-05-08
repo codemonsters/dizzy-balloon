@@ -159,3 +159,7 @@ function copyTable(obj, seen) -- el segundo parámetro se ignora, es para detect
     end
     return res
 end
+
+function getString(str)
+    return str[config.get("language")]
+end

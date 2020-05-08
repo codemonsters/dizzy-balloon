@@ -5,14 +5,13 @@ local menu = {
 function menu.load(menuManager, screen)
     menu.menuManager = menuManager
     menu.screen = screen
-    menu.musicOn = false
-
+    local strings = require("misc/strings")
     local widgetsClass = require("misc/widgets")
     local buttons = {
         {
             type = "toggle",
-            labelOn = "Sonido activado",
-            labelOff = "Sonido desactivado",
+            labelOn = getString(strings.sound.on),
+            labelOff = getString(strings.sound.off),
             value = config.get("sound"),
             callback = function(self)
                 sounds.play(sounds.uiClick)
@@ -22,8 +21,8 @@ function menu.load(menuManager, screen)
         },
         {
             type = "toggle",
-            labelOn = "Música activada",
-            labelOff = "Música desactivada",
+            labelOn = getString(strings.music.on),
+            labelOff = getString(strings.music.off),
             value = config.get("music"),
             callback = function(self)
                 sounds.play(sounds.uiClick)
@@ -49,11 +48,14 @@ function menu.load(menuManager, screen)
                     config.set("language", "en")
                 end
                 print("Idioma: " .. tostring(config.get("language")))
+                if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then -- TODO: Hacer esto más elegante.
+                    menu.menuManager:changeMenuTo(menu.menuManager:getMenu("preferences"))
+                end
             end,
         },
         {
             type = "standard",
-            label = "Volver",
+            label = getString(strings.goBack),
             callback = function(self)
                 if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
                     menu.menuManager:changeMenuTo(menu.menuManager:getMenu("main"))
