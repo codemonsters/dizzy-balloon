@@ -15,8 +15,9 @@ function menu.load(menuManager, screen)
             labelOff = "Sonido desactivado",
             value = config.get("sound"),
             callback = function(self)
+                sounds.play(sounds.uiClick)
                 config.set("sound", self.on)
-                print("Sonido: " .. tostring(config.get("sound")))
+                log.debug("Estado del sonido: " .. tostring(config.get("sound")))
             end,
         },
         {
@@ -25,13 +26,14 @@ function menu.load(menuManager, screen)
             labelOff = "Música desactivada",
             value = config.get("music"),
             callback = function(self)
+                sounds.play(sounds.uiClick)
                 config.set("music", self.on)
                 if config.get("music") == true then
                     loadAndStartMusic({file = "menu.mp3", volume = 1})
                 else
                     if music then music:stop() end
                 end
-                print("Música: " .. tostring(config.get("music")))
+                log.debug("Estado de la música " .. tostring(config.get("music")))
             end,
         },
         {
@@ -40,6 +42,7 @@ function menu.load(menuManager, screen)
             labelOff = "English",
             value = config.get("language"),
             callback = function(self)
+                sounds.play(sounds.uiClick)
                 if self.on then
                     config.set("language", "es")
                 else
