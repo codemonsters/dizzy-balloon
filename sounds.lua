@@ -45,7 +45,9 @@ end
 
 function SoundsClass.play(soundTable)
     soundTable.audioSource:setVolume(soundTable.volume)
-    soundTable.audioSource:play()
+    if config.get("sound") == true then
+        soundTable.audioSource:play()
+    end
 end
 
 return SoundsClass

@@ -16,6 +16,7 @@ function menu.load(menuManager, screen)
             value = config.get("sound"),
             callback = function(self)
                 config.set("sound", self.on)
+                print("Sonido: " .. tostring(config.get("sound")))
             end,
         },
         {
@@ -25,6 +26,12 @@ function menu.load(menuManager, screen)
             value = config.get("music"),
             callback = function(self)
                 config.set("music", self.on)
+                if config.get("music") == true then
+                    loadAndStartMusic({file = "menu.mp3", volume = 1})
+                else
+                    if music then music:stop() end
+                end
+                print("Música: " .. tostring(config.get("music")))
             end,
         },
         {
@@ -38,6 +45,7 @@ function menu.load(menuManager, screen)
                 else
                     config.set("language", "en")
                 end
+                print("Idioma: " .. tostring(config.get("language")))
             end,
         },
         {
