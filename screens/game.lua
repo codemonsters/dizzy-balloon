@@ -140,6 +140,9 @@ game.states = {
                     enemyRespawnTimer = 0
                 end
             end
+            for i, cloud in ipairs(game.currentLevel.clouds) do
+                cloud:update(dt)
+            end
 
             game.currentLevel.player:update(dt)
 
@@ -210,7 +213,12 @@ game.states = {
 
                 -- objetos del juego
 
+
                 game.currentLevel.player:draw()
+
+                for i, cloud in ipairs(game.currentLevel.clouds) do
+                    cloud:draw(dt)
+                end
 
                 for i, enemy in ipairs(game.currentLevel.enemies) do
                     enemy:draw()
@@ -345,6 +353,9 @@ game.states = {
                 love.graphics.setColor(255, 255, 255)
 
                 -- objetos del juego
+                for i, cloud in ipairs(game.currentLevel.clouds) do
+                    cloud:draw()
+                end
 
                 for i, enemy in ipairs(game.currentLevel.enemies) do
                     enemy:draw()
@@ -461,7 +472,8 @@ function game.loadlevel(level)
     level.player.x = 100
     level.player.y = 100
     level.bomb = BombClass.new("Bomb", level.world, game)
-    level.cloud = CloudClass.new("Cloud", 10, 10, level.world)
+    game.crearCloud(20, 20)
+
     loadAndStartMusic(game.currentLevel.music)
     game.pause = false
     played_ingame_menu_click = false
@@ -874,6 +886,11 @@ end
 function game.crearSeta(x, y)
     seta = MushroomClass.new("Seta", game.currentLevel.world, game, x, y)
     table.insert(game.currentLevel.mushrooms, seta)
+end
+
+function game.crearCloud(x, y)
+    cloud = CloudClass.new("Nube", x, y, game.currentLevel.world)
+    table.insert(game.currentLevel.clouds, cloud)
 end
 
 function game.change_state(new_state)
