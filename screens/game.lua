@@ -233,6 +233,7 @@ game.states = {
                 end
 
                 love.graphics.setColor(255, 255, 255)
+                game.currentLevel.limit:draw()
                 love.graphics.rectangle("line", game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
 
             end
@@ -511,7 +512,7 @@ function game.load()
     loadAndStartMusic(game.currentLevel.music)
     game.pause = false
     played_ingame_menu_click = false
-    
+
     local strings = require("misc/strings")
     local widgetsClass = require("misc/widgets")
     game.botonPausa = widgetsClass.newButton(

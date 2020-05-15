@@ -38,7 +38,13 @@ local Bomb = {
                 self.world:add(self, self.x, self.y, self.width, self.height)
                 self.elapsed_time = 0
                 self.collisions_filter = function(item, other)
-                    if other.isGoal then
+                    log.debug(other.name)
+                    if other.isGoal or (other.isSeed and other.state.sky) or other.isLimit then
+                        --self.game.pause = true
+                        if self.montado and other.y < self.y then
+                            -- Si chocamos por encima con algo y la bomba está montada en algo entonces avisamos a la montura para que rebote
+                            self.montura.velocidad_y = math.abs(self.montura.velocidad_y)
+                        end
                         return
                     else
                         return "slide"
@@ -62,6 +68,7 @@ local Bomb = {
                     self.width / self.state.quads[1].width,
                     self.height / self.state.quads[1].height
                 )
+                love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
             end
         },
         prelaunching = {
