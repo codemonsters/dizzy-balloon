@@ -8,12 +8,12 @@ function menu.load(menuManager, screen)
 
     -- creamos los botones del menú
     local widgetsClass = require("misc/widgets")
+    local strings = require("misc/strings")
     local buttons = {
         {
-            label = "Jugar",
+            label = getString(strings.play),
             callback = function()
                 sounds.play(sounds.uiClick)
-                --sounds.ui_click:play()
                 menu.menuManager:changeMenuTo(
                     nil,
                     function()
@@ -25,7 +25,7 @@ function menu.load(menuManager, screen)
             end,
         },
         {
-            label = "Preferencias",
+            label = getString(strings.preferences),
             callback = function()
                 if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
                     menu.menuManager:changeMenuTo(menu.menuManager:getMenu("preferences"))
@@ -33,7 +33,7 @@ function menu.load(menuManager, screen)
             end
         },
         {
-            label = "Instrucciones",
+            label = getString(strings.instructions),
             callback = function()
                 if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
                     menu.menuManager:changeMenuTo(menu.menuManager:getMenu("instructions"))
@@ -41,7 +41,7 @@ function menu.load(menuManager, screen)
             end
         },
         {
-            label = "Salir",
+            label = getString(strings.quit),
             callback = function()
                 if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
                     os.exit()

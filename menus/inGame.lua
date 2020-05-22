@@ -7,9 +7,10 @@ function menu.load(menuManager, screen)
     menu.screen = screen
     menu.closing = false -- flag que cuando vale true indica que estamos cerrando este menú
     local widgetsClass = require("misc/widgets")
+    local strings = require("misc/strings")
     local buttons = {
         {
-            label = "Continuar",
+            label = getString(strings.continue),
             callback = function()
                 if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
                     menu.continueGame()
@@ -17,7 +18,7 @@ function menu.load(menuManager, screen)
             end,
         },
         {
-            label = "Salir",
+            label = getString(strings.quit),
             callback = function()
                 if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
                     if not menu.closing then

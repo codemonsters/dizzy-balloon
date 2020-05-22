@@ -6,8 +6,8 @@ local Enemy = {
     riders = nil,
     width = 40,
     height = 40,
-    moduloVelocidadInicial = 6,
-    moduloVelocidad = 6,
+    moduloVelocidadInicial = 3,
+    moduloVelocidad = 3,
     velocidad_x = 0,
     velocidad_y = 0,
     isEnemy = true,
@@ -15,7 +15,13 @@ local Enemy = {
     enemyFilter = function(item, other)
         if other.isPlayer then
             return "slide"
-        elseif other.isBomb then
+        elseif other.isBomb and not other.montado then
+            if not other.state == (other.states.launching or other.states.exploding) then
+                return
+            else
+                return "bounce"
+            end
+        elseif other.isBomb and other.montado then
             return "slide"
         elseif other.isMushroom then
             return "bounce"
@@ -38,8 +44,12 @@ local Enemy = {
 
                 if len > 0 then
                     local col = cols[1]
-                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then -- si se pone "if not other.col.isBomb" then da un error cuando el enemigo choca con algo, puede ser problema de la bomba no teniendo un collision_filter o algo por el estilo
+                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then
                         self:rebotar(col)
+                    elseif col.other.isBomb then
+                        if not col.other.state == (col.other.states.launching or col.other.states.exploding) then
+                            self:rebotar(col)
+                        end
                     elseif col.other.isPlayer then
                         col.other:empujar({x = self.velocidad_x - col.other:vx() * dt, y = 0}, self)
                     end
@@ -198,6 +208,7 @@ end
 function Enemy:rebotar(col)
     -- TODO: calculo de velocidad tras el choque
     vecBounce = {x = col.bounce.x - col.touch.x, y = col.bounce.y - col.touch.y}
+
     moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
     vectorUnitario = {x = vecBounce.x / moduloBounce, y = vecBounce.y / moduloBounce}
 

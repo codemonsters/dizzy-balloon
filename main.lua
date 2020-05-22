@@ -21,6 +21,8 @@ function changeScreen(new_screen)
 end
 
 function love.load()
+    --[[
+    -- !!! TODO: Eliminar este if de mobdebug?
     if arg[#arg] == "-debug" then
         -- if your game is invoked with "-debug" (zerobrane does this by default)
         -- invoke the debugger
@@ -28,6 +30,7 @@ function love.load()
         -- disable buffer to read print messages instantly
         io.stdout:setvbuf("no")
     end
+    --]]
     log.level = "trace" -- trace / debug / info / warn / error / fatal
     log.info("Iniciando")
 
@@ -158,4 +161,8 @@ function copyTable(obj, seen) -- el segundo parámetro se ignora, es para detect
         res[copyTable(k, s)] = copyTable(v, s)
     end
     return res
+end
+
+function getString(str)
+    return str[config.get("language")]
 end
