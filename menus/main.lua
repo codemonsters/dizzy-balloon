@@ -11,11 +11,9 @@ function menu.load(menuManager, screen)
     local strings = require("misc/strings")
     local buttons = {
         {
-            --label = strings.play[config.get("language")],
             label = getString(strings.play),
             callback = function()
                 sounds.play(sounds.uiClick)
-                --sounds.ui_click:play()
                 menu.menuManager:changeMenuTo(
                     nil,
                     function()

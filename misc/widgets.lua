@@ -41,7 +41,6 @@ function widgetClass.newButton(label, x, y, width, height, callback, font)
     object.setLabel = function(label)
         object.label = label
         object.image = widgetClass.getButtonImage(object)
-        -- print("LLAMADA RECIBIDA A SETLABEL CON: " .. label)
     end
     return object
 end
