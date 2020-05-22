@@ -41,7 +41,7 @@ local Bomb = {
                     log.debug(other.name)
                     if other.isGoal or (other.isSeed and other.state.sky) or other.isLimit then
                         --self.game.pause = true
-                        if self.montado and other.y < self.y then
+                        if self.montado and other.y + other.height == self.y then
                             -- Si chocamos por encima con algo y la bomba está montada en algo entonces avisamos a la montura para que rebote
                             self.montura.velocidad_y = math.abs(self.montura.velocidad_y)
                         end
