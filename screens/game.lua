@@ -472,7 +472,14 @@ function game.loadlevel(level)
     level.player.x = 100
     level.player.y = 100
     level.bomb = BombClass.new("Bomb", level.world, game)
-    game.crearCloud(20, 20)
+    local totalIntervalos = 4
+    math.randomseed(os.time())
+
+    for i=1,totalIntervalos do
+        local minIntervalo = (i-1) * (WORLD_HEIGHT/1.2-CloudClass.height)/totalIntervalos
+        local maxIntervalo = i * (WORLD_HEIGHT/1.2-CloudClass.height)/totalIntervalos
+        game.crearCloud(math.random(0, WORLD_WIDTH), math.random(minIntervalo, maxIntervalo))
+    end
 
     loadAndStartMusic(game.currentLevel.music)
     game.pause = false

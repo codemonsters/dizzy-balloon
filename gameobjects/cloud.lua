@@ -1,9 +1,9 @@
 local CloudClass = {
     name = "Nube",
     x, y = 0,0,
-    vx = ,
-    width = 100,
-    height = 79,
+    vx = 100,
+    width = 150,
+    height = 140,
     state = nil,
     states = {
         standing = {
@@ -12,15 +12,15 @@ local CloudClass = {
             },
             load = function(self)
                 self.collisions_filter = function(item, other)
-                    return "cross"
+                    return ""
                 end
             end,
             update = function(self, dt)
                 if self.x > WORLD_WIDTH then
-                    self.x = 0 - self.width
+                    self.x = -self.width
                 end
-                print(self.x)
-                self.x, self.y, cols, len = self.world:move(self, self.x + self.vx * dt, self.y, self.collisions_filter)
+
+                self.x = self.x + self.vx * dt
             end,
             draw = function(self)
                 love.graphics.draw(
@@ -33,7 +33,6 @@ local CloudClass = {
                     self.height / self.state.quads[1].height
                 )
             end
-        
         }
     }
 }
@@ -47,8 +46,6 @@ function CloudClass.new(name, x, y, world)
     cloud.width, cloud.height = width, height
     cloud.world = world
     cloud.state = CloudClass.states.standing
-    cloud.world:add(cloud, cloud.x, cloud.y, CloudClass.width, CloudClass.height)
-    
     setmetatable(cloud, CloudClass)
     return cloud
 end

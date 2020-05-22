@@ -21,6 +21,8 @@ local Enemy = {
             return "bounce"
         elseif other.isLimit then
             return "bounce"
+        elseif other.isCloud then
+            return "cross"
         else
             return "bounce"
         end
@@ -196,7 +198,6 @@ end
 function Enemy:rebotar(col)
     -- TODO: calculo de velocidad tras el choque
     vecBounce = {x = col.bounce.x - col.touch.x, y = col.bounce.y - col.touch.y}
-    
     moduloBounce = math.sqrt(math.pow(vecBounce.x, 2) + math.pow(vecBounce.y, 2))
     vectorUnitario = {x = vecBounce.x / moduloBounce, y = vecBounce.y / moduloBounce}
 
