@@ -27,6 +27,8 @@ local Enemy = {
             return "bounce"
         elseif other.isLimit then
             return "bounce"
+        elseif other.isCloud then
+            return "cross"
         else
             return "bounce"
         end
