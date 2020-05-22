@@ -598,7 +598,8 @@ function game.draw()
         love.graphics.rectangle("fill", 0, 0, hud_width, SCREEN_HEIGHT)
         love.graphics.setColor(255, 255, 255)
         love.graphics.draw(gamepad, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
-        love.graphics.printf("Time " .. math.ceil(game.currentLevel.time), font_hud, 0, 100, hud_width, "center")
+        local strings = require("misc/strings")
+        love.graphics.printf(getString(strings.time) .. " " .. math.ceil(game.currentLevel.time), font_hud, 0, 100, hud_width, "center")
     end
 
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
