@@ -18,6 +18,10 @@ local menuManager =
         {
             name = "instructions",
             menu = require("menus/instructions")
+        },
+        {
+            name = "credits",
+            menu = require("menus/credits")
         }
     },
     {
@@ -50,6 +54,16 @@ local menuManager =
             from = "instructions",
             to = "main",
             effect = MenuManagerClass.effects.moveLeft
+        },
+        {
+            from = "main",
+            to = "credits",
+            effect = MenuManagerClass.effects.fadeOut
+        },
+        {
+            from = "credits",
+            to = "main",
+            effect = MenuManagerClass.effects.fadeOut
         }
     }
 )

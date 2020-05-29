@@ -1,4 +1,8 @@
 local strings = {
+    credits = {
+        es = "Créditos",
+        en = "Credits"
+    },
     quit = {
         es = "Salir",
         en = "Exit"
