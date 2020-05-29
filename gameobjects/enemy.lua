@@ -19,7 +19,7 @@ local Enemy = {
             if not other.state == (other.states.launching or other.states.exploding) then
                 return
             else
-                return "bounce"
+                return "touch"
             end
         elseif other.isBomb and other.montado then
             return "slide"
