@@ -191,13 +191,13 @@ game.states = {
 
                 -- objetos del juego
 
-
-                game.currentLevel.player:draw()
-
                 for i, cloud in ipairs(game.currentLevel.clouds) do
                     cloud:draw(dt)
                 end
 
+                game.currentLevel.player:draw()
+
+                
                 for i, enemy in ipairs(game.currentLevel.enemies) do
                     enemy:draw()
                 end
