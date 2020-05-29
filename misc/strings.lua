@@ -46,7 +46,11 @@ local strings = {
     continue = {
         es = "Continuar",
         en = "Continue"
-    }
+    },
+    time = {
+        es = "Tiempo",
+        en = "Time"
+    },
 }
 
 return strings
