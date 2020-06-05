@@ -66,17 +66,22 @@ local menu = {
 
 -- carga este screen
 function menu.load()
+    factorEscalaExtra = 2
+    local MENU_HEIGHT, MENU_WIDTH = SCREEN_HEIGHT/factorEscalaExtra, SCREEN_WIDTH/factorEscalaExtra
     -- música
+    canvas = love.graphics.newCanvas(MENU_WIDTH, MENU_HEIGHT)
     loadAndStartMusic({file = "menu.mp3", volume = 1})
+
     -- animaciones
-    world = bump.newWorld(50)
-    jugador = PlayerClass.new(world, nil)
-    enemigo1 = EnemyClass.new(enemigo, SCREEN_WIDTH * 0.05, PlayerClass.height * 3, world, nil, 0)
+    local world = bump.newWorld(50)
+    jugador = PlayerClass.new(world, 1, MENU_HEIGHT - PlayerClass.height, nil)
+    enemigo1 = EnemyClass.new(enemigo, MENU_WIDTH * 0.05, PlayerClass.height * 2, world, nil, 0)
+    
     local borderWidth = 50
-    BlockClass.new("Suelo", 0, WORLD_HEIGHT, SCREEN_WIDTH, borderWidth, world)
-    BlockClass.new("ParedIzquierda", 0, 0, 1, SCREEN_HEIGHT, world)
-    BlockClass.new("ParedDerecha", SCREEN_WIDTH, 0, 1, SCREEN_HEIGHT, world)
-    BlockClass.new("Techo", 0, 0, SCREEN_WIDTH, 1, world)
+    suelo = BlockClass.new("Suelo", 0, MENU_HEIGHT, MENU_WIDTH, borderWidth, world)
+    BlockClass.new("ParedIzquierda", -borderWidth, 0, borderWidth, MENU_HEIGHT, world)
+    pd = BlockClass.new("ParedDerecha", MENU_WIDTH - 1, 0, borderWidth, MENU_HEIGHT, world)
+    BlockClass.new("Techo", 0, -borderWidth, MENU_WIDTH, borderWidth, world)
     animLoader:applyAnim(enemigo1, animacionTestEnemigo)
     animLoader:applyAnim(jugador, animacionTestJugador) -- asocia el animador al jugador y cargar una animación en él
 end
@@ -91,13 +96,28 @@ end
 function menu.draw()
     love.graphics.clear(1, 0, 1)
 
+    love.graphics.setCanvas(canvas) -- volvemos a dibujar en la ventana principal
+    love.graphics.clear(1, 0, 1)
+    jugador:draw()
+    enemigo1:draw()
+    suelo:draw()
+    pd:draw()
+
     love.graphics.push()
     love.graphics.translate(desplazamientoX, desplazamientoY)
     love.graphics.scale(factorEscala, factorEscala)
-    love.graphics.setColor(255, 0, 0, 255)
+    
 
-    jugador:draw()
-    enemigo1:draw()
+    love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
+    love.graphics.draw(
+        canvas,
+        0,
+        0,
+        0,
+        factorEscalaExtra,
+        factorEscalaExtra
+    )
+    love.graphics.setColor(255, 0, 0, 255)
 
     -- DEBUG: marcas en los extremos diagonales de la pantalla
     love.graphics.setColor(255, 0, 0)

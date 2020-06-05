@@ -117,15 +117,15 @@ local Player = {
 
 Player.__index = Player
 
-function Player.new(world, game)
+function Player.new(world, spawnX, spawnY, game)
     local player = {}
     setmetatable(player, Player)
     player.game = game
     player.world = world
     player.width = 40
     player.height = Player.width
-    player.x = 1
-    player.y = WORLD_HEIGHT - Player.height
+    player.x = spawnX
+    player.y = spawnY
     player.velocidad_y = Player.velyini --la velocidad y debe ser negativa para que haya diferencia en el movimiento de eje y para saber cuando aplicar aceleración
     player.left, player.right, player.up, player.down, player.not_supported = false, false, false, false, false
     player.jumpLeft, player.jumpRight = false, false
