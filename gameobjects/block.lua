@@ -15,7 +15,7 @@ function BlockClass.new(name, x, y, width, height, world)
     block.x, block.y = x, y
     block.width, block.height = width, height
     block.world = world
-    block.world:add(block, block.x, block.y, block.width, block.height)
+    block.world:add(block, block.x, block.y, width, height)
     setmetatable(block, BlockClass)
     return block
 end

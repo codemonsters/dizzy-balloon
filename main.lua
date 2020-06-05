@@ -21,6 +21,8 @@ function changeScreen(new_screen)
 end
 
 function love.load()
+    --[[
+    -- !!! TODO: Eliminar este if de mobdebug?
     if arg[#arg] == "-debug" then
         -- if your game is invoked with "-debug" (zerobrane does this by default)
         -- invoke the debugger
@@ -28,10 +30,11 @@ function love.load()
         -- disable buffer to read print messages instantly
         io.stdout:setvbuf("no")
     end
+    --]]
     log.level = "trace" -- trace / debug / info / warn / error / fatal
     log.info("Iniciando")
 
-    love.graphics.setDefaultFilter("nearest", "linear") -- Cambiamos el filtro usado durante el escalado
+    love.graphics.setDefaultFilter("nearest") -- Cambiamos el filtro usado durante el escalado
 
     font_title = love.graphics.newFont("assets/fonts/edunline.ttf", 80)
     -- font_hud = love.graphics.newFont("assets/fonts/orangejuice20.ttf", 40) -- https://www.dafont.com/es/pixelmania.font

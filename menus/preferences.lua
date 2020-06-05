@@ -48,8 +48,10 @@ function menu.load(menuManager, screen)
                     config.set("language", "en")
                 end
                 print("Idioma: " .. tostring(config.get("language")))
-                if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then -- TODO: Hacer esto más elegante.
-                    menu.menuManager:changeMenuTo(menu.menuManager:getMenu("preferences"))
+                if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+                    menu.widgets[1].setLabels(getString(strings.sound.on), getString(strings.sound.off))
+                    menu.widgets[2].setLabels(getString(strings.music.on), getString(strings.music.off))
+                    menu.widgets[4].setLabel(getString(strings.goBack))
                 end
             end,
         },

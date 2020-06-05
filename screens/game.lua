@@ -6,6 +6,7 @@ local PointerClass = require("misc/pointer")
 local BombClass = require("gameobjects/bomb")
 local BalloonClass = require("gameobjects/balloon")
 local MushroomClass = require("gameobjects/mushroom")
+local CloudClass = require("gameobjects/cloud")
 local GoalClass = require("gameobjects/goal")
 local LimitClass = require("gameobjects/limit")
 local LevelClass = require("levels/level")
@@ -34,28 +35,6 @@ local hud_height = SCREEN_HEIGHT
 local dimensionesBotonPausa = window_width * .05
 
 local MenuManagerClass = require("menus/menuManager")
-local menuManager =
-    MenuManagerClass.new(
-    {
-        {
-            name = "inGame",
-            menu = require("menus/inGame")
-        }
-    },
-    {
-        {
-            from = nil,
-            to = "inGame",
-            effect = MenuManagerClass.effects.moveDown
-        },
-        {
-            from = "inGame",
-            to = nil,
-            effect = MenuManagerClass.effects.moveUp
-        }
-    },
-    game
-)
 
 function game.continue()
     game.pause = false
@@ -139,6 +118,9 @@ game.states = {
                     enemyRespawnTimer = 0
                 end
             end
+            for i, cloud in ipairs(game.currentLevel.clouds) do
+                cloud:update(dt)
+            end
 
             game.currentLevel.player:update(dt)
 
@@ -209,8 +191,13 @@ game.states = {
 
                 -- objetos del juego
 
+                for i, cloud in ipairs(game.currentLevel.clouds) do
+                    cloud:draw(dt)
+                end
+
                 game.currentLevel.player:draw()
 
+                
                 for i, enemy in ipairs(game.currentLevel.enemies) do
                     enemy:draw()
                 end
@@ -233,6 +220,7 @@ game.states = {
                 end
 
                 love.graphics.setColor(255, 255, 255)
+                game.currentLevel.limit:draw()
                 love.graphics.rectangle("line", game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
 
             end
@@ -344,6 +332,9 @@ game.states = {
                 love.graphics.setColor(255, 255, 255)
 
                 -- objetos del juego
+                for i, cloud in ipairs(game.currentLevel.clouds) do
+                    cloud:draw()
+                end
 
                 for i, enemy in ipairs(game.currentLevel.enemies) do
                     enemy:draw()
@@ -456,10 +447,19 @@ function game.loadlife(posX)
 end
 
 function game.loadlevel(level)
-    level.player = PlayerClass.new(level.world, game)
+    level.player = PlayerClass.new(level.world, 1, WORLD_HEIGHT - PlayerClass.height, game)
     level.player.x = 100
     level.player.y = 100
     level.bomb = BombClass.new("Bomb", level.world, game)
+    local totalIntervalos = 4
+    math.randomseed(os.time())
+
+    for i=1,totalIntervalos do
+        local minIntervalo = (i-1) * (WORLD_HEIGHT/1.2-CloudClass.height)/totalIntervalos
+        local maxIntervalo = i * (WORLD_HEIGHT/1.2-CloudClass.height)/totalIntervalos
+        game.crearCloud(math.random(0, WORLD_WIDTH), math.random(minIntervalo, maxIntervalo))
+    end
+
     loadAndStartMusic(game.currentLevel.music)
     game.pause = false
     played_ingame_menu_click = false
@@ -511,7 +511,7 @@ function game.load()
     loadAndStartMusic(game.currentLevel.music)
     game.pause = false
     played_ingame_menu_click = false
-    
+
     local strings = require("misc/strings")
     local widgetsClass = require("misc/widgets")
     game.botonPausa = widgetsClass.newButton(
@@ -528,11 +528,33 @@ function game.load()
             end
         end,
         font_hud)
+
+    game.menuManager = MenuManagerClass.new(
+        {
+            {
+                name = "inGame",
+                menu = require("menus/inGame")
+            }
+        },
+        {
+            {
+                from = nil,
+                to = "inGame",
+                effect = MenuManagerClass.effects.moveDown
+            },
+            {
+                from = "inGame",
+                to = nil,
+                effect = MenuManagerClass.effects.moveUp
+            }
+        },
+        game
+    )
 end
 
 function game.update(dt)
     if game.pause then
-        menuManager:update(dt)
+        game.menuManager:update(dt)
         if played_ingame_menu_click == false then
             sounds.play(sounds.uiRollOver)
             played_ingame_menu_click = true
@@ -565,24 +587,6 @@ function game.draw()
         love.graphics.setColor(255, 0, 0)
         love.graphics.draw(circle, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
         love.graphics.setColor(255, 255, 255)
-        --el botón de pausa
-        --[[
-        love.graphics.setColor(255, 255, 255)
-        love.graphics.rectangle(
-            "line",
-            hud_width - dimensionesBotonPausa,
-            0,
-            dimensionesBotonPausa / 3,
-            dimensionesBotonPausa
-        )
-        love.graphics.rectangle(
-            "line",
-            hud_width - dimensionesBotonPausa * (1 / 3),
-            0,
-            dimensionesBotonPausa / 3,
-            dimensionesBotonPausa
-        )
-        --]]
     end
 
     love.graphics.setCanvas(gamepadCanvas) -- canvas del gamepad
@@ -594,7 +598,8 @@ function game.draw()
         love.graphics.rectangle("fill", 0, 0, hud_width, SCREEN_HEIGHT)
         love.graphics.setColor(255, 255, 255)
         love.graphics.draw(gamepad, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
-        love.graphics.printf("Time " .. math.ceil(game.currentLevel.time), font_hud, 0, 100, hud_width, "center")
+        local strings = require("misc/strings")
+        love.graphics.printf(getString(strings.time) .. " " .. math.ceil(game.currentLevel.time), font_hud, 0, 100, hud_width, "center")
     end
 
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
@@ -626,7 +631,7 @@ function game.draw()
         love.graphics.scale(factorEscala, factorEscala)
         love.graphics.setBlendMode("alpha", "premultiplied")
         love.graphics.setColor(255, 255, 255)
-        menuManager:draw()
+        game.menuManager:draw()
         love.graphics.pop()
     end
 end
@@ -634,8 +639,8 @@ end
 function game.keypressed(key, scancode, isrepeat)
     -- Dado que el juego está en pausa delegamos cómo resolver el evento al menú actual
     if game.pause then
-        if menuManager.currentMenu then
-            menuManager.currentMenu.keypressed(key, scancode.isrepeat)
+        if game.menuManager.currentMenu then
+            game.menuManager.currentMenu.keypressed(key, scancode.isrepeat)
         end
         return
     end
@@ -677,8 +682,8 @@ end
 function game.keyreleased(key, scancode, isrepeat)
     -- Dado que el juego está en pausa delegamos cómo resolver el evento al menú actual
     if game.pause then
-        if menuManager.currentMenu then
-            menuManager.currentMenu.keyreleased(key, scancode.isrepeat)
+        if game.menuManager.currentMenu then
+            game.menuManager.currentMenu.keyreleased(key, scancode.isrepeat)
         end
         return
     end
@@ -873,6 +878,11 @@ end
 function game.crearSeta(x, y)
     seta = MushroomClass.new("Seta", game.currentLevel.world, game, x, y)
     table.insert(game.currentLevel.mushrooms, seta)
+end
+
+function game.crearCloud(x, y)
+    cloud = CloudClass.new("Nube", x, y, game.currentLevel.world)
+    table.insert(game.currentLevel.clouds, cloud)
 end
 
 function game.change_state(new_state)
