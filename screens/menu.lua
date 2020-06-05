@@ -74,8 +74,7 @@ function menu.load()
 
     -- animaciones
     local world = bump.newWorld(50)
-    jugador = PlayerClass.new(world, nil)
-    jugador.y = MENU_HEIGHT - jugador.height -- Inicialmente vale 310
+    jugador = PlayerClass.new(world, 1, MENU_HEIGHT - PlayerClass.height, nil)
     enemigo1 = EnemyClass.new(enemigo, MENU_WIDTH * 0.05, PlayerClass.height * 2, world, nil, 0)
     
     local borderWidth = 50

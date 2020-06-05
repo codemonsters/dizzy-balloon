@@ -447,7 +447,7 @@ function game.loadlife(posX)
 end
 
 function game.loadlevel(level)
-    level.player = PlayerClass.new(level.world, game)
+    level.player = PlayerClass.new(level.world, 1, WORLD_HEIGHT - PlayerClass.height, game)
     level.player.x = 100
     level.player.y = 100
     level.bomb = BombClass.new("Bomb", level.world, game)
