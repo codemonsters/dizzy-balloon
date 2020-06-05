@@ -13,15 +13,17 @@ function menu.load(menuManager, screen)
         {
             label = getString(strings.play),
             callback = function()
-                sounds.play(sounds.uiClick)
-                menu.menuManager:changeMenuTo(
-                    nil,
-                    function()
-                        changeScreen(require("screens/game"))
-                        menu.menuManager:init()
-                    end,
-                    true
-                )
+                if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+                    sounds.play(sounds.uiClick)
+                    menu.menuManager:changeMenuTo(
+                        nil,
+                        function()
+                            changeScreen(require("screens/game"))
+                            menu.menuManager:init()
+                        end,
+                        true
+                    )
+                end
             end,
         },
         {
@@ -41,6 +43,22 @@ function menu.load(menuManager, screen)
             end
         },
         {
+            label = getString(strings.credits),
+            callback = function()
+                if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+                    sounds.play(sounds.uiClick)
+                    menu.menuManager:changeMenuTo(
+                        nil,
+                        function()
+                            changeScreen(require("screens/credits"))
+                            menu.menuManager:init()
+                        end,
+                        true
+                    )
+                end
+            end
+        },
+        {
             label = getString(strings.quit),
             callback = function()
                 if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
@@ -51,7 +69,7 @@ function menu.load(menuManager, screen)
     }
     menu.widgets = {}
     for i = 1, #buttons do
-        table.insert(menu.widgets, widgetsClass.newButton(buttons[i].label, SCREEN_WIDTH * 0.15, 50 + i * SCREEN_HEIGHT * 0.16, SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.13, buttons[i].callback, font_buttons))
+        table.insert(menu.widgets, widgetsClass.newButton(buttons[i].label, SCREEN_WIDTH * 0.15, 50 + i * SCREEN_HEIGHT * 0.14, SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.12, buttons[i].callback, font_buttons))
     end
 end
 
@@ -63,7 +81,7 @@ end
 
 function menu.draw()
     love.graphics.setBlendMode("alpha")
-    love.graphics.printf( "Dizzy Balloon", font_title, 0, SCREEN_HEIGHT * 0.1, 1280, "center")
+    love.graphics.printf("Dizzy Balloon", font_title, 0, SCREEN_HEIGHT * 0.09, 1280, "center")
     for i = 1, #menu.widgets do
         menu.widgets[i].draw()
     end
