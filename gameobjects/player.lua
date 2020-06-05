@@ -42,8 +42,6 @@ local Player = {
             return "touch"
         elseif other.isLimit then
             return nil
-        elseif other.isEnemy then
-            return nil
         else
             return "slide"
         end
@@ -157,7 +155,7 @@ function Player:update(dt)
     if self.velocidad_y < 0 then
         for i = 1, lenColFeet do
             if
-                not self.montado and not self.invencible and
+                not self.montado and
                     ((items[i].isBalloon and items[i].state == BalloonClass.states.flying_alone) or items[i].isEnemy)
              then
                 self.montado = true
