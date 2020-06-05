@@ -13,15 +13,17 @@ function menu.load(menuManager, screen)
         {
             label = getString(strings.play),
             callback = function()
-                sounds.play(sounds.uiClick)
-                menu.menuManager:changeMenuTo(
-                    nil,
-                    function()
-                        changeScreen(require("screens/game"))
-                        menu.menuManager:init()
-                    end,
-                    true
-                )
+                if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
+                    sounds.play(sounds.uiClick)
+                    menu.menuManager:changeMenuTo(
+                        nil,
+                        function()
+                            changeScreen(require("screens/game"))
+                            menu.menuManager:init()
+                        end,
+                        true
+                    )
+                end
             end,
         },
         {
@@ -44,7 +46,15 @@ function menu.load(menuManager, screen)
             label = getString(strings.credits),
             callback = function()
                 if menu.menuManager.screenState == menu.menuManager.screenStates.showingMenu then
-                    menu.menuManager:changeMenuTo(menu.menuManager:getMenu("credits"))
+                    sounds.play(sounds.uiClick)
+                    menu.menuManager:changeMenuTo(
+                        nil,
+                        function()
+                            changeScreen(require("screens/credits"))
+                            menu.menuManager:init()
+                        end,
+                        true
+                    )
                 end
             end
         },
