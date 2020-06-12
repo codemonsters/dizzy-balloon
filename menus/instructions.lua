@@ -32,20 +32,20 @@ function menu.load(menuManager, screen)
         }
     end
 
-    print(Tstrings[nPaginaTutorial])
-    local buttons = {
+    buttons = {
         {
             --local idioma = config.get("language"),
             label = Tstrings[nPaginaTutorial],
             callback = function()
-                print('hola')
+                print(Tstrings[nPaginaTutorial])
             end
         },
         {
             label = getString(strings.previous),
             callback = function()
                 if nPaginaTutorial > 1 then
-                    nPaginaTutorial = nPaginaTutorial - 1 
+                    nPaginaTutorial = nPaginaTutorial - 1
+                    menu.widgets[1].setLabel(Tstrings[nPaginaTutorial])
                 end
             end
         },
@@ -53,7 +53,8 @@ function menu.load(menuManager, screen)
             label = getString(strings.next),
             callback = function()
                 if nPaginaTutorial < table.getn(Tstrings) then
-                    nPaginaTutorial = nPaginaTutorial + 1 
+                    nPaginaTutorial = nPaginaTutorial + 1
+                    menu.widgets[1].setLabel(Tstrings[nPaginaTutorial])
                 end
             end
         },
@@ -73,7 +74,6 @@ function menu.load(menuManager, screen)
 end
 
 function menu.update(dt)
-    print(nPaginaTutorial)
     for i = 1, #menu.widgets do
         menu.widgets[i].update()
     end
