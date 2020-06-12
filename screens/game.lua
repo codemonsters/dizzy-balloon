@@ -674,6 +674,9 @@ function game.keypressed(key, scancode, isrepeat)
     elseif key == "l" then
         -- TODO: Eliminar esto en la versión pública
         game.change_state(game.states.cambiandoDeNivel)
+    elseif key == "j" then
+        game.currentLevel.player:die()
+        -- TODO: Eliminar esto en la versión pública
     elseif key == "z" then
         print("Posición del jugador (x, y) = " .. game.currentLevel.player.x .. ", " .. game.currentLevel.player.y)
     end
