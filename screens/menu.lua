@@ -74,16 +74,16 @@ function menu.load()
 
     -- animaciones
     local world = bump.newWorld(50)
-    jugador = PlayerClass.new(world, 1, MENU_HEIGHT - PlayerClass.height, nil)
-    enemigo1 = EnemyClass.new(enemigo, MENU_WIDTH * 0.05, PlayerClass.height * 2, world, nil, 0)
+    jugador = PlayerClass.new(world, -PlayerClass.width, MENU_HEIGHT - PlayerClass.height, nil)
+    enemigo1 = EnemyClass.new(enemigo, -EnemyClass.width*4, MENU_HEIGHT - EnemyClass.height * 1.3, world, nil, 0)
     
     local borderWidth = 50
-    suelo = BlockClass.new("Suelo", 0, MENU_HEIGHT, MENU_WIDTH, borderWidth, world)
-    BlockClass.new("ParedIzquierda", -borderWidth, 0, borderWidth, MENU_HEIGHT, world)
-    pd = BlockClass.new("ParedDerecha", MENU_WIDTH - 1, 0, borderWidth, MENU_HEIGHT, world)
-    BlockClass.new("Techo", 0, -borderWidth, MENU_WIDTH, borderWidth, world)
-    animLoader:applyAnim(enemigo1, animacionTestEnemigo)
-    animLoader:applyAnim(jugador, animacionTestJugador) -- asocia el animador al jugador y cargar una animación en él
+    suelo = BlockClass.new("Suelo", -MENU_WIDTH, MENU_HEIGHT, MENU_WIDTH*3, borderWidth, world)
+    --BlockClass.new("ParedIzquierda", -borderWidth, 0, borderWidth, MENU_HEIGHT, world)
+    --pd = BlockClass.new("ParedDerecha", MENU_WIDTH - 1, 0, borderWidth, MENU_HEIGHT, world)
+    --BlockClass.new("Techo", 0, -borderWidth, MENU_WIDTH, borderWidth, world)
+    animLoader:applyAnim(enemigo1, animacionTestEnemigo, true)
+    animLoader:applyAnim(jugador, animacionTestJugador, true) -- asocia el animador al jugador y cargar una animación en él
 end
 
 function menu.update(dt)
@@ -100,8 +100,6 @@ function menu.draw()
     love.graphics.clear(1, 0, 1)
     jugador:draw()
     enemigo1:draw()
-    suelo:draw()
-    pd:draw()
 
     love.graphics.push()
     love.graphics.translate(desplazamientoX, desplazamientoY)

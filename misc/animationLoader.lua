@@ -13,31 +13,16 @@ animacionTestJugador = {
                 jugador.right = false
                 jugador.left = true
             end,
-            time = 1.75
-        },
-        {
-            setParams = function(jugador)
-                jugador.right = false 
-                jugador.left = false
-            end,
-            time = 1.5
+            time = 0.1
         },
         {
             setParams = function(jugador) 
-                jugador.left = false
                 jugador.right = true
-            end,
-            time = 0.15
-        },
-
-        {
-            setParams = function(jugador) 
-                jugador.right = false
+                jugador.left = false
                 jugador:jump()
             end,
-            time = 0.5
+            time = 3
         },
-
     },
 
     currFrame = nil, -- el keyframe que se está ejecutando
@@ -51,22 +36,9 @@ animacionTestEnemigo = {
         {
             setParams = function(enemigo)
                 enemigo.velocidad_x = math.sqrt(8)
-                enemigo.velocidad_y = -math.sqrt(8)
+                enemigo.velocidad_y = 0
             end,
-            time = 3.5
-        },
-
-        {
-            setParams = function(enemigo)
-                enemigo.velocidad_x = -math.sqrt(8)
-            end,
-            time = 2.5
-        },
-        {
-            setParams = function(enemigo)
-                enemigo.velocidad_y = -math.sqrt(8)
-            end,
-            time = 1.2
+            time = 5.1
         },
     },
 
@@ -79,7 +51,7 @@ animacionTestEnemigo = {
 
 local animList = {}
 
-function animLoader:applyAnim(target, anim)
+function animLoader:applyAnim(target, anim, repetir)
     anim.target = target
 
     table.insert(animList, anim)
@@ -88,6 +60,21 @@ function animLoader:applyAnim(target, anim)
     anim.counter = 0
     anim.frameIndex = 1
     anim.currFrame = nil
+
+    if anim.rep then --se ha repetido al menos una vez antes, devolvemos al objeto a su posición inicial
+        target.world:update(
+            target,
+            target.initPos.x,
+            target.initPos.y,
+            target.width,
+            target.height
+        )
+        target.x, target.y = target.initPos.x, target.initPos.y
+    else
+        target.initPos = {x = target.x, y = target.y}
+    end
+    anim.rep = repetir
+
     self:loadKeyFrame(anim, anim.frameIndex)
 end
 
@@ -95,10 +82,7 @@ function animLoader:update(dt)
     for numAnim, anim in pairs(animList) do
         if anim then
             anim.counter = anim.counter + dt
-            if not anim.currFrame then
-                anim = nil
-            
-            elseif anim.counter >= anim.currFrame.time then
+            if anim.counter >= anim.currFrame.time then
                 self:loadKeyFrame(anim, anim.frameIndex + 1)
     
                 anim.counter = 0
@@ -114,9 +98,12 @@ function animLoader:loadKeyFrame(anim, index)
 
     if not anim.currFrame then
         table.remove(animList, findIndexInTable(animList, anim))
+        if anim.rep then
+            animLoader:applyAnim(anim.target, anim, true)
+        end
     else
         anim.currFrame.setParams(anim.target)
-end
+    end
 end
 
 function findIndexInTable(tabla,valor)
