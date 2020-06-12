@@ -46,6 +46,23 @@ local Player = {
             return "slide"
         end
     end,
+    invincible_collisions_filter = function(item, other)
+        if other.isBalloon and other.state == BalloonClass.states.growing then
+            return nil -- TODO: Revisar si deberiamos resolver esta colisión también desde aquí y no solo desde balloon
+        elseif other.isBomb and other.state ~= other.states.planted then
+            return nil
+        elseif other.isSeed and other.state ~= other.states.falling then
+            return "touch"
+        elseif other.isGoal then
+            return "touch"
+        elseif other.isLimit then
+            return nil
+        elseif other.isEnemy then
+            return "cross"
+        else
+            return "slide"
+        end
+    end,
     states = {
         standing = {
             quads = {
@@ -136,6 +153,7 @@ function Player.new(world, spawnX, spawnY, game)
     player.tInvencible = 4
     player.nBlinks = 8
     player.nTramo = 0
+    player.collisions_filter = Player.collisions_filter
     player.world:add(player, player.x, player.y, player.width, player.height)
     player:change_state(Player.states.standing)
     return player
@@ -146,6 +164,7 @@ function Player:update(dt)
 
     if self.invencible and self.tVivo >= self.tInvencible then
         self.invencible = false
+        self.collisions_filter = Player.collisions_filter
     end
 
     local feetHeight = 5    
@@ -155,7 +174,7 @@ function Player:update(dt)
     if self.velocidad_y < 0 then
         for i = 1, lenColFeet do
             if
-                not self.montado and
+                not self.montado and not self.invencible and
                     ((items[i].isBalloon and items[i].state == BalloonClass.states.flying_alone) or items[i].isEnemy)
              then
                 self.montado = true
@@ -318,6 +337,7 @@ end
 
 function Player:revive()
     self.invencible = true
+    self.collisions_filter = Player.invincible_collisions_filter
     self.tVivo = 0
 end
 
