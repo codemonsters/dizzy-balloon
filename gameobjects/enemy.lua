@@ -15,7 +15,7 @@ local Enemy = {
     enemyFilter = function(item, other)
         if other.isPlayer then
             if other.invencible then
-                return "cross"
+                return
             else
                 return "slide"
             end
