@@ -14,7 +14,11 @@ local Enemy = {
     image = love.graphics.newImage("assets/images/old/enemy.png"),
     enemyFilter = function(item, other)
         if other.isPlayer then
-            return "slide"
+            if other.invencible then
+                return
+            else
+                return "slide"
+            end
         elseif other.isBomb and not other.montado then
             if not other.state == (other.states.launching or other.states.exploding) then
                 return
@@ -50,7 +54,7 @@ local Enemy = {
                         if not col.other.state == (col.other.states.launching or col.other.states.exploding) then
                             self:rebotar(col)
                         end
-                    elseif col.other.isPlayer then
+                    elseif col.other.isPlayer and not col.other.invencible then
                         col.other:empujar({x = self.velocidad_x - col.other:vx() * dt, y = 0}, self)
                     end
                 end
@@ -90,7 +94,7 @@ local Enemy = {
                             self.velocidad_x = -self.lastXvelocity
                             self.velocidad_y = 0
                         end
-                    elseif col.other.isPlayer then
+                    elseif col.other.isPlayer and not col.other.invencible then
                         col.other:empujar({x = self.velocidad_x - col.other:vx() * dt, y = 0}, self)
                     end
                 end
@@ -157,7 +161,7 @@ function Enemy:update(dt)
     cols, len = self.world:queryRect(self.movSigx, self.y, self.width, self.height)
     if len > 0 then
         local col = cols[1]
-        if col.isPlayer then
+        if col.isPlayer and not col.invencible then
             col:empujar({x = self.velocidad_x - col:vx() * dt, y = 0}, self)
         end
     end
