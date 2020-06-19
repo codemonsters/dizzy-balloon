@@ -745,34 +745,32 @@ function love.touchpressed(id, x, y, dx, dy, pressure)
         game.pause = true
         if music then music:pause() end
     end
-
-    if x > SCREEN_WIDTH / 2 then
+    if x / factorEscala > SCREEN_WIDTH / 2 then
         rightFinger:touchpressed(x, y)
     else
         jugadorquieremoverse = true
-        --jugadorquieredisparar = true
-        leftFinger:touchpressed(mouseX, mouseY)
+        leftFinger:touchpressed(x, y)
     end
 end
 
 function love.touchreleased(id, x, y, dx, dy, pressure)
-    if x > SCREEN_WIDTH / 2 then
+    if x / factorEscala > SCREEN_WIDTH / 2 then
         rightFinger:touchreleased(dx, dy)
     else
         jugadorquieremoverse = false
-        --jugadorquieredisparar = false
         leftFinger:touchreleased(dx, dy)
     end
 end
 
 function game.pointerpressed(pointer)
-    if pointer.x > SCREEN_WIDTH / 2  and not game.pause then
+    print(pointer.name)
+    if pointer.x / factorEscala > SCREEN_WIDTH / 2  and not game.pause then
         game.currentLevel.player:jump()
     end
 end
 
 function game.pointerreleased(pointer)
-    if pointer.x < SCREEN_WIDTH / 2 then
+    if pointer.x / factorEscala < SCREEN_WIDTH / 2 then
         game.currentLevel.player.left,
             game.currentLevel.player.right,
             game.currentLevel.player.up,
@@ -783,7 +781,7 @@ function game.pointerreleased(pointer)
 end
 
 function game.pointermoved(pointer)
-    if pointer.x < SCREEN_WIDTH / 2 then
+    if pointer.x / factorEscala < SCREEN_WIDTH / 2 then
         if jugadorquieremoverse == true then
             if pointer.x + pointer.movementdeadzone < pointer.x + pointer.dx then
                 game.currentLevel.player.right = true
