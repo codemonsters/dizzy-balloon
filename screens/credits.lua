@@ -39,24 +39,32 @@ local screen = {
 
 local data = {
     {
-     type = "text",
+     type = "textTitle",
      text = "Creado por:"
     },
     {
         type = "text",
-        text = "Lorem Ipsum"
-    },
-    {
-        type="image",
-        image=quads.boot_fast.quad,
-        width=quads.boot_fast.width,
-        height=quads.boot_fast.height,
-        scaleFactorX=5,
-        scaleFactorY=5
+        text = {"Braisa", "Kenta", "Marcos", "PabloH"}
     },
     {
         type = "text",
-        text = [["texto 3"]]
+        text = {"Yagueto", "Nerea", "Alejandro"}
+    },
+    {
+        type = "textTitle",
+        text = "Fuentes tipográficas usadas:"
+    },
+    {
+        type = "text",
+        text = "Made with Löve"
+    },
+    {
+        type="image",
+        image=quads.love.quad,
+        width=quads.love.width,
+        height=quads.love.height,
+        scaleFactorX=1,
+        scaleFactorY=1
     }
 }
 
@@ -101,13 +109,20 @@ function screen.draw()
     love.graphics.setColor(255, 0, 0, 255)
     for k, v in pairs(onScreenData) do
         if v.type == "text" then
-            love.graphics.printf(v.text, font_buttons, 0, SCREEN_HEIGHT - v.y, SCREEN_WIDTH, "center")
+            if type(v.text) == "string" then
+                love.graphics.printf(v.text, font_buttons, 0, SCREEN_HEIGHT - v.y, SCREEN_WIDTH, "center")
+            elseif type(v.text) == "table" then
+                --TODO: Coger ancho pantalla y dividir en columnas las tablas
+            else
+                log.fatal("OH NO! El tipo de dato del texto de créditos es ".. type(v.text))
+            end
             verticalDistance = 75
+
         elseif v.type == "image" then
             love.graphics.draw(
                 atlas,
                 v.image,
-                (SCREEN_WIDTH / 2) - v.width,
+                (SCREEN_WIDTH / 2) - v.width * (v.scaleFactorX / 2),
                 SCREEN_HEIGHT - v.y,
                 0,
                 v.scaleFactorX,
