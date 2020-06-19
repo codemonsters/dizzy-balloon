@@ -1,7 +1,7 @@
 local CloudClass = {
     name = "Nube",
     x, y = 0,0,
-    vx = 100,
+    vx = 20,
     width = 150,
     height = 140,
     state = nil,
