@@ -81,7 +81,7 @@ end
 
 function menu.draw()
     love.graphics.setBlendMode("alpha")
-    love.graphics.printf("Dizzy Balloon", font_title, 0, SCREEN_HEIGHT * 0.09, 1280, "center")
+    love.graphics.printf("Dizzy Balloon", font_title, 0, SCREEN_HEIGHT * 0.09, SCREEN_WIDTH, "center")
     for i = 1, #menu.widgets do
         menu.widgets[i].draw()
     end
