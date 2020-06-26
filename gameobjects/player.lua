@@ -40,7 +40,7 @@ local Player = {
             return "touch"
         elseif other.isGoal then
             return "touch"
-        elseif other.isLimit then
+        elseif other.isLimit or other.isBonus then
             return nil
         else
             return "slide"
@@ -55,7 +55,7 @@ local Player = {
             return "touch"
         elseif other.isGoal then
             return "touch"
-        elseif other.isLimit then
+        elseif other.isLimit or other.isBonus then
             return nil
         elseif other.isEnemy then
             return "cross"
@@ -199,7 +199,8 @@ function Player:update(dt)
 
     --colisiones con la cabeza del jugador
     for i = 1, len do
-        if self.velocidad_y > 0 and not items[i].isLimit then
+        if self.velocidad_y > 0 and not items[i].isLimit and not items[i].isBonus then
+            log.debug(items[i].name)
             self:cabezazo()
         end
         if items[i].isGoal and self.game then -- comprobamos si hemos tocado la meta

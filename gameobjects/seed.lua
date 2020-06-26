@@ -8,6 +8,7 @@
         * evolving
         * dead
 --]]
+local BonusClass = require("gameobjects/bonus")
 local SeedClass = {
     x = 0,
     y = 0,
@@ -18,6 +19,7 @@ local SeedClass = {
     name = "Seed",
     isSeed = true,
     powerUp = nil,
+    bonus = nil,
     player_over_timer = 0,
     willExplode = false,
     states = {
@@ -71,7 +73,7 @@ local SeedClass = {
                         return
                     elseif other.isSeed and other.state == other.states.sky then
                         return "cross"
-                    elseif other.isLimit then
+                    elseif other.isLimit or other.isBonus then
                         return "cross"
                     else
                         return "slide"
@@ -99,6 +101,7 @@ local SeedClass = {
                     end
                 end
                 if self.willExplode then
+                    self.bonus = BonusClass.new(self.x, self.y, self.powerUp.quad, self.world, self.game)
                     self.change_state(self, self.states.explode)
                 end
             end,
@@ -127,6 +130,7 @@ local SeedClass = {
                 self.elapsed_time = self.elapsed_time + dt
                 if self.elapsed_time > self.state_max_time then
                     if self.powerUp ~= nil then
+                        self.bonus = BonusClass.new(self.x, self.y, self.powerUp.quad, self.world, self.game)
                         self.change_state(self, self.states.explode)
                     else
                         self.change_state(self, self.states.onthefloor)
@@ -294,6 +298,7 @@ local SeedClass = {
                 end
                 initialTime = initialTime + dt
                 if initialTime >= 0.3 then
+                    self.game.remove_bonus(self.bonus)
                     self:die()
                 end
             end,
@@ -306,6 +311,7 @@ local SeedClass = {
                     self.state.size,
                     self.state.size
                 )
+                self.bonus:draw()
             end
         }
     }
