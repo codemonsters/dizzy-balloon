@@ -44,7 +44,9 @@ local Player = {
             return "touch"
         elseif other.isGoal then
             return "touch"
-        elseif other.isLimit or other.isBonus then
+        elseif other.isBonus then
+            return "cross"
+        elseif other.isLimit then
             return nil
         else
             return "slide"
@@ -59,9 +61,9 @@ local Player = {
             return "touch"
         elseif other.isGoal then
             return "touch"
-        elseif other.isLimit or other.isBonus then
+        elseif other.isLimit then
             return nil
-        elseif other.isEnemy then
+        elseif other.isEnemy or other.isBonus then
             return "cross"
         else
             return "slide"
@@ -203,8 +205,7 @@ function Player:update(dt)
 
     --colisiones con la cabeza del jugador
     for i = 1, len do
-        if self.velocidad_y > 0 and not items[i].isLimit and not items[i].isBonus then
-            log.debug(items[i].name)
+        if self.velocidad_y > 0 and not items[i].isLimit then
             self:cabezazo()
         end
         if items[i].isGoal and self.game then -- comprobamos si hemos tocado la meta
@@ -332,6 +333,7 @@ end
 function Player:die()
     if self.invencible == false and self.game then
         self.game.vidaperdida()
+        self.vmultiplier, self.ymultiplier = 1, 1
         if self.game.vidas <= 0 then
             sounds.play(sounds.gameOver)
         else
