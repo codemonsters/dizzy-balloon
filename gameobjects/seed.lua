@@ -21,7 +21,6 @@ local SeedClass = {
     powerUp = nil,
     bonus = nil,
     player_over_timer = 0,
-    willExplode = false,
     states = {
         sky = {
             name = "sky",
@@ -68,10 +67,7 @@ local SeedClass = {
                 self.current_frame = 1
                 self.elapsed_time = 0
                 self.collisions_filter = function(item, other)
-                    if self.state == self.states.falling and other.isPlayer and self.powerUp ~= nil then
-                        self.willExplode = true
-                        return
-                    elseif other.isSeed and other.state == other.states.sky then
+                    if other.isSeed and other.state == other.states.sky then
                         return "cross"
                     elseif other.isLimit or other.isBonus then
                         return "cross"
@@ -99,9 +95,6 @@ local SeedClass = {
                     if self.current_frame > 2 then
                         self.current_frame = 1
                     end
-                end
-                if self.willExplode then
-                    self.change_state(self, self.states.explode)
                 end
             end,
             draw = function(self)
