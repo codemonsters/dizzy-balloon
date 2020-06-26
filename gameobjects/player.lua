@@ -329,6 +329,7 @@ end
 function Player:die()
     if self.invencible == false and self.game then
         self.game.vidaperdida()
+        self.vmultiplier, self.ymultiplier = 1, 1
         if self.game.vidas <= 0 then
             sounds.play(sounds.gameOver)
         else
