@@ -38,8 +38,9 @@ local screen = {
 }
 
 local data = {
+    --TODO: Crear el "textTitle"
     {
-     type = "textTitle",
+     type = "text",
      text = "Creado por:"
     },
     {
@@ -73,7 +74,7 @@ local onScreenData ={
 
 local index = 1
 
-local verticalSpeed = 50
+local verticalSpeed = 30
 
 local verticalDistance = 75
 
@@ -82,8 +83,13 @@ function screen.load()
     -- música
     --TODO: Deberíamos poner otra música
     --loadAndStartMusic({file = "menu.mp3", volume = 1})
+    for k,v in pairs(onScreenData) do
+        onScreenData[k] = nil
+    end
+    print(onScreenData[1])
+    index = 1
     table.insert(onScreenData, data[index])
-    onScreenData[index].y = 0
+    onScreenData[index].y = -10
 end
 
 function screen.update(dt)
@@ -94,7 +100,7 @@ function screen.update(dt)
     if onScreenData[index].y > verticalDistance and index ~= #data then
         index = index + 1
         table.insert(onScreenData, data[index])
-        data[index].y = 0
+        data[index].y = -10
     end
 
 end
@@ -112,12 +118,17 @@ function screen.draw()
             if type(v.text) == "string" then
                 love.graphics.printf(v.text, font_buttons, 0, SCREEN_HEIGHT - v.y, SCREEN_WIDTH, "center")
             elseif type(v.text) == "table" then
-                --TODO: Coger ancho pantalla y dividir en columnas las tablas
+                local horizontalpos = 0
+                local columnsize = SCREEN_WIDTH / (#v.text)
+                for key, value in pairs(v.text) do
+                    print(horizontalpos)
+                    love.graphics.printf(value, font_hud, horizontalpos, SCREEN_HEIGHT - v.y, horizontalpos + columnsize, "center")
+                    horizontalpos = horizontalpos + columnsize
+                end
             else
                 log.fatal("OH NO! El tipo de dato del texto de créditos es ".. type(v.text))
             end
             verticalDistance = 75
-
         elseif v.type == "image" then
             love.graphics.draw(
                 atlas,
