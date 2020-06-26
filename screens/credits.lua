@@ -40,8 +40,15 @@ local screen = {
 local data = {
     --TODO: Crear el "textTitle"
     {
-     type = "text",
-     text = "Creado por:"
+        type = "textTitle",
+        text = "DIZZY BALLOON"
+    },
+    {
+        type="space"
+    },
+    {
+        type = "textH1",
+        text = "Creado por:"
     },
     {
         type = "text",
@@ -52,11 +59,21 @@ local data = {
         text = {"Yagueto", "Nerea", "Alejandro"}
     },
     {
-        type = "textTitle",
+        type = "space"
+    },
+    {
+        type = "textH1",
         text = "Fuentes tipográficas usadas:"
     },
     {
         type = "text",
+        text = "GBYTftF"
+    },
+    {
+        type = "space"
+    },
+    {
+        type = "textH1",
         text = "Made with Löve"
     },
     {
@@ -64,8 +81,8 @@ local data = {
         image=quads.love.quad,
         width=quads.love.width,
         height=quads.love.height,
-        scaleFactorX=1,
-        scaleFactorY=1
+        scaleFactorX=0.8,
+        scaleFactorY=0.8
     }
 }
 
@@ -74,7 +91,7 @@ local onScreenData ={
 
 local index = 1
 
-local verticalSpeed = 30
+local verticalSpeed = 50
 
 local verticalDistance = 75
 
@@ -90,6 +107,9 @@ function screen.load()
     index = 1
     table.insert(onScreenData, data[index])
     onScreenData[index].y = -10
+    fontH1 = love.graphics.newFont("assets/fonts/unlearne.ttf", 80) -- https://www.1001fonts.com/
+    fontH2 = love.graphics.newFont("assets/fonts/unlearne.ttf", 60) -- https://www.dafont.com/es/pixelmania.font
+    fontH3 = love.graphics.newFont("assets/fonts/unlearne.ttf", 50)
 end
 
 function screen.update(dt)
@@ -106,7 +126,7 @@ function screen.update(dt)
 end
 
 function screen.draw()
-    love.graphics.clear(1, 0, 1)
+    love.graphics.clear(0, 0, 0)
     love.graphics.translate(desplazamientoX, desplazamientoY)
     love.graphics.scale(factorEscala, factorEscala)
     love.graphics.push()
@@ -114,22 +134,37 @@ function screen.draw()
     love.graphics.setBlendMode("alpha")
     love.graphics.setColor(255, 0, 0, 255)
     for k, v in pairs(onScreenData) do
-        if v.type == "text" then
+        if string.match(v.type, "text") then
+            local font
+            if v.type == "textTitle" then
+                font = font_title
+                verticalDistance = 2
+            elseif v.type == "textH1" then
+                font = fontH1
+                verticalDistance = 2
+            elseif v.type == "textH2" then
+                font = fontH2
+                verticalDistance = 2
+            else
+                font = fontH3
+                verticalDistance = 2
+            end
+            verticalDistance = verticalDistance * font:getHeight()
             if type(v.text) == "string" then
-                love.graphics.printf(v.text, font_buttons, 0, SCREEN_HEIGHT - v.y, SCREEN_WIDTH, "center")
+                love.graphics.printf(v.text, font, 0, SCREEN_HEIGHT - v.y, SCREEN_WIDTH, "center")
             elseif type(v.text) == "table" then
                 local horizontalpos = 0
                 local columnsize = SCREEN_WIDTH / (#v.text)
                 for key, value in pairs(v.text) do
-                    print(horizontalpos)
-                    love.graphics.printf(value, font_hud, horizontalpos, SCREEN_HEIGHT - v.y, horizontalpos + columnsize, "center")
+                    love.graphics.printf(value, font, horizontalpos, SCREEN_HEIGHT - v.y, columnsize, "center")
                     horizontalpos = horizontalpos + columnsize
                 end
+                verticalDistance = verticalDistance * 0.5
             else
                 log.fatal("OH NO! El tipo de dato del texto de créditos es ".. type(v.text))
             end
-            verticalDistance = 75
         elseif v.type == "image" then
+            love.graphics.setColor(255, 255, 255)
             love.graphics.draw(
                 atlas,
                 v.image,
@@ -140,6 +175,8 @@ function screen.draw()
                 v.scaleFactorY
             )
             verticalDistance = verticalDistance + v.height + 20
+        elseif v.type == "space" then
+            verticalDistance = 50
         end
     end
 
