@@ -29,7 +29,11 @@ local Player = {
         return vx_factor * 180 * self.vmultiplier * airSlow
     end,
     vy = function(self)
-        return -self.velocidad_y * 80 * self.ymultiplier -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
+        vel_y = -self.velocidad_y * 80
+        if vel_y < 0 then
+            vel_y = vel_y * self.ymultiplier
+        end
+        return vel_y -- TODO: Eliminar el campo velocidad_y para que solo se use el método self.vy() y eliminar así código repetido
     end,
     collisions_filter = function(item, other)
         if other.isBalloon and other.state == BalloonClass.states.growing then

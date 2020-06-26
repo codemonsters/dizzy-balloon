@@ -16,7 +16,7 @@ local PowerUps = {
     jumpBoost = {
         color = {1, 0.97, 0},
         apply = function(self, player)
-            player.ymultiplier = 2
+            player.ymultiplier = 1.7
         end,
         quad = quads.spring
     },
