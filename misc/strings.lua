@@ -47,10 +47,6 @@ local strings = {
         es = "Menú",
         en = "Menu"
     },
-    previous = {
-        es = "Anterior",
-        en = "Previous"
-    },
     next = {
         es = "Siguiente",
         en = "Next"

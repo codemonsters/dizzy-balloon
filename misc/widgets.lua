@@ -49,6 +49,7 @@ end
 function widgetClass.getButtonImage(object)
     -- dibujamos el botón en un canvas y guardamos el canvas como imagen. Utilizaremos esta imagen para dibujar el botón tantas veces como se solicite
     local objectCanvas = love.graphics.newCanvas(object.width, object.height)
+    local nLineas = 0
     love.graphics.setCanvas(objectCanvas)
         love.graphics.setColor(0.753, 0, 0.427, 1)
         --rectángulo más alto
@@ -66,7 +67,11 @@ function widgetClass.getButtonImage(object)
         -- texto
         love.graphics.setColor(0.753 * 1.4, 0.3, 0.427 * 1.4, 1)
         local textWidth = object.font:getWidth(object.label)
-        local textHeight = object.font:getHeight()
+        for i in object.label:gmatch("\n") do
+            nLineas = nLineas + 1
+        end
+
+        local textHeight = object.font:getHeight() * (1 + nLineas)
         love.graphics.setFont(object.font)
         love.graphics.print(object.label, (object.width - textWidth) / 2, (object.height - textHeight) / 2)
     love.graphics.setCanvas()
