@@ -139,6 +139,10 @@ game.states = {
                 mushroom:update(dt)
             end
 
+            for i, bonus in ipairs(game.currentLevel.bonuses) do
+                bonus:update(dt)
+            end
+
             if fireRequested then
                 fireRequested = false
                 if
@@ -217,6 +221,10 @@ game.states = {
 
                 for i, mushroom in ipairs(game.currentLevel.mushrooms) do
                     mushroom:draw()
+                end
+            
+                for i, bonus in ipairs(game.currentLevel.bonuses) do
+                    bonus:draw()
                 end
 
                 love.graphics.setColor(255, 255, 255)

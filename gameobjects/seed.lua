@@ -101,7 +101,6 @@ local SeedClass = {
                     end
                 end
                 if self.willExplode then
-                    self.bonus = BonusClass.new(self.x, self.y, self.powerUp.quad, self.world, self.game)
                     self.change_state(self, self.states.explode)
                 end
             end,
@@ -130,7 +129,6 @@ local SeedClass = {
                 self.elapsed_time = self.elapsed_time + dt
                 if self.elapsed_time > self.state_max_time then
                     if self.powerUp ~= nil then
-                        self.bonus = BonusClass.new(self.x, self.y, self.powerUp.quad, self.world, self.game)
                         self.change_state(self, self.states.explode)
                     else
                         self.change_state(self, self.states.onthefloor)
@@ -278,40 +276,14 @@ local SeedClass = {
             },
             load = function(self)
                 self.currentFrame = 1
-                initialTime = 0
-                canApply = true
                 self.world:remove(self)
+                self:die()
+                table.insert(self.game.currentLevel.bonuses, BonusClass.new(self.x, self.y, self.powerUp, self.world, self.game)) 
             end,
             update = function(self, dt)
-                local items, lenColExplosion =
-                    self.world:queryRect(
-                    self.x - self.state.size / 2,
-                    self.y - self.state.size / 2,
-                    self.state.size,
-                    self.state.size
-                )
-                for i = 1, lenColExplosion do
-                    if items[i].isPlayer and canApply then
-                        self.powerUp:apply(items[i])
-                        canApply = false
-                    end
-                end
-                initialTime = initialTime + dt
-                if initialTime >= 0.3 then
-                    self.game.remove_bonus(self.bonus)
-                    self:die()
-                end
             end,
             draw = function(self)
                 self.states.sky.draw(self)
-                love.graphics.rectangle(
-                    "fill",
-                    self.x - self.state.size / 2,
-                    self.y - self.state.size / 2,
-                    self.state.size,
-                    self.state.size
-                )
-                self.bonus:draw()
             end
         }
     }
