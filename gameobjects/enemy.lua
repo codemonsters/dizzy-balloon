@@ -50,7 +50,7 @@ local Enemy = {
 
                 if len > 0 then
                     local col = cols[1]
-                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then
+                    if col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom or col.other.isBalloon then
                         self:rebotar(col)
                     elseif col.other.isBomb then
                         if not col.other.state == (col.other.states.launching or col.other.states.exploding) then
@@ -80,7 +80,7 @@ local Enemy = {
 
                 if len > 0 then
                     local col = cols[1]
-                    if not col.other.isBomb and not col.other.isPlayer then --col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom then
+                    if not col.other.isBomb and not col.other.isPlayer then --col.other.isBlock or col.other.isSeed or col.other.isEnemy or col.other.isMushroom or col.other.isBalloon then
                         if self.horizontal then -- colisión yendo hacia arriba
                             self.horizontal = false
                             self.yAfterDiving = self.y
