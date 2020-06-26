@@ -82,6 +82,7 @@ function menu.load()
     --BlockClass.new("ParedIzquierda", -borderWidth, 0, borderWidth, MENU_HEIGHT, world)
     --pd = BlockClass.new("ParedDerecha", MENU_WIDTH - 1, 0, borderWidth, MENU_HEIGHT, world)
     --BlockClass.new("Techo", 0, -borderWidth, MENU_WIDTH, borderWidth, world)
+    animLoader:reset();
     animLoader:applyAnim(enemigo1, animacionTestEnemigo, true)
     animLoader:applyAnim(jugador, animacionTestJugador, true) -- asocia el animador al jugador y cargar una animación en él
 end

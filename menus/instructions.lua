@@ -55,7 +55,7 @@ function menu.load(menuManager, screen)
     menu.widgets = {}
     for i = 1, #buttons do
         if i == 1 then
-            table.insert(menu.widgets, widgetsClass.newButton(buttons[i].label, SCREEN_WIDTH * 0.15, 150 + i * SCREEN_HEIGHT * 0.16, SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.13, buttons[i].callback, font_tutorial))
+            table.insert(menu.widgets, widgetsClass.newButton(buttons[i].label, SCREEN_WIDTH * 0.15, 150 + i * SCREEN_HEIGHT * 0.16, SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.13, buttons[i].callback, font_tutorial, 0.6))
         else
             table.insert(menu.widgets, widgetsClass.newButton(buttons[i].label, 285 + SCREEN_WIDTH * 0.15, 150 + i * SCREEN_HEIGHT * 0.16, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.13, buttons[i].callback, font_buttons))
         end

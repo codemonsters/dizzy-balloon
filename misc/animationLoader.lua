@@ -48,8 +48,14 @@ animacionTestEnemigo = {
     target = nil -- el objeto animado
 }
 
-
 local animList = {}
+
+function animLoader:reset()
+    for numAnim, anim in pairs(animList) do
+        anim.rep = false
+    end
+    animList = {}
+end
 
 function animLoader:applyAnim(target, anim, repetir)
     anim.target = target
@@ -84,7 +90,6 @@ function animLoader:update(dt)
             anim.counter = anim.counter + dt
             if anim.counter >= anim.currFrame.time then
                 self:loadKeyFrame(anim, anim.frameIndex + 1)
-    
                 anim.counter = 0
             end
         end

@@ -5,8 +5,8 @@ local widgetClass = {
     alphaSelected = 0.85
 }
 
--- Crea un botón nuevo. 'font' es opcional, si no se recibe uno se utiliza el font por defecto definido en widgetClass
-function widgetClass.newButton(label, x, y, width, height, callback, font)
+-- Crea un botón nuevo. 'font' es opcional, si no se recibe uno se utiliza el font por defecto definido en widgetClass. Lo mismo pasa con alphaHover.
+function widgetClass.newButton(label, x, y, width, height, callback, font, alphaHover)
     local object = { }
     object.label, object.x, object.y, object.width, object.height, object.callback = label, x, y, width, height, callback
     object.font = font or widgetClass.defaultFontButtons
@@ -23,8 +23,12 @@ function widgetClass.newButton(label, x, y, width, height, callback, font)
     end
     object.update = function()
         if object.mouseOver() then
-            object.alpha = widgetClass.alphaSelected
-            if love.mouse.isDown(1) and not object.justChanged then
+            if object.alpha ~= widgetClass.alphaSelected then
+                object.alpha = alphaHover
+            else
+                object.alpha = alphaSelected
+            end
+                    if love.mouse.isDown(1) and not object.justChanged then
                 object.justChanged = true
                 object.callback(object)
             elseif not love.mouse.isDown(1) then
