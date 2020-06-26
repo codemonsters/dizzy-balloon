@@ -48,6 +48,7 @@ function LevelClass.new(levelDefinition, game)
     level.mushrooms = {}
     level.balloons = {}
     level.clouds = {}
+    level.bonuses = {}
     level.sky = SkyClass.new(level.world, level.game, level)
     level.goal = GoalClass.new("Salida", 0, -1, WORLD_WIDTH, 1, level.world)
     level.limit = LimitClass.new("Techo", 0, 0, WORLD_WIDTH, 20, level.world) -- El limite es necesario para bloquear el escape de enemigos y otros objetos excepto las semillas y el jugador

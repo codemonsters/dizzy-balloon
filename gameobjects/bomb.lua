@@ -80,7 +80,7 @@ local Bomb = {
             load = function(self)
                 self.world:add(self, self.x, self.y, self.width, self.height)
                 self.collisions_filter = function(item, other)
-                    if other.isGoal then
+                    if other.isGoal or other.isBonus then
                         return nil
                     else
                         return "cross"
@@ -128,7 +128,7 @@ local Bomb = {
                 self.collisions_filter = function(item, other)
                     if other.isBlock or other.isLimit then
                         self.vx = -0.6 * self.vx
-                    elseif other.isGoal then
+                    elseif other.isGoal  or other.isBonus then
                         return nil
                     end
 
@@ -199,7 +199,7 @@ local Bomb = {
             },
             load = function(self)
                 self.collisions_filter = function(item, other)
-                    if other.isBlock or other.isLimit or other.isGoal then
+                    if other.isBlock or other.isLimit or other.isGoal or other.isBonus then
                         return nil
                     else
                         return "cross"
@@ -247,7 +247,7 @@ local Bomb = {
                     local x, y, cols, len =
                         self.world:check(self, self.current_x, self.current_y, self.collisions_filter)
                     for i = 1, len do
-                        if not cols[i].other.isBlock and not cols[i].other.isGoal and not cols[i].other.isLimit then
+                        if not cols[i].other.isBlock and not cols[i].other.isGoal and not cols[i].other.isLimit and not cols[i].other.isBonus then
                             if
                                 not cols[i].other.isSeed or
                                     (cols[i].other.isSeed and cols[i].other.state ~= cols[i].other.states.sky)

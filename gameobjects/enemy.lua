@@ -33,6 +33,8 @@ local Enemy = {
             return "bounce"
         elseif other.isCloud then
             return "cross"
+        elseif other.isBonus then
+            return nil
         else
             return "bounce"
         end
