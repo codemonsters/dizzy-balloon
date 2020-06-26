@@ -860,6 +860,16 @@ function game.remove_mushroom(mushroom)
     end
 end
 
+function game.remove_bonus(bonus)
+    for i, v in ipairs(game.currentLevel.bonuses) do
+        if v == bonus then
+            game.currentLevel.world:remove(bonus)
+            table.remove(game.currentLevel.bonuses, i)
+            break
+        end
+    end
+end
+
 function game.kill_object(object)
     log.debug("Matando el objeto " .. object.name)
 
