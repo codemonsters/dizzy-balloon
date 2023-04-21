@@ -1,3 +1,14 @@
+-- enable debugging using local lua debugger vscode extension
+if os.getenv "LOCAL_LUA_DEBUGGER_VSCODE" == "1" then
+    local lldebugger = require "lldebugger"
+    lldebugger.start()
+    local run = love.run
+    function love.run(...)
+        local f = lldebugger.call(run, false, ...)
+        return function(...) return lldebugger.call(f, false, ...) end
+    end
+end
+
 log = require("libraries/log/log") -- https://github.com/rxi/log.lua
 config = require("misc/config") -- nuestros ajustes de configuración del juego
 local SoundClass = require("sounds")
