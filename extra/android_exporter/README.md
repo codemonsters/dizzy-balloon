@@ -1,4 +1,5 @@
-Instrucciones para crear un APK para Android desde Linux:
+# En el branch [``package-generator``](https://github.com/codemonsters/dizzy-balloon/tree/package-generator) hay un script que aún puede que funcione!!
+## Instrucciones para crear un APK para Android desde Linux:
 1. Comprobar que en la carpeta apktool tenemos la última versión de apktool (https://ibotpeaches.github.io/Apktool/install/)
 2. Comprueba que el script (wrapper) apktool es ejecutable (sino: `chmod +x apktool/apktool`)
 3. Comprueba que en la carpeta love-embed está descargado el último APK embed de Löve2D (https://github.com/love2d/love/releases/download/11.3/love-11.3-android-embed.apk)
