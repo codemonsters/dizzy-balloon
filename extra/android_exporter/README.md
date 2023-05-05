@@ -3,10 +3,12 @@
 
 [Nota: Las instrucciones asumen que el directorio raíz es extra/android_exporter]
 
+Se puede crear automáticamente el APK con firma debug desde una terminal Linux utilizando el script 'crear_apk.sh'. Si se desea hacer manualmente, estos son los pasos:
+
 1. Comprobar que en la carpeta apktool tenemos la última versión de apktool (https://ibotpeaches.github.io/Apktool/install/)
 2. Comprueba que el script (wrapper) apktool es ejecutable (sino: `chmod +x apktool`)
 3. Comprueba que en la carpeta love-embed está descargado el último APK embed de Löve2D (https://github.com/love2d/love/releases/download/11.3/love-11.3-android-embed.apk)
-4. Crea la carpeta output: `mkdir output`
+4. Borrar la antigua carpeta "output" y crearla de nuevo: `rm -rf output; mkdir output`
 5. Desempaqueta el APK en la carpeta output ejecutando: `apktool/apktool d -s -o output/love_decoded love-embed/love-11.3-android-embed.apk`
 6. Crea una carpeta assets dentro de love_decoded: `mkdir output/love_decoded/assets`
 7. Crea un archivo comprimido game.love dentro de output/love_decoded/assets con todos los ficheros del juego: `pushd .; cd ../../src; /usr/lib/jvm/java-20-openjdk/bin/jar -cfM ../extra/android_exporter/output/love_decoded/assets/game.love *;popd`

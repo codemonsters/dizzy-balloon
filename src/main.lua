@@ -118,7 +118,10 @@ end
 
 function actualizaVariablesEscalado(window_width, window_height)
     -- calcula el valor de las variables: factorEscala, desplazamientoX, desplazamientoY (utilizadas para escalar y desplazar el viewport del juego dentro de la ventana principal)
-
+    log.debug("Recalculando variables escalado para resolución " .. window_width .. " x " .. window_height)
+    MARTIN_WINDOW_WIDTH = window_width
+    MARTIN_WINDOW_HEIGHT = window_height
+    
     factorEscalaAncho = window_width / SCREEN_WIDTH
     factorEscalaAlto = window_height / SCREEN_HEIGHT
     if factorEscalaAncho < factorEscalaAlto then
