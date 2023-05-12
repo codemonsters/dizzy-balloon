@@ -69,7 +69,7 @@ function menu.load()
     factorEscalaExtra = 2
     local MENU_HEIGHT, MENU_WIDTH = SCREEN_HEIGHT/factorEscalaExtra, SCREEN_WIDTH/factorEscalaExtra
     -- música
-    canvas = love.graphics.newCanvas(MENU_WIDTH, MENU_HEIGHT)
+    menuCanvas = love.graphics.newCanvas(MENU_WIDTH, MENU_HEIGHT)
     loadAndStartMusic({file = "menu.mp3", volume = 1})
 
     -- animaciones
@@ -97,7 +97,7 @@ end
 function menu.draw()
     love.graphics.clear(1, 0, 1)
 
-    love.graphics.setCanvas(canvas) -- volvemos a dibujar en la ventana principal
+    love.graphics.setCanvas(menuCanvas)
     love.graphics.clear(1, 0, 1)
     jugador:draw()
     enemigo1:draw()
@@ -109,7 +109,7 @@ function menu.draw()
 
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
     love.graphics.draw(
-        canvas,
+        menuCanvas,
         0,
         0,
         0,
