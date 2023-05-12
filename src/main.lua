@@ -50,21 +50,21 @@ function love.load()
     font_hud = love.graphics.newFont("assets/fonts/unlearne.ttf", 40) -- https://www.dafont.com/es/pixelmania.font
     font_tutorial = love.graphics.newFont("assets/fonts/unlearne.ttf", 33)
 
-    if mobile == true then
+    if mobile then
         love.window.setFullscreen(true)
     end
-    window_width, window_height = love.window.getDesktopDimensions()
+    device_width, device_height = love.window.getDesktopDimensions()
 
     if love.window.getFullscreen() then
         -- scale the window to match the screen resolution
-        log.debug("Corriendo en pantalla completa (resolución: " .. window_width .. " x " .. window_height .. " px)")
+        log.debug("Corriendo en pantalla completa (resolución: " .. device_width .. " x " .. device_height .. " px)")
     else
         -- definimos el tamaño inicial de la ventana
-        window_width, window_height = window_width * .7, window_height * .7
-        log.debug("Corriendo en una ventana de: " .. window_width .. " x " .. window_height .. " px")
+        device_width, device_height = device_width * .7, device_height * .7
+        log.debug("Corriendo en una ventana de: " .. device_width .. " x " .. device_height .. " px")
         love.window.setMode(
-            window_width,
-            window_height,
+            device_width,
+            device_height,
             {
                 vsync = true,
                 resizable = true,
@@ -73,7 +73,7 @@ function love.load()
         )
     end
 
-    actualizaVariablesEscalado(window_width, window_height)
+    actualizaVariablesEscalado(device_width, device_height)
 
     math.randomseed(os.time()) -- NOTE: Quizá redundante, parece que Love ya inicializa la semilla random automáticamente
 
@@ -91,6 +91,7 @@ end
 
 function love.draw()
     screen.draw()
+    love.graphics.print(MARTIN_DEVICE_WIDTH .. "x" .. MARTIN_DEVICE_HEIGHT.. "; FULLSCRN=" .. tostring(love.window.getFullscreen()), 10, 10)
 end
 
 function love.resize(w, h)
@@ -116,22 +117,22 @@ function love.keyreleased(key, scancode, isrepeat)
     screen.keyreleased(key, scancode, isrepeat)
 end
 
-function actualizaVariablesEscalado(window_width, window_height)
+function actualizaVariablesEscalado(device_width, device_height)
     -- calcula el valor de las variables: factorEscala, desplazamientoX, desplazamientoY (utilizadas para escalar y desplazar el viewport del juego dentro de la ventana principal)
-    log.debug("Recalculando variables escalado para resolución " .. window_width .. " x " .. window_height)
-    MARTIN_WINDOW_WIDTH = window_width
-    MARTIN_WINDOW_HEIGHT = window_height
+    log.debug("Recalculando variables escalado para resolución " .. device_width .. " x " .. device_height)
+    MARTIN_DEVICE_WIDTH = device_width
+    MARTIN_DEVICE_HEIGHT = device_height
     
-    factorEscalaAncho = window_width / SCREEN_WIDTH
-    factorEscalaAlto = window_height / SCREEN_HEIGHT
+    factorEscalaAncho = device_width / SCREEN_WIDTH
+    factorEscalaAlto = device_height / SCREEN_HEIGHT
     if factorEscalaAncho < factorEscalaAlto then
         factorEscala = factorEscalaAncho
     else
         factorEscala = factorEscalaAlto
     end
 
-    desplazamientoX = (window_width - factorEscala * SCREEN_WIDTH) / 2
-    desplazamientoY = (window_height - factorEscala * SCREEN_HEIGHT) / 2
+    desplazamientoX = (device_width - factorEscala * SCREEN_WIDTH) / 2
+    desplazamientoY = (device_height - factorEscala * SCREEN_HEIGHT) / 2
 end
 
 -- Inicia la música. El argumento music es una tabal con dos claves (file y volume), tal y com se puede definir en el nivel

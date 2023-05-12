@@ -32,7 +32,7 @@ local game = {
 local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
 local hud_height = SCREEN_HEIGHT
 
-local dimensionesBotonPausa = window_width * .05
+local dimensionesBotonPausa = device_width * .05
 
 local MenuManagerClass = require("menus/menuManager")
 
@@ -748,7 +748,7 @@ function love.touchmoved(id, x, y, dx, dy, pressure)
 end
 
 function love.touchpressed(id, x, y, dx, dy, pressure)
-    if x > window_width - dimensionesBotonPausa and y < dimensionesBotonPausa then
+    if x > device_width - dimensionesBotonPausa and y < dimensionesBotonPausa then
         played_ingame_menu_click = false
         game.pause = true
         if music then music:pause() end

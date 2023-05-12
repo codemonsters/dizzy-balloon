@@ -126,8 +126,7 @@ function menu.draw()
     love.graphics.line(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 11)
 
     menuManager:draw()
-
-    love.graphics.print(MARTIN_WINDOW_WIDTH .. "x" .. MARTIN_WINDOW_HEIGHT, 10, 10)
+    
     love.graphics.pop()
 end
 
