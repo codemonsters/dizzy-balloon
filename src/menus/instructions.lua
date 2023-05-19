@@ -1,10 +1,10 @@
-local menu = {
+local instr = {
     name = "instructions",
 }
 
-function menu.load(menuManager, screen)
-    menu.menuManager = menuManager
-    menu.screen = screen
+function instr.load(menuManager, screen)
+    instr.menuManager = menuManager
+    instr.screen = screen
 
     -- creamos los botones del menú
     local strings = require("misc/strings")
@@ -45,34 +45,34 @@ function menu.load(menuManager, screen)
             callback = function()
                 if nPaginaTutorial < table.getn(Tstrings) then
                     nPaginaTutorial = nPaginaTutorial + 1
-                    menu.widgets[1].setLabel(Tstrings[nPaginaTutorial])
+                    instr.widgets[1].setLabel(Tstrings[nPaginaTutorial])
                 else
-                    menu.menuManager:changeMenuTo(menu.menuManager:getMenu("main"))
+                    instr.menuManager:changeMenuTo(instr.menuManager:getMenu("main"))
                 end
             end
         },
     }
-    menu.widgets = {}
+    instr.widgets = {}
     for i = 1, #buttons do
         if i == 1 then
-            table.insert(menu.widgets, widgetsClass.newButton(buttons[i].label, SCREEN_WIDTH * 0.15, 150 + i * SCREEN_HEIGHT * 0.16, SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.13, buttons[i].callback, font_tutorial, 0.6))
+            table.insert(instr.widgets, widgetsClass.newButton(buttons[i].label, SCREEN_WIDTH * 0.15, 150 + i * SCREEN_HEIGHT * 0.16, SCREEN_WIDTH * 0.7, SCREEN_HEIGHT * 0.13, buttons[i].callback, font_tutorial, 0.6))
         else
-            table.insert(menu.widgets, widgetsClass.newButton(buttons[i].label, 285 + SCREEN_WIDTH * 0.15, 150 + i * SCREEN_HEIGHT * 0.16, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.13, buttons[i].callback, font_buttons))
+            table.insert(instr.widgets, widgetsClass.newButton(buttons[i].label, 285 + SCREEN_WIDTH * 0.15, 150 + i * SCREEN_HEIGHT * 0.16, SCREEN_WIDTH * 0.25, SCREEN_HEIGHT * 0.13, buttons[i].callback, font_buttons))
         end
     end
 end
 
-function menu.update(dt)
-    for i = 1, #menu.widgets do
-        menu.widgets[i].update()
+function instr.update(dt)
+    for i = 1, #instr.widgets do
+        instr.widgets[i].update()
     end
 end
 
-function menu.draw()
+function instr.draw()
     love.graphics.setBlendMode("alpha")
-    for i = 1, #menu.widgets do
-        menu.widgets[i].draw()
+    for i = 1, #instr.widgets do
+        instr.widgets[i].draw()
     end
 end
 
-return menu
+return instr
