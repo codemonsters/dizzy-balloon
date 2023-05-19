@@ -93,12 +93,8 @@ end
 
 function screen.draw()
     love.graphics.clear(1, 0, 1)
-    love.graphics.translate(desplazamientoX, desplazamientoY)
-    love.graphics.scale(factorEscala, factorEscala)
-    love.graphics.push()
-    love.graphics.setCanvas()
     love.graphics.setBlendMode("alpha")
-    love.graphics.setColor(255, 0, 0, 255)
+    love.graphics.setColor(255, 255, 255, 255)
     for k, v in pairs(onScreenData) do
         if v.type == "text" then
             love.graphics.printf(v.text, font_buttons, 0, SCREEN_HEIGHT - v.y, SCREEN_WIDTH, "center")
@@ -116,8 +112,6 @@ function screen.draw()
             verticalDistance = verticalDistance + v.height + 20
         end
     end
-
-    love.graphics.pop()
 end
 
 function screen.keypressed(key, scancode, isrepeat)
