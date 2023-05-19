@@ -29,8 +29,8 @@ local game = {
     name = "Juego",
 }
 
-local hud_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
-local hud_height = SCREEN_HEIGHT
+local lateral_width = (SCREEN_WIDTH - WORLD_WIDTH) / 2
+
 
 local dimensionesBotonPausa = device_width * .05
 
@@ -71,12 +71,8 @@ game.states = {
         end,
         draw = function(self)
             game.states.jugando.draw(self)
-            love.graphics.push()
-            love.graphics.translate(desplazamientoX, desplazamientoY)
-            love.graphics.scale(factorEscala, factorEscala)
             love.graphics.setColor(0, 0, 0, game.alpha)
             love.graphics.rectangle("fill", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
-            love.graphics.pop()
         end
     },
     jugando = {
@@ -234,9 +230,9 @@ game.states = {
             end
             love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
 
-            love.graphics.push()
-            love.graphics.translate(desplazamientoX, desplazamientoY)
-            love.graphics.scale(factorEscala, factorEscala)
+            --love.graphics.push()
+            --love.graphics.translate(desplazamientoX, desplazamientoY)
+            --love.graphics.scale(factorEscala, factorEscala)
             love.graphics.setBlendMode("alpha", "premultiplied")
             love.graphics.draw(
                 game.currentLevel.worldCanvas,
@@ -247,7 +243,7 @@ game.states = {
                 1
             )
 
-            love.graphics.pop()
+            --love.graphics.pop()
         end
     },
     cambiandoDeNivel = {
@@ -509,8 +505,8 @@ function game.loadlevel(level)
 end
 
 function game.load()
-    hudCanvas = love.graphics.newCanvas(hud_width, hud_height)
-    gamepadCanvas = love.graphics.newCanvas(hud_width, hud_height)
+    hudCanvas = love.graphics.newCanvas(lateral_width, SCREEN_HEIGHT)
+    gamepadCanvas = love.graphics.newCanvas(lateral_width, SCREEN_HEIGHT)
     game.vidas = 3
     game.bombasAereas = 9
     game.currentLevel = LevelClass.new(LevelDefinitions[1], game)
@@ -524,9 +520,9 @@ function game.load()
     local widgetsClass = require("misc/widgets")
     game.botonPausa = widgetsClass.newButton(
         getString(strings.menu),
-        SCREEN_WIDTH - hud_width + 80,
+        SCREEN_WIDTH - lateral_width + 80,
         SCREEN_HEIGHT * 0.05,
-        hud_width - 80 * 2,
+        lateral_width - 80 * 2,
         50,
         function()
             if not game.pause then
@@ -575,58 +571,27 @@ end
 
 function game.draw()
     love.graphics.clear(0, 0, 0) -- borramos la pantalla por completo
+    love.graphics.setBlendMode("alpha")
 
-    love.graphics.setCanvas(hudCanvas) -- canvas del HUD
-    do
-        love.graphics.setBlendMode("alpha")
-
-        -- El fondo del canvas
-        love.graphics.setColor(0, 0, 0)
-        love.graphics.rectangle("fill", 0, 0, hud_width, SCREEN_HEIGHT)
-        love.graphics.setColor(255, 255, 255)
-        love.graphics.printf("LVL - " .. game.currentLevel.id, font_hud, 0, 100, hud_width, "center")
-        love.graphics.printf("x " .. game.vidas, font_hud, 140, 160, hud_width, "left")
-        love.graphics.printf("x " .. game.bombasAereas, font_hud, 140, 220, hud_width, "left")
-        ------------
-        love.graphics.draw(atlas, PlayerClass.states.standing.quads[1].quad, 95, 154, 0, 2, 2) -- dibujamos el jugador en el hud
-
-        love.graphics.draw(atlas, BombClass.states.planted.quads[1].quad, 94, 216, 0, 3, 3) -- dibujamos la bomba en el hud
-
-        love.graphics.setColor(255, 0, 0)
-        love.graphics.draw(circle, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
-        love.graphics.setColor(255, 255, 255)
-    end
-
-    love.graphics.setCanvas(gamepadCanvas) -- canvas del gamepad
-    do
-        love.graphics.setBlendMode("alpha")
-
-        -- El fondo del canvas
-        love.graphics.setColor(0, 0, 0)
-        love.graphics.rectangle("fill", 0, 0, hud_width, SCREEN_HEIGHT)
-        love.graphics.setColor(255, 255, 255)
-        love.graphics.draw(gamepad, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
-        local strings = require("misc/strings")
-        love.graphics.printf(getString(strings.time) .. " " .. math.ceil(game.currentLevel.time), font_hud, 0, 100, hud_width, "center")
-    end
-
-    love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
-
-    love.graphics.push()
-    love.graphics.translate(desplazamientoX, desplazamientoY)
-    love.graphics.scale(factorEscala, factorEscala)
-
-    love.graphics.setBlendMode("alpha", "premultiplied")
+    -- información del lateral izquierdo
     love.graphics.setColor(255, 255, 255)
-    love.graphics.draw(hudCanvas, SCREEN_WIDTH - hud_width, 0, 0, 1, 1)
-    love.graphics.draw(gamepadCanvas, 0, 0, 0, 1, 1)
+    love.graphics.setFont(font_hud)
+    love.graphics.printf("LVL - " .. game.currentLevel.id, 0, 100, lateral_width, "center")
+    love.graphics.printf("x " .. game.vidas, 140, 160, lateral_width, "left")
+    love.graphics.printf("x " .. game.bombasAereas, 140, 220, lateral_width, "left")
+    love.graphics.draw(atlas, PlayerClass.states.standing.quads[1].quad, 95, 154, 0, 2, 2) -- dibujamos el jugador en el hud
+    love.graphics.draw(atlas, BombClass.states.planted.quads[1].quad, 94, 216, 0, 3, 3) -- dibujamos la bomba en el hud
 
-    -- botón de pausa
+    love.graphics.draw(gamepad, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
+    local strings = require("misc/strings") -- TODO: Mover este require para la parte superior de este archivo?
+    love.graphics.printf(getString(strings.time) .. " " .. math.ceil(game.currentLevel.time), lateral_width + WORLD_WIDTH, 100, lateral_width, "center")
+
+    -- información del lateral derecho
     game.botonPausa.draw()
-    -- fin botón de pausa
-
-    love.graphics.pop()
-
+    love.graphics.setColor(255, 0, 0)
+    love.graphics.draw(circle, lateral_width + 35 + WORLD_WIDTH, SCREEN_HEIGHT - 280, 0, 1, 1) -- botón salto?
+    love.graphics.setColor(255, 255, 255)
+    
     game.state.draw(game)
 
     if game.execOnceAfterDraw then
@@ -634,13 +599,9 @@ function game.draw()
         game.execOnceAfterDraw = nil
     end
     if game.pause then
-        love.graphics.push()
-        love.graphics.translate(desplazamientoX, desplazamientoY)
-        love.graphics.scale(factorEscala, factorEscala)
         love.graphics.setBlendMode("alpha", "premultiplied")
         love.graphics.setColor(255, 255, 255)
         game.menuManager:draw()
-        love.graphics.pop()
     end
 end
 
