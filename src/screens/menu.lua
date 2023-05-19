@@ -74,8 +74,8 @@ function menu.load()
 
     -- animaciones
     local world = bump.newWorld(50)
-    jugador = PlayerClass.new(world, -PlayerClass.width, MENU_HEIGHT - PlayerClass.height, nil)
-    enemigo1 = EnemyClass.new(enemigo, -EnemyClass.width*4, MENU_HEIGHT - EnemyClass.height * 1.3, world, nil, 0)
+    jugador = PlayerClass.new(world, -PlayerClass.width, SCREEN_HEIGHT - PlayerClass.height, nil)
+    enemigo1 = EnemyClass.new("Enemigo", -EnemyClass.width * 4, SCREEN_HEIGHT - EnemyClass.height * 1.3, world, nil, 0)
     
     local borderWidth = 50
     suelo = BlockClass.new("Suelo", -MENU_WIDTH, MENU_HEIGHT, MENU_WIDTH*3, borderWidth, world)
@@ -96,38 +96,9 @@ end
 
 function menu.draw()
     love.graphics.clear(1, 0, 1)
-
-    love.graphics.setCanvas(menuCanvas)
-    love.graphics.clear(1, 0, 1)
     jugador:draw()
     enemigo1:draw()
-
-    love.graphics.push()
-    love.graphics.translate(desplazamientoX, desplazamientoY)
-    love.graphics.scale(factorEscala, factorEscala)
-    
-
-    love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
-    love.graphics.draw(
-        menuCanvas,
-        0,
-        0,
-        0,
-        factorEscalaExtra,
-        factorEscalaExtra
-    )
-    love.graphics.setColor(255, 0, 0, 255)
-
-    -- DEBUG: marcas en los extremos diagonales de la pantalla
-    love.graphics.setColor(255, 0, 0)
-    love.graphics.line(0, 0, 10, 0)
-    love.graphics.line(0, 0, 0, 10)
-    love.graphics.line(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, SCREEN_WIDTH - 11, SCREEN_HEIGHT - 1)
-    love.graphics.line(SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 11)
-
     menuManager:draw()
-    
-    love.graphics.pop()
 end
 
 function menu.keypressed(key, scancode, isrepeat)
