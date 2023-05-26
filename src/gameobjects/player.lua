@@ -255,7 +255,7 @@ function Player:cabezazo()
 end
 
 function Player:draw()
-    love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.setColor(1, 1, 1, 1)
 
     if self.invencible then
         self.nTramo = (self.tVivo / self.tInvencible) * (self.nBlinks * 2) + 1
@@ -284,7 +284,7 @@ function Player:draw()
         self.height / self.state.quads[self.current_frame].height
     )
 
-    love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.setColor(1, 1, 1, 1)
 end
 
 function Player:change_state(new_state)

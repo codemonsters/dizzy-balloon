@@ -306,7 +306,7 @@ end
 
 function SeedClass:draw()
     self.state.draw(self)
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(1, 1, 1)
     --love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
 end
 

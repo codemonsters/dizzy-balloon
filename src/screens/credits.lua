@@ -94,7 +94,7 @@ end
 function screen.draw()
     love.graphics.clear(1, 0, 1)
     love.graphics.setBlendMode("alpha")
-    love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.setColor(1, 1, 1, 1)
     for k, v in pairs(onScreenData) do
         if v.type == "text" then
             love.graphics.printf(v.text, font_buttons, 0, SCREEN_HEIGHT - v.y, SCREEN_WIDTH, "center")

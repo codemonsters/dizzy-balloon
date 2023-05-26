@@ -185,10 +185,8 @@ game.states = {
         draw = function(self)
             love.graphics.setCanvas(game.currentLevel.worldCanvas) -- a partir de ahora dibujamos en el canvas
             do
-                love.graphics.setBlendMode("alpha")
-
                 -- El fondo del mundo
-                love.graphics.setColor(192, 0, 109)
+                love.graphics.setColor(192 / 255, 0, 109 / 255)
                 love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
 
                 -- objetos del juego
@@ -225,17 +223,14 @@ game.states = {
                     bonus:draw()
                 end
 
-                love.graphics.setColor(255, 255, 255)
-                game.currentLevel.limit:draw()
-                love.graphics.rectangle("line", game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
-
+                -- hitboxes del cielo y del jugador
+                -- love.graphics.setColor(255, 255, 255)
+                -- game.currentLevel.limit:draw()
+                --love.graphics.rectangle("line", game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
             end
-            love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
-
-            --love.graphics.push()
-            --love.graphics.translate(desplazamientoX, desplazamientoY)
-            --love.graphics.scale(factorEscala, factorEscala)
-            love.graphics.setBlendMode("alpha", "premultiplied")
+            love.graphics.setCanvas(mainCanvas) -- volvemos a dibujar en la ventana principal
+            
+            --love.graphics.setBlendMode("alpha", "premultiplied")
             love.graphics.draw(
                 game.currentLevel.worldCanvas,
                 (SCREEN_WIDTH - WORLD_WIDTH) / 2,
@@ -244,8 +239,6 @@ game.states = {
                 1,
                 1
             )
-
-            --love.graphics.pop()
         end
     },
     cambiandoDeNivel = {
@@ -260,10 +253,10 @@ game.states = {
 
             love.graphics.setCanvas(game.nextLevel.worldCanvas)
             do
-                love.graphics.setColor(192, 0, 109)
+                love.graphics.setColor(192 / 255, 0, 109 / 255)
                 love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
                 -- objetos del juego
-                love.graphics.setColor(255, 255, 255)
+                love.graphics.setColor(1, 1, 1)
 
                 if game.nextLevel.sky ~= nil then
                     game.nextLevel.sky:draw()
@@ -299,12 +292,12 @@ game.states = {
             end
         end,
         draw = function(self)
-            love.graphics.translate(desplazamientoX, desplazamientoY)
-            love.graphics.scale(factorEscala, factorEscala)
-            love.graphics.setBlendMode("alpha", "premultiplied")
+            --love.graphics.translate(desplazamientoX, desplazamientoY)
+            --love.graphics.scale(factorEscala, factorEscala)
+            --love.graphics.setBlendMode("alpha", "premultiplied")
 
-            love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
-            love.graphics.push()
+            --love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
+            --love.graphics.push()
 
             love.graphics.draw( -- el primer frame del anterior nivel es dibujado ya que sigue en memoria
                 game.currentLevel.worldCanvas,
@@ -322,20 +315,19 @@ game.states = {
                 1,
                 1
             )
-
-            love.graphics.pop()
+            --love.graphics.pop()
         end
     },
     muriendo = {
         load = function(self)
             love.graphics.setCanvas(game.currentLevel.worldCanvas) -- a partir de ahora dibujamos en el canvas
             do
-                love.graphics.setBlendMode("alpha")
+                --love.graphics.setBlendMode("alpha")
 
                 -- El fondo del mundo
-                love.graphics.setColor(192, 0, 109)
+                love.graphics.setColor(192 / 255, 0, 109 / 255)
                 love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
-                love.graphics.setColor(255, 255, 255)
+                love.graphics.setColor(1, 1, 1)
 
                 -- objetos del juego
                 for i, cloud in ipairs(game.currentLevel.clouds) do
@@ -382,13 +374,13 @@ game.states = {
             end
         end,
         draw = function(self)
-            love.graphics.translate(desplazamientoX, desplazamientoY)
-            love.graphics.scale(factorEscala, factorEscala)
-            love.graphics.setBlendMode("alpha", "premultiplied")
+            --love.graphics.translate(desplazamientoX, desplazamientoY)
+            --love.graphics.scale(factorEscala, factorEscala)
+            --love.graphics.setBlendMode("alpha", "premultiplied")
 
-            love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
+            --love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
 
-            love.graphics.push()
+            --love.graphics.push()
             love.graphics.draw( -- el ultimo frame antes de morir es dibujado
                 game.currentLevel.worldCanvas,
                 (SCREEN_WIDTH - WORLD_WIDTH) / 2,
@@ -406,7 +398,7 @@ game.states = {
                 PlayerClass.width / PlayerClass.states.standing.quads[1].width,
                 PlayerClass.height / PlayerClass.states.standing.quads[1].height
             )
-            love.graphics.pop()
+            --love.graphics.pop()
         end
     }
 }
@@ -576,7 +568,7 @@ function game.draw()
     love.graphics.setBlendMode("alpha")
 
     -- información del lateral izquierdo
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(1, 1, 1)
     love.graphics.setFont(font_hud)
     love.graphics.printf("LVL - " .. game.currentLevel.id, 0, 100, lateral_width, "center")
     love.graphics.printf("x " .. game.vidas, 140, 160, lateral_width, "left")
@@ -589,9 +581,9 @@ function game.draw()
 
     -- información del lateral derecho
     game.botonPausa.draw()
-    love.graphics.setColor(255, 0, 0)
+    love.graphics.setColor(1, 0, 0)  -- sí, hace falta (para que el botón derecho sea rojo incluso cuando se pasa el ratón por encima del menú)
     love.graphics.draw(circle, lateral_width + 35 + WORLD_WIDTH, SCREEN_HEIGHT - 280, 0, 1, 1) -- botón salto?
-    love.graphics.setColor(255, 255, 255)
+    love.graphics.setColor(1, 1, 1)
     
     game.state.draw(game)
 
@@ -599,11 +591,19 @@ function game.draw()
         game.execOnceAfterDraw()
         game.execOnceAfterDraw = nil
     end
+
     if game.pause then
         love.graphics.setBlendMode("alpha", "premultiplied")
-        love.graphics.setColor(255, 255, 255)
+        love.graphics.setColor(1, 1, 1)
         game.menuManager:draw()
     end
+
+    love.graphics.setColor(0, 1, 0)
+    love.graphics.line(
+        (SCREEN_WIDTH - WORLD_WIDTH) / 2, 
+        (SCREEN_HEIGHT - WORLD_HEIGHT) / 2, 
+        (SCREEN_WIDTH - WORLD_WIDTH) / 2 + WORLD_WIDTH, 
+        (SCREEN_HEIGHT - WORLD_HEIGHT) / 2 + WORLD_HEIGHT)
 end
 
 function game.keypressed(key, scancode, isrepeat)
@@ -686,7 +686,6 @@ function love.mousepressed(x, y, button, istouch, presses)
         mouseX, mouseY = (x - desplazamientoX) / factorEscala, (y - desplazamientoY) / factorEscala
         print(mouseX .. ",  " .. x)
         jugadorquieremoverse = true
-        --jugadorquieredisparar = true
         mousepointer:touchpressed(mouseX, mouseY)
     end
 end
@@ -694,7 +693,6 @@ end
 function love.mousereleased(x, y, button, istouch, presses)
     if button == 1 and not mobile then
         jugadorquieremoverse = false
-        --jugadorquieredisparar = false
         mousepointer:touchreleased(dx, dy)
     end
 end

@@ -94,13 +94,9 @@ function love.draw()
     love.graphics.setCanvas(mainCanvas)
     love.graphics.translate(desplazamientoX, desplazamientoY)
     love.graphics.scale(factorEscala, factorEscala)
-        
+
         screen.draw()
-
-        love.graphics.setColor(255, 255, 255, 0.5)
-        love.graphics.line(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1)
-        love.graphics.line(SCREEN_WIDTH - 1, 0, 0, SCREEN_HEIGHT - 1)
-
+        
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
     love.graphics.pop()
 end
