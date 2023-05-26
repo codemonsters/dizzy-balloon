@@ -100,7 +100,6 @@ function love.draw()
         love.graphics.setColor(255, 255, 255, 0.5)
         love.graphics.line(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1)
         love.graphics.line(SCREEN_WIDTH - 1, 0, 0, SCREEN_HEIGHT - 1)
-        --love.graphics.print(MARTIN_DEVICE_WIDTH .. "x" .. MARTIN_DEVICE_HEIGHT.. "; FULLSCRN=" .. tostring(love.window.getFullscreen()), 10, 10)
 
     love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
     love.graphics.pop()
@@ -132,8 +131,6 @@ end
 function actualizaVariablesEscalado(device_width, device_height)
     -- calcula el valor de las variables: factorEscala, desplazamientoX, desplazamientoY (utilizadas para escalar y desplazar el viewport del juego dentro de la ventana principal)
     log.debug("Recalculando variables escalado para resolución " .. device_width .. " x " .. device_height)
-    MARTIN_DEVICE_WIDTH = device_width
-    MARTIN_DEVICE_HEIGHT = device_height
     
     factorEscalaAncho = device_width / SCREEN_WIDTH
     factorEscalaAlto = device_height / SCREEN_HEIGHT

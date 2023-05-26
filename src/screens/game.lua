@@ -1,3 +1,5 @@
+local strings = require("misc/strings")
+
 local bump = require "libraries/bump/bump"
 local PlayerClass = require("gameobjects/player")
 local EnemyClass = require("gameobjects/enemy")
@@ -583,7 +585,6 @@ function game.draw()
     love.graphics.draw(atlas, BombClass.states.planted.quads[1].quad, 94, 216, 0, 3, 3) -- dibujamos la bomba en el hud
 
     love.graphics.draw(gamepad, 35, SCREEN_HEIGHT - 280, 0, 1, 1)
-    local strings = require("misc/strings") -- TODO: Mover este require para la parte superior de este archivo?
     love.graphics.printf(getString(strings.time) .. " " .. math.ceil(game.currentLevel.time), lateral_width + WORLD_WIDTH, 100, lateral_width, "center")
 
     -- información del lateral derecho
