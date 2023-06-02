@@ -582,11 +582,11 @@ function game.draw()
     -- información del lateral derecho
     game.botonPausa.draw()
     love.graphics.setColor(1, 0, 0)  -- sí, hace falta (para que el botón derecho sea rojo incluso cuando se pasa el ratón por encima del menú)
-    love.graphics.draw(circle, lateral_width + 35 + WORLD_WIDTH, SCREEN_HEIGHT - 280, 0, 1, 1) -- botón salto?
+    love.graphics.draw(circle, lateral_width + 35 + WORLD_WIDTH, SCREEN_HEIGHT - 280, 0, 1, 1) -- botón salto
     love.graphics.setColor(1, 1, 1)
     
     game.state.draw(game)
-
+    
     if game.execOnceAfterDraw then
         game.execOnceAfterDraw()
         game.execOnceAfterDraw = nil

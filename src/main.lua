@@ -51,27 +51,28 @@ function love.load()
     font_tutorial = love.graphics.newFont("assets/fonts/unlearne.ttf", 33)
 
     if mobile then
-        love.window.setFullscreen(true)
-    end
-    device_width, device_height = love.window.getDesktopDimensions()
-
-    if love.window.getFullscreen() then
-        -- scale the window to match the screen resolution
-        log.debug("Corriendo en pantalla completa (resolución: " .. device_width .. " x " .. device_height .. " px)")
+        --love.window.setFullscreen(true)
+        device_width, device_height = love.window.getDimensions()
+        log.debug("Corriendo en dispositivo móvil")
     else
-        -- definimos el tamaño inicial de la ventana
-        device_width, device_height = device_width * .7, device_height * .7
-        log.debug("Corriendo en una ventana de: " .. device_width .. " x " .. device_height .. " px")
-        love.window.setMode(
-            device_width,
-            device_height,
-            {
-                vsync = true,
-                resizable = true,
-                centered = true
-            }
-        )
+        device_width, device_height = love.window.getDesktopDimensions()
+        if love.window.getFullscreen() then
+            log.debug("Corriendo en pantalla completa (resolución: " .. device_width .. " x " .. device_height .. " px)")
+        else
+            device_width, device_height = device_width * .7, device_height * .7 -- definimos el tamaño inicial de la ventana
+            log.debug("Corriendo en una ventana de: " .. device_width .. " x " .. device_height .. " px")
+            love.window.setMode(
+                device_width,
+                device_height,
+                {
+                    vsync = true,
+                    resizable = true,
+                    centered = true
+                }
+            )
+        end
     end
+
 
     actualizaVariablesEscalado(device_width, device_height)
 
