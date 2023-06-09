@@ -83,6 +83,53 @@ game.states = {
             love.graphics.clear(0, 0, 0)
         end,
         update = function(self, dt)
+            love.graphics.setCanvas(game.currentLevel.worldCanvas) -- a partir de ahora dibujamos en el canvas
+            do
+                -- El fondo del mundo
+                love.graphics.setColor(192 / 255, 0, 109 / 255)
+                love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
+                love.graphics.setColor(1, 1, 1)
+
+                -- objetos del juego
+
+                for i, cloud in ipairs(game.currentLevel.clouds) do
+                    cloud:draw(dt)
+                end
+
+                game.currentLevel.player:draw()
+
+                
+                for i, enemy in ipairs(game.currentLevel.enemies) do
+                    enemy:draw()
+                end
+
+                for i, balloon in ipairs(game.currentLevel.balloons) do
+                    balloon:draw()
+                end
+                if game.currentLevel.sky ~= nil then
+                    game.currentLevel.sky:draw()
+                end
+
+                for i, block in ipairs(game.currentLevel.blocks) do
+                    block:draw()
+                end
+
+                game.currentLevel.bomb:draw()
+
+                for i, mushroom in ipairs(game.currentLevel.mushrooms) do
+                    mushroom:draw()
+                end
+            
+                for i, bonus in ipairs(game.currentLevel.bonuses) do
+                    bonus:draw()
+                end
+
+                -- hitboxes del cielo y del jugador
+                -- love.graphics.setColor(255, 255, 255)
+                -- game.currentLevel.limit:draw()
+                --love.graphics.rectangle("line", game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
+            end
+            love.graphics.setCanvas() -- volvemos a dibujar en la ventana principal
             -- comprobamos si debemos crear un enemigo nuevo
             game.currentLevel.time = game.currentLevel.time - dt
             if game.currentLevel.time <= 0 then
@@ -183,53 +230,6 @@ game.states = {
             game.currentLevel.bomb:update(dt)
         end,
         draw = function(self)
-            love.graphics.setCanvas(game.currentLevel.worldCanvas) -- a partir de ahora dibujamos en el canvas
-            do
-                -- El fondo del mundo
-                love.graphics.setColor(192 / 255, 0, 109 / 255)
-                love.graphics.rectangle("fill", 0, 0, WORLD_WIDTH, WORLD_HEIGHT)
-
-                -- objetos del juego
-
-                for i, cloud in ipairs(game.currentLevel.clouds) do
-                    cloud:draw(dt)
-                end
-
-                game.currentLevel.player:draw()
-
-                
-                for i, enemy in ipairs(game.currentLevel.enemies) do
-                    enemy:draw()
-                end
-
-                for i, balloon in ipairs(game.currentLevel.balloons) do
-                    balloon:draw()
-                end
-                if game.currentLevel.sky ~= nil then
-                    game.currentLevel.sky:draw()
-                end
-
-                for i, block in ipairs(game.currentLevel.blocks) do
-                    block:draw()
-                end
-
-                game.currentLevel.bomb:draw()
-
-                for i, mushroom in ipairs(game.currentLevel.mushrooms) do
-                    mushroom:draw()
-                end
-            
-                for i, bonus in ipairs(game.currentLevel.bonuses) do
-                    bonus:draw()
-                end
-
-                -- hitboxes del cielo y del jugador
-                -- love.graphics.setColor(255, 255, 255)
-                -- game.currentLevel.limit:draw()
-                --love.graphics.rectangle("line", game.currentLevel.player.x, game.currentLevel.player.y, game.currentLevel.player.width, game.currentLevel.player.height)
-            end
-            love.graphics.setCanvas(mainCanvas) -- volvemos a dibujar en la ventana principal
-            
             --love.graphics.setBlendMode("alpha", "premultiplied")
             love.graphics.draw(
                 game.currentLevel.worldCanvas,
@@ -599,11 +599,6 @@ function game.draw()
     end
 
     love.graphics.setColor(0, 1, 0)
-    love.graphics.line(
-        (SCREEN_WIDTH - WORLD_WIDTH) / 2, 
-        (SCREEN_HEIGHT - WORLD_HEIGHT) / 2, 
-        (SCREEN_WIDTH - WORLD_WIDTH) / 2 + WORLD_WIDTH, 
-        (SCREEN_HEIGHT - WORLD_HEIGHT) / 2 + WORLD_HEIGHT)
 end
 
 function game.keypressed(key, scancode, isrepeat)
