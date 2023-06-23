@@ -51,7 +51,7 @@ function love.load()
     font_tutorial = love.graphics.newFont("assets/fonts/unlearne.ttf", 33)
 
     if mobile then
-        --love.window.setFullscreen(true)
+        love.window.setFullscreen(true)
         device_width, device_height = love.graphics.getDimensions()
         log.debug("Corriendo en dispositivo móvil")
     else
