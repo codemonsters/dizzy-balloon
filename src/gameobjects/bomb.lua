@@ -68,7 +68,7 @@ local Bomb = {
                     self.width / self.state.quads[1].width,
                     self.height / self.state.quads[1].height
                 )
-                love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
+                -- love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
             end
         },
         prelaunching = {
@@ -278,7 +278,7 @@ local Bomb = {
                     quad_x_scale_factor,
                     quad_y_scale_factor
                 )
-                love.graphics.rectangle("line", self.current_x, self.current_y, self.current_width, self.current_height)
+                --love.graphics.rectangle("line", self.current_x, self.current_y, self.current_width, self.current_height)
             end
         },
         afterExplosion = {
