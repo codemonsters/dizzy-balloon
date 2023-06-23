@@ -73,7 +73,7 @@ function getMinimumAtlasDimensions(data)
 end
 
 function createAtlasImage(data, outputPNGFilename, outputImageWidth, outputImageHeight)
-    canvas = love.graphics.newCanvas(outputImageWidth, outputImageHeight)
+    canvas = love.graphics.newCanvas(outputImageWidth, outputImageHeight, { dpiscale = 1 })
     love.graphics.setCanvas(canvas)
     love.graphics.clear()
     love.graphics.setBlendMode("alpha")

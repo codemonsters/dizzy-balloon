@@ -499,8 +499,8 @@ function game.loadlevel(level)
 end
 
 function game.load()
-    hudCanvas = love.graphics.newCanvas(lateral_width, SCREEN_HEIGHT)
-    gamepadCanvas = love.graphics.newCanvas(lateral_width, SCREEN_HEIGHT)
+    hudCanvas = love.graphics.newCanvas(lateral_width, SCREEN_HEIGHT, { dpiscale = 1 })
+    gamepadCanvas = love.graphics.newCanvas(lateral_width, SCREEN_HEIGHT, { dpiscale = 1 })
     game.vidas = 3
     game.bombasAereas = 9
     game.currentLevel = LevelClass.new(LevelDefinitions[1], game)

@@ -69,7 +69,7 @@ function menu.load()
     factorEscalaExtra = 2
     local MENU_HEIGHT, MENU_WIDTH = SCREEN_HEIGHT/factorEscalaExtra, SCREEN_WIDTH/factorEscalaExtra
     -- música
-    menuCanvas = love.graphics.newCanvas(MENU_WIDTH, MENU_HEIGHT)
+    menuCanvas = love.graphics.newCanvas(MENU_WIDTH, MENU_HEIGHT, { dpiscale = 1 })
     loadAndStartMusic({file = "menu.mp3", volume = 1})
 
     -- animaciones

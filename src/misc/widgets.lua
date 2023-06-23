@@ -52,7 +52,7 @@ end
 -- genera y devuelve la imagen que utilizaremos como botón
 function widgetClass.getButtonImage(object)
     -- dibujamos el botón en un canvas y guardamos el canvas como imagen. Utilizaremos esta imagen para dibujar el botón tantas veces como se solicite
-    local objectCanvas = love.graphics.newCanvas(object.width, object.height)
+    local objectCanvas = love.graphics.newCanvas(object.width, object.height, { dpiscale = 1 })
     local nLineas = 0
     love.graphics.setCanvas(objectCanvas)
         love.graphics.setColor(0.753, 0, 0.427, 1)

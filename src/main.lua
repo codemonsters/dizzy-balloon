@@ -52,7 +52,7 @@ function love.load()
 
     if mobile then
         --love.window.setFullscreen(true)
-        device_width, device_height = love.window.getDimensions()
+        device_width, device_height = love.graphics.getDimensions()
         log.debug("Corriendo en dispositivo móvil")
     else
         device_width, device_height = love.window.getDesktopDimensions()

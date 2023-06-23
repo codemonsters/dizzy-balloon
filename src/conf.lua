@@ -4,7 +4,7 @@ function love.conf(t)
     --t.window.height = 648 -- 216
     --t.window.width = 1152 -- 384
     t.window.fullscreen = false -- Enable or disable fullscreen
-    t.version = "11.1" -- The LÖVE version this game was made for (string)
+    t.version = "11.3" -- The LÖVE version this game was made for (string)
     t.accelerometerjoystick = false -- Enable the accelerometer on iOS and Android by exposing it as a Joystick (boolean)
     t.console = true -- Usamos consola para mostrar el logging(Sólo Windows)
 
