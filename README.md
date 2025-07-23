@@ -68,8 +68,11 @@ Con frecuencia cuando comencemos a desarrollar una nueva característica del jue
    ```git config --global --unset-all```
 
 
-### Android: Creación de un APK
-Usar el método de aquí: https://love2d.org/wiki/Game_Distribution/APKTool
+### Android: Creación de un AAB
+
+https://github.com/love2d/love-android/wiki/Game-Packaging
+
+https://github.com/love2d/love-android/wiki/Building-L%C3%96VE-for-Android---Android-Studio
 
 ### Discord: Trabajo a distancia
 Invitación al servidor de Discord para la actividad de Laboratorio: https://discord.gg/ZQaNtRF
