@@ -48,35 +48,43 @@ Con frecuencia cuando comencemos a desarrollar una nueva característica del jue
 * Podemos hacer tantos commit y push dentro la rama como sea necesario
 * Cuando consideremos el trabajo está acabado mezclamos/publicamos los cambios en la rama principal (master): ```git checkout master; git merge nombre_rama```
 
-### Problemas con el usuario
+### Android: Creación y firmado de un AAB para publicar en Google Play
 
-* Para actualizar el url de origin con un nuevo nombre de usuario
-   Entrar en el archivo ```.gitconfig``` y eliminas user.
+1. Instalar Android Studio y abrirlo para que descargue la última versión del Android SDK. Es necesario instalar también la última versión de CMake desde Android Studio (menú Tools > SDK Manager > pestaña SDKTools > marcar Show Package Details > seleccionar última versión de CMake > Apply y después File > Sync Project with Gradle Files).
+2. Clonar el repositorio love-android: ```dizzy-balloon $ git clone --recurse-submodules https://github.com/love2d/love-android```
+3. Copia tu juego (main.lua y demás) a love-android/app/src/embed/assets/
+4. Modifica el archivo love-android/app/build.gradle de la siguiente manera:
+    ```
+    android {
+        defaultConfig {
+            compileSdk 36 // última versión listada en https://developer.android.com/tools/releases/platforms
+            targetSdk 36  // Idem
+        }
+    }
+    ```
+5. Modifica love-android/gradle.properties:
+    ```
+    app.name=Dizzy Balloon   # Descomentar esta línea y como nombre poner Dizzy Balloon
+    #app.name_byte_array=76,195,150,86,69,32,102,111,114,32,65,110,100,114,111,105,100   # Comentar esta línea, solo la deberíamos usar si los caracteres del nombre de la aplicación no son ingleses
 
-   ### En Windows:
-   ```Step 1: Open Control panel. ```
-
-   ```Step 2: Click on Credential Manager.```
-
-   ```Step 3: Click on Windows Credentials under Manage your credentials page.```
-
-   ```Step 4: Under Generic Credentials click on github.```
-
-   ```Step 5: Click on Remove and then confirm by clicking Yes button.```
-
-   ### En Linux:
-   ```git config --global --unset-all```
-
-
-### Android: Creación de un AAB
-
-https://github.com/love2d/love-android/wiki/Game-Packaging
-
-https://github.com/love2d/love-android/wiki/Building-L%C3%96VE-for-Android---Android-Studio
+    app.application_id=es.codemonsters.dizzyballoon # Cambiar a es.codemonsters.dizzyballoon
+    app.orientation=landscape
+    app.version_code=33                             # Cambiar al número siguiente de la última versión publicada
+    app.version_name=0.9.0                          # Cambiar a "0.9.0" o lo que corresponda en nuestra aplicación
+    ```
+6. Sobreescribe los iconos que trae por defecto por los del juego copiando el contenido que hay en 'extra/android_icons' dentro de la carpeta 'love-android/app/src/main/res'
+7. Abre el proyecto seleccionando desde Android Studio la carpeta 'dizzy-balloon/love-android'
+8. Genera el AAB firmado desde Android Studio:
+    1. Cambia la variante de build a embedNoRecordRelease (Build > Select Build Variant).
+    2. Ve a Build > Generate Signed App Bundle / APK.
+    3. Elige Android App Bundle.
+    4. Selecciona tu .jks, introduce alias y contraseñas.
+    5. Finaliza y Android Studio lo genera por ti.
+    6. El archivo AAB resultante queda en love-android/app/build/outputs/bundle/embedNoRecordRelease/
 
 ### Discord: Trabajo a distancia
-Invitación al servidor de Discord para la actividad de Laboratorio: https://discord.gg/ZQaNtRF
 
+Invitación al servidor de Discord para la actividad de Laboratorio: https://discord.gg/ZQaNtRF
 
 ## Documentación
 
